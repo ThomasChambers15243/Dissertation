@@ -52,13 +52,14 @@ OP_TABLE = {
     "~" : "op",
     "<<" : "op",
     ">>" : "op",
-    # Brackets
+    # Brackets and New Path
     "(" : "op",
     ")" : "op",
     "{" : "op",
     "}" : "op",
     "[" : "op",
     "]" : "op",
+    ":" : "op",
     # Keyword
     "and" : "op",
     "or" : "op",
@@ -101,7 +102,9 @@ def TokeniseCode():
 
     distinctOperators = {}
     distinctOperands = {}
+
     nullTolkens = [' ', '\n']
+
     with open("TestFile.py", "r") as file:
         for line in file:
             # Set up token search
@@ -109,8 +112,27 @@ def TokeniseCode():
             while current < len(line):
                 token = line[current]
                 if token in nullTolkens:
-                    current+=1
+                    current += 1
                     continue
+
+                # Letter
+                if token.isalpha():
+                    word = ""
+                    while line[current].isalpha():
+                        word += line[current]
+                        current += 1
+                    if word in OP_TABLE:
+                        if word not in distinctOperators:
+                            distinctOperators[word] = OP_TABLE[word]
+                        operatorCount += 1
+                        current += 1
+                    else:
+                        operandCount += 1
+                        if word not in distinctOperands:
+                            distinctOperands[word] = word
+                    continue
+
+
                 # Number
                 if token.isdigit():
                     number = ""
@@ -118,7 +140,20 @@ def TokeniseCode():
                         number += token
                         current += 1
                         token = line[current]
-                # Variable
+
+                # String
+                if token == '"':
+                    stringValue = ""
+
+                # Single Ops
+                if token in OP_TABLE:
+                    if token not in distinctOperators:
+                        distinctOperators[token] = OP_TABLE[token]
+                    operatorCount += 1
+                    current += 1
+                    continue
+
+
 
     return [operatorCount, distinctOperators]
 
