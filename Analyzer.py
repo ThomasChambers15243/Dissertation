@@ -132,18 +132,21 @@ def TokeniseCode():
                             distinctOperands[word] = word
                     continue
 
-
                 # Number
                 if token.isdigit():
                     number = ""
-                    while token.isdigit():
-                        number += token
+                    while line[current].isdigit():
+                        number += line[current]
                         current += 1
-                        token = line[current]
+                    if number not in distinctOperands:
+                        distinctOperands[number] = number
+                    operandCount += 1
+                    continue
 
                 # String
                 if token == '"':
                     stringValue = ""
+
 
                 # Single Ops
                 if token in OP_TABLE:
