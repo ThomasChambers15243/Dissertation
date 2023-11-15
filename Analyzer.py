@@ -1,5 +1,5 @@
-import re
-import codecs
+import math
+
 # File for analyzing code
 
 # Example Use of TEST
@@ -104,7 +104,7 @@ OP_TABLE = {
 # Turns the code into useable tokens for Halstead Calculations
 # Returns an array of two tuples
 # [ (int: Operator Count , dict: Unique Operators) , (int: Operand Count , dict: Unique Operands)
-def TokeniseCode():
+def TokeniseCode(SourceCodeFilePath):
     operatorCount = 0;
     operandCount = 0;
 
@@ -113,7 +113,7 @@ def TokeniseCode():
 
     nullTolkens = [' ', '\n',',']
 
-    with open("TestFile.py", "r", encoding="unicode_escape") as file:
+    with open("SourceCodeFilePath", "r", encoding="unicode_escape") as file:
         for line in file:
             line += "  "
             # Set up token search
@@ -192,29 +192,35 @@ def TokeniseCode():
                         distinctOperators[value] = value
                     operatorCount += 1
                     continue
-
-
-
     return [(operatorCount,distinctOperators), (operandCount, distinctOperands)]
+# n1                    n2                 N1                   N2
+# distinctOperatorCount,distinctOperandCount,totalOperatorCount,totalOperandCount
+def Vocabulary(distinctOperatorCount, distinctOperandCount):
+    return distinctOperatorCount + distinctOperandCount
 
-def Vocabulary():
-    return 0
-def Length():
-    return 0
-def Volume():
-    return 0
-def Difficulty():
-    return 0
-def Effort():
-    return 0
+def Length(totalOperatorCount, totalOperandCount):
+    return totalOperatorCount + totalOperandCount
 
-opC,opR = TokeniseCode()
-print("Number Of operators: " + str(opC[0]))
-for i in opC[1]:
-    print(i)
-print("Number Of Operands: " + str(opR[0]))
-for i in opR[1]:
-    print(i)
+def EstimatedProgramLength(distinctOperatorCount, distinctOperandCount):
+    eProgLength = (distinctOperatorCount * math.log2(distinctOperatorCount) * distinctOperatorCount) + (distinctOperandCount * math.log2(distinctOperandCount) * distinctOperandCount)
+    return eProgLength
+
+def Volume(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount):
+    volume = Length(totalOperatorCount, totalOperandCount) * math.log2(Vocabulary(distinctOperatorCount,distinctOperandCount))
+    return volume
+
+def Difficulty(distinctOperatorCount, distinctOperandCount, totalOperandCount):
+    difficulty = (distinctOperatorCount / 2) * (distinctOperandCount / totalOperandCount)
+    return difficulty
+
+def Effort(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount):
+    effort = Difficulty(distinctOperatorCount, distinctOperandCount, totalOperandCount) * Volume(totalOperatorCount, totalOperandCount, distinctOperatorCount)
+    return effort
+
+def CalculateAllHalsteadMetrics(SourceCodeFilePath):
+    return 0;
+
+
 # Halstead Metrics
 
 #def ProgramVolume()
