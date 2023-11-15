@@ -113,7 +113,7 @@ def TokeniseCode(SourceCodeFilePath):
 
     nullTolkens = [' ', '\n',',']
 
-    with open("SourceCodeFilePath", "r", encoding="unicode_escape") as file:
+    with open(SourceCodeFilePath, "r", encoding="unicode_escape") as file:
         for line in file:
             line += "  "
             # Set up token search
@@ -193,8 +193,24 @@ def TokeniseCode(SourceCodeFilePath):
                     operatorCount += 1
                     continue
     return [(operatorCount,distinctOperators), (operandCount, distinctOperands)]
+
 # n1                    n2                 N1                   N2
 # distinctOperatorCount,distinctOperandCount,totalOperatorCount,totalOperandCount
+def ShowOperatorAndOperandStats(sourceCodeFilePath):
+    # Tokenize the code and get the metrics
+    operators, operands = TokeniseCode(sourceCodeFilePath)
+
+    # Acquires the Halstead metrics as n1, n2, N1, N2
+    distinctOperatorCount = len(operators[1])
+    distinctOperandCount = len(operands[1])
+    totalOperatorCount = operators[0]
+    totalOperandCount = operands[0]
+
+    print(f"Number of Distinct Operators: {distinctOperatorCount}\n")
+    print(f"Number of Distinct Operands: {distinctOperandCount}\n")
+    print(f"Total Number of Operators: {totalOperatorCount}\n")
+    print(f"Total Number of Operands: {totalOperandCount}\n")
+
 def Vocabulary(distinctOperatorCount, distinctOperandCount):
     return distinctOperatorCount + distinctOperandCount
 
@@ -213,11 +229,59 @@ def Difficulty(distinctOperatorCount, distinctOperandCount, totalOperandCount):
     difficulty = (distinctOperatorCount / 2) * (distinctOperandCount / totalOperandCount)
     return difficulty
 
-def Effort(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount):
+def Effort(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount, difficulty=None, volume=None):
+    if difficulty != None and volume != None:
+        return difficulty * volume
     effort = Difficulty(distinctOperatorCount, distinctOperandCount, totalOperandCount) * Volume(totalOperatorCount, totalOperandCount, distinctOperatorCount)
     return effort
 
-def CalculateAllHalsteadMetrics(SourceCodeFilePath):
+def Time(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount, effort=None):
+    if effort != None:
+        return effort / 18
+    effort = Effort(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount)
+    return effort
+
+def BugsEstimate(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount,volume=None):
+    if volume != None:
+        return volume / 3000
+    bugsEstimate = Volume(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount) / 3000
+
+def CalculateAllHalsteadMetrics(sourceCodeFilePath):
+    # Tokenize the code and get the metrics
+    operators, operands = TokeniseCode(sourceCodeFilePath)
+
+    # Acquires the Halstead metrics as n1, n2, N1, N2
+    distinctOperatorCount = len(operators[1])
+    distinctOperandCount = len(operands[1])
+    totalOperatorCount = operators[0]
+    totalOperandCount = operands[0]
+
+    # Calculate Metrics
+    vocabulary = Vocabulary(distinctOperatorCount, distinctOperandCount)
+    length = Length(totalOperatorCount, totalOperandCount)
+    estimatedProgramLength = EstimatedProgramLength(distinctOperatorCount, distinctOperandCount)
+    volume = Volume(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount)
+    difficulty = Difficulty(distinctOperatorCount, distinctOperandCount, totalOperandCount)
+    effort = Effort(totalOperatorCount,totalOperandCount, distinctOperatorCount, distinctOperandCount, difficulty, volume)
+    time = Time(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount, effort)
+    bugsEstimate = BugsEstimate(totalOperatorCount, totalOperandCount, distinctOperatorCount,distinctOperandCount, volume)
+
+    # Prints Basic Counts
+    print(f"Number of Distinct Operators: {distinctOperatorCount}")
+    print(f"Number of Distinct Operands: {distinctOperandCount}")
+    print(f"Total Number of Operators: {totalOperatorCount}")
+    print(f"Total Number of Operands: {totalOperandCount}\n")
+
+    # Prints Calculated Metrics
+    print(f"Vocabulary: {vocabulary}\n")
+    print(f"Length: {length}\n")
+    print(f"Estimated Program Length: {estimatedProgramLength}\n")
+    print(f"Volume: {volume}\n")
+    print(f"Difficulty: {difficulty}\n")
+    print(f"Effort: {effort}\n")
+    print(f"Time: {time}\n")
+    print(f"Estimated Number of bugs: {bugsEstimate}\n")
+
     return 0;
 
 
