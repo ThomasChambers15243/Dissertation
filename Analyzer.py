@@ -218,7 +218,9 @@ def Length(totalOperatorCount, totalOperandCount):
     return totalOperatorCount + totalOperandCount
 
 def EstimatedProgramLength(distinctOperatorCount, distinctOperandCount):
-    eProgLength = (distinctOperatorCount * math.log2(distinctOperatorCount) * distinctOperatorCount) + (distinctOperandCount * math.log2(distinctOperandCount) * distinctOperandCount)
+    lhs = distinctOperatorCount * math.log2(distinctOperatorCount)
+    rhs = distinctOperandCount * math.log2(distinctOperandCount)
+    eProgLength = lhs + rhs
     return eProgLength
 
 def Volume(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount):
@@ -226,7 +228,7 @@ def Volume(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinc
     return volume
 
 def Difficulty(distinctOperatorCount, distinctOperandCount, totalOperandCount):
-    difficulty = (distinctOperatorCount / 2) * (distinctOperandCount / totalOperandCount)
+    difficulty = (distinctOperatorCount / 2) * (totalOperandCount / distinctOperandCount)
     return difficulty
 
 def Effort(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount, difficulty=None, volume=None):
@@ -251,11 +253,14 @@ def CalculateAllHalsteadMetrics(sourceCodeFilePath):
     operators, operands = TokeniseCode(sourceCodeFilePath)
 
     # Acquires the Halstead metrics as n1, n2, N1, N2
-    distinctOperatorCount = len(operators[1])
-    distinctOperandCount = len(operands[1])
-    totalOperatorCount = operators[0]
-    totalOperandCount = operands[0]
-
+    # distinctOperatorCount = len(operators[1])
+    # distinctOperandCount = len(operands[1])
+    # totalOperatorCount = operators[0]
+    # totalOperandCount = operands[0]
+    distinctOperatorCount = 12
+    distinctOperandCount = 7
+    totalOperatorCount = 27
+    totalOperandCount = 15
     # Calculate Metrics
     vocabulary = Vocabulary(distinctOperatorCount, distinctOperandCount)
     length = Length(totalOperatorCount, totalOperandCount)
