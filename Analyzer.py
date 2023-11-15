@@ -22,7 +22,7 @@
 # Operands are variables, methods, constants (False, True)
 
 
-# Hash Map of all operator Tokens in Python, 27 long
+# Hash Map of all operator Tokens in Python
 OP_TABLE = {
     # Assingment
     "+=" : "op",
@@ -31,6 +31,8 @@ OP_TABLE = {
     "%=" : "op",
     "**=" : "op",
     "//=" : "op",
+    "=" : "op",
+    "." : "op",
     # Arithmetric
     "+" : "op",
     "-" : "op",
@@ -103,10 +105,11 @@ def TokeniseCode():
     distinctOperators = {}
     distinctOperands = {}
 
-    nullTolkens = [' ', '\n']
+    nullTolkens = [' ', '\n',',']
 
     with open("TestFile.py", "r") as file:
         for line in file:
+            line += "\n"
             # Set up token search
             current = 0
             while current < len(line):
@@ -114,6 +117,15 @@ def TokeniseCode():
                 if token in nullTolkens:
                     current += 1
                     continue
+
+                # Skip Comments
+                if token == "#":
+                    current = len(line)
+                    continue
+                if token == "'":
+                    if line[current+2] == "'":
+                        current += 3
+                        continue
 
                 # Letter
                 if token.isalpha():
@@ -144,9 +156,18 @@ def TokeniseCode():
                     continue
 
                 # String
-                if token == '"':
+                if token == '"' or token == "'" or token == "_":
+                    current += 1
                     stringValue = ""
-
+                    while line[current] != '"' and line[current] != "'":
+                        lineCurrent = line[current]
+                        stringValue += line[current]
+                        current += 1
+                    if stringValue not in distinctOperands:
+                        distinctOperands[stringValue] = stringValue
+                    operandCount += 1
+                    current += 1
+                    continue
 
                 # Single Ops
                 if token in OP_TABLE:
@@ -155,14 +176,27 @@ def TokeniseCode():
                     operatorCount += 1
                     current += 1
                     continue
+                else:
+                    value = ""
+                    while value not in OP_TABLE:
+                        value += line[current]
+                        current += 1
+                    if value not in distinctOperators:
+                        distinctOperators[value] = value
+                    operatorCount += 1
+                    continue
 
 
 
-    return [operatorCount, distinctOperators]
+    return [(operatorCount,distinctOperators), (operandCount, distinctOperands)]
 
-opC,dOp = TokeniseCode()
-print(opC)
-print(dOp)
+opC,opR = TokeniseCode()
+print("Number Of operators: " + str(opC[0]))
+for i in opC[1]:
+    print(i)
+print("Number Of Operands: " + str(opR[0]))
+for i in opR[1]:
+    print(i)
 # Halstead Metrics
 
 #def ProgramVolume()
