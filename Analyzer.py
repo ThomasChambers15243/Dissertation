@@ -101,6 +101,9 @@ OP_TABLE = {
     "yield" : "op",
 }
 
+# Turns the code into useable tokens for Halstead Calculations
+# Returns an array of two tuples
+# [ (int: Operator Count , dict: Unique Operators) , (int: Operand Count , dict: Unique Operands)
 def TokeniseCode():
     operatorCount = 0;
     operandCount = 0;
@@ -193,6 +196,17 @@ def TokeniseCode():
 
 
     return [(operatorCount,distinctOperators), (operandCount, distinctOperands)]
+
+def Vocabulary():
+    return 0
+def Length():
+    return 0
+def Volume():
+    return 0
+def Difficulty():
+    return 0
+def Effort():
+    return 0
 
 opC,opR = TokeniseCode()
 print("Number Of operators: " + str(opC[0]))
