@@ -1,3 +1,5 @@
+import re
+import codecs
 # File for analyzing code
 
 # Example Use of TEST
@@ -62,6 +64,7 @@ OP_TABLE = {
     "[" : "op",
     "]" : "op",
     ":" : "op",
+    ";" : "op",
     # Keyword
     "and" : "op",
     "or" : "op",
@@ -107,9 +110,9 @@ def TokeniseCode():
 
     nullTolkens = [' ', '\n',',']
 
-    with open("TestFile.py", "r") as file:
+    with open("TestFile.py", "r", encoding="unicode_escape") as file:
         for line in file:
-            line += "\n"
+            line += " "
             # Set up token search
             current = 0
             while current < len(line):
@@ -128,9 +131,9 @@ def TokeniseCode():
                         continue
 
                 # Letter
-                if token.isalpha():
+                if token.isalpha() or token == "_" or ((token + line[current+1]) == "__"):
                     word = ""
-                    while line[current].isalpha():
+                    while line[current].isalpha() or line[current] == "_" or ((line[current] + line[current+1]) == "__"):
                         word += line[current]
                         current += 1
                     if word in OP_TABLE:
@@ -155,11 +158,13 @@ def TokeniseCode():
                     operandCount += 1
                     continue
 
+                # To-Do Fix Bug: Handle python strings correctly
                 # String
-                if token == '"' or token == "'" or token == "_":
+                if token == '"' or token == "'":
                     current += 1
                     stringValue = ""
-                    while line[current] != '"' and line[current] != "'":
+                    testValue = line
+                    while line[current] != "" and line[current] != "'":
                         lineCurrent = line[current]
                         stringValue += line[current]
                         current += 1
