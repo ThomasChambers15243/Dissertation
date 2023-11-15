@@ -112,7 +112,7 @@ def TokeniseCode():
 
     with open("TestFile.py", "r", encoding="unicode_escape") as file:
         for line in file:
-            line += " "
+            line += "  "
             # Set up token search
             current = 0
             while current < len(line):
@@ -163,8 +163,7 @@ def TokeniseCode():
                 if token == '"' or token == "'":
                     current += 1
                     stringValue = ""
-                    testValue = line
-                    while line[current] != "" and line[current] != "'":
+                    while line[current] != "'" and line[current] != '"':
                         lineCurrent = line[current]
                         stringValue += line[current]
                         current += 1
