@@ -166,9 +166,6 @@ def TokeniseCode(SourceCodeFilePath):
                     operandCount += 1
                     continue
 
-                # To-Do Fix Bug: Handle python strings correctly
-                # Maybe check for \, if the character after that is " or ' then its not the end of the string
-                # Could also use an escape variable to check if the context at the end is " or '
                 # String
                 if token == '"' or token == "'":
                     stringValue = ""
