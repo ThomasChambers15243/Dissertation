@@ -1,5 +1,5 @@
 import math
-
+import re
 # File for analyzing code and Performing Halstead Calculations
 
 # Halstead Calculations
@@ -36,6 +36,7 @@ OP_TABLE = {
     "-" : "op",
     "*" : "op",
     "/" : "op",
+    "\\": "op",
     "%" : "op",
     "**" : "op",
     # Comparison
@@ -61,6 +62,7 @@ OP_TABLE = {
     "]" : "op",
     ":" : "op",
     ";" : "op",
+    "@" : "op",
     # Keyword
     "and" : "op",
     "or" : "op",
@@ -109,9 +111,15 @@ def TokeniseCode(SourceCodeFilePath):
 
     nullTolkens = [' ', '\n',',']
 
-    with open(SourceCodeFilePath, "r", encoding="unicode_escape") as file:
-        for line in file:
-            line += "  "
+    with open(SourceCodeFilePath, "r") as file:
+        for sline in file:
+            # Convert each line into a raw string so that escape chars can be managed
+            line = r""
+            for i in sline:
+                line+=i
+            # Adds a buffer at the end of every line
+            line += "   "
+
             # Set up token search
             current = 0
             while current < len(line):
@@ -124,15 +132,16 @@ def TokeniseCode(SourceCodeFilePath):
                 if token == "#":
                     current = len(line)
                     continue
-                if token == "'":
-                    if line[current+2] == "'":
+                if token == "'" or token == '"':
+                    quote = line[current] + line[current+1] + line[current+2]
+                    if quote == r"'''" or quote == r'"""':
                         current += 3
                         continue
 
                 # Letter
                 if token.isalpha() or token == "_" or ((token + line[current+1]) == "__"):
                     word = ""
-                    while line[current].isalpha() or line[current] == "_" or ((line[current] + line[current+1]) == "__"):
+                    while line[current].isalpha() or line[current] == "_" or line[current].isdigit():
                         word += line[current]
                         current += 1
                     if word in OP_TABLE:
@@ -162,11 +171,13 @@ def TokeniseCode(SourceCodeFilePath):
                 # Could also use an escape variable to check if the context at the end is " or '
                 # String
                 if token == '"' or token == "'":
-                    current += 1
                     stringValue = ""
-                    while line[current] != "'" and line[current] != '"':
+                    current += 1
+                    while line[current] != token:
                         stringValue += line[current]
                         current += 1
+                        while line[current] == '\\':
+                            current += 2
                     if stringValue not in distinctOperands:
                         distinctOperands[stringValue] = stringValue
                     operandCount += 1
