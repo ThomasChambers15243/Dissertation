@@ -4,6 +4,7 @@ import openai
 openai.api_key = os.environ['API_KEY']
 
 MODEL = "gpt-3.5-turbo"
+# MODEL = "gpt-4"
 
 def GetResponce(content):
 

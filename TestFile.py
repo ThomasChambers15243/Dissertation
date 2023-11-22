@@ -1,20 +1,9 @@
-a = "dsf\"\\\"\\''\'fdf\"d'fds" + 'sdf\'"'
-a = "dsf"
-b = 'df'
-def P1(s):
-    stack = []
-    mapping = {')': '(', '}': '{', ']': '['}
+def P6(arr1, arr2):
+    combined_arr = arr1 + arr2
+    combined_arr.sort(key=lambda x: (len(x), sum(ord(c) for c in x)))
+    return combined_arr
 
-    TEST = "________________________"
-
-    a = "dsf\'fdf\"d'fds"
-
-    for char in s:
-        if char in mapping:
-            if not stack or stack[-1] != mapping[char]:
-                return False
-            stack.pop()
-        else:
-            stack.append(char)
-
-    return len(stack) == 0
+def P6(arr1, arr2):
+    combined_arr = arr1 + arr2
+    combined_arr.sort(key=lambda x: (len(x), sum(ord(c) for c in x)))
+    return combined_arr
