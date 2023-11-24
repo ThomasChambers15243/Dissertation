@@ -173,7 +173,7 @@ def TokeniseCode(SourceCodeFilePath):
                     while line[current] != token:
                         stringValue += line[current]
                         current += 1
-                        while line[current] == '\\':
+                        if line[current] == r'\\':
                             current += 2
                     if stringValue not in distinctOperands:
                         distinctOperands[stringValue] = stringValue
