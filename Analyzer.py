@@ -132,9 +132,9 @@ def TokeniseCode(SourceCodeFilePath):
                 if token == "#":
                     current = len(line)
                     continue
-                if token == "'" or token == '"':
+                if token == "'" or token == '"' or token == '`':
                     quote = line[current] + line[current+1] + line[current+2]
-                    if quote == r"'''" or quote == r'"""':
+                    if quote == r"'''" or quote == r'"""' or quote == r"```":
                         current += 3
                         continue
 
