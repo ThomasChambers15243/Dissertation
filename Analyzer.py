@@ -1,5 +1,5 @@
 import math
-import re
+
 # File for analyzing code and Performing Halstead Calculations
 
 # Halstead Calculations
@@ -255,6 +255,7 @@ def BugsEstimate(totalOperatorCount, totalOperandCount, distinctOperatorCount, d
     bugsEstimate = Volume(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount) / 3000
     return bugsEstimate
 
+# Calculates all Halstead Metrics and returns them as a dictionary
 def CalculateAllHalsteadMetrics(sourceCodeFilePath):
     # Tokenize the code and get the metrics
     operators, operands = TokeniseCode(sourceCodeFilePath)
@@ -275,20 +276,41 @@ def CalculateAllHalsteadMetrics(sourceCodeFilePath):
     time = Time(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount, effort)
     bugsEstimate = BugsEstimate(totalOperatorCount, totalOperandCount, distinctOperatorCount,distinctOperandCount, volume)
 
+    metrics = {
+        "distinctOperatorCount": distinctOperatorCount,
+        "distinctOperandCount" : distinctOperandCount,
+        "totalOperatorCount": totalOperatorCount,
+        "totalOperandCount": totalOperandCount,
+        "vocab": vocabulary,
+        "length": length,
+        "eProgLength": estimatedProgramLength,
+        "volume": volume,
+        "difficulty": difficulty,
+        "effort": effort,
+        "time": time,
+        "bugsEstimate": bugsEstimate}
+
+    return metrics
+
+
+
+
+# Prints all Halstead Metrics
+def PrintAllHalsteadMetrics(sourceCodeFilePath):
+    metrics = CalculateAllHalsteadMetrics(sourceCodeFilePath)
     # Prints Basic Counts
-    print(f"Number of Distinct Operators: {distinctOperatorCount}")
-    print(f"Number of Distinct Operands: {distinctOperandCount}")
-    print(f"Total Number of Operators: {totalOperatorCount}")
-    print(f"Total Number of Operands: {totalOperandCount}\n")
+    print(f"Number of Distinct Operators: {metrics['distinctOperatorCount']}")
+    print(f"Number of Distinct Operands: {metrics['distinctOperandCount']}")
+    print(f"Total Number of Operators: {metrics['totalOperatorCount']}")
+    print(f"Total Number of Operands: {metrics['totalOperandCount']}\n")
 
-    # Prints Calculated Metrics
-    print(f"Vocabulary: {vocabulary}\n")
-    print(f"Length: {length}\n")
-    print(f"Estimated Program Length: {estimatedProgramLength}\n")
-    print(f"Volume: {volume}\n")
-    print(f"Difficulty: {difficulty}\n")
-    print(f"Effort: {effort}\n")
-    print(f"Time: {time}\n")
-    print(f"Estimated Number of bugs: {bugsEstimate}\n")
-
-    return 0;
+    # Prints Halstead Calculation Results
+    print(f"Vocabulary: {metrics['vocab']}")
+    print(f"Length: {metrics['length']}")
+    print(f"Estimated Program Length: {metrics['eProgLength']}")
+    print(f"Volume: {metrics['volume']}")
+    print(f"Difficulty: {metrics['difficulty']}")
+    print(f"Effort: {metrics['effort']}")
+    print(f"Time: {metrics['time']}")
+    print(f"Estimated Number of bugs: {metrics['bugsEstimate']}")
+    return 0
