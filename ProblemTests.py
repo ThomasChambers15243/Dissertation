@@ -1,5 +1,4 @@
 import unittest
-import sys
 import random
 from TestFile import P1
 from TestFile import P2
@@ -7,6 +6,11 @@ from TestFile import P3
 from TestFile import P4
 from TestFile import P5
 from TestFile import P6
+
+# How to test each method in each test file?
+# Write the contents of each tests file to TestFile.py as the method to use.
+# Test it, if it passes, then benchmark it.
+# Clear the file and move onto the next test file.
 
 class TestP1(unittest.TestCase):
     def test_temperature_conversion(self):
@@ -84,6 +88,9 @@ def suite():
     suite.addTest(TestP5('test_large_array'))
     return suite
 
+# https://docs.python.org/2/library/unittest.html#unittest.TestResult
+
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()
-    runner.run(suite())
+    a = runner.run(suite())
+    print(a)
