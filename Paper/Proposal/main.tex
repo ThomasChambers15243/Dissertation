@@ -34,7 +34,10 @@
 %%
 %%
 %% The first command in your LaTeX source must be the \documentclass command.
+
+% Package for Coding Formatting
 \documentclass[manuscript,screen,review,sigconf]{acmart}
+\usepackage{listings}
 
 %%
 %% \BibTeX command to typeset BibTeX logo in the docs
@@ -92,7 +95,7 @@
 %%
 %% The "title" command has an optional parameter,
 %% allowing the author to define a "short title" to be used in page headers.
-\title{Can Large Language Models Generated Code For Small-Scale Problems That Is Competitive To Model, Human-Written Code}
+\title{Can Large Language Models Generated Code That Can Compete With Model, Human-Written Code}
 
 %%
 %% The "author" command and its associated commands are used to define
@@ -116,7 +119,7 @@
 %% other information printed in the page headers. This command allows
 %% the author to define a more concise list
 %% of authors' names for this purpose.
-\renewcommand{\shortauthors}{Trovato and Tobin, et al.}
+
 
 
 
@@ -173,14 +176,14 @@ In 2021 OpenAI released their fine-tuned model GPT-3 codex, trained on 54 millio
 \subsection{Issues with the Current State of Code Generation}
  Large language models have proven to appear highly performant, however, there are several technical and practical limitations that should be carefully understood.
 
-Firstly, models are not uniform across languages. Nguyen and Nadi \cite{CopilotSuggestionsEval} found that CoPilot functionally performed best when writing in Java and worst in Javascript. Other researchers have written their own fine-tuned model, Poly-Coder, based on the GPT-2 architecture, which outperforms all GPT-based models in the C language \cite{SysEvaOfLLMofCode}. This was argued to possibly be a problem with the dataset and fine-tunning process.
+\textit{Firstly}, models are not uniform across languages. Nguyen and Nadi \cite{CopilotSuggestionsEval} found that CoPilot functionally performed best when writing in Java and worst in Javascript. Other researchers have written their own fine-tuned model, Poly-Coder, based on the GPT-2 architecture, which outperforms all GPT-based models in the C language \cite{SysEvaOfLLMofCode}. This was argued to possibly be a problem with the dataset and fine-tunning process.
 
-Secondly, the results are not \textit{one-shot}. Codex can respond with very variant accuracy in its solutions, hence why most investigations use several responses, such as with \textit{pass@k} often using 100 samples. This is not the standard programming experience. A student does not submit 100 solutions to be marked by their professor, leading to the comparison being fallacious. An attempt to control this compared students to Codex, except also gave students multiple attempts at solutions, their success frequently increases with each attempt. However, they found that Codex was still competitive with students, even after
+\textit{Secondly}, the results are not \textit{one-shot}. Codex can respond with very variant accuracy in its solutions, hence why most investigations use several responses, such as with \textit{pass@k} often using 100 samples. This is not the standard programming experience. A student does not submit 100 solutions to be marked by their professor, leading to the comparison being fallacious. An attempt to control this compared students to Codex, except also gave students multiple attempts at solutions, their success frequently increases with each attempt. However, they found that Codex was still competitive with students, even after
  multiple submission\cite{Codex_CS1_CS2_Test}.
 
-Thirdly, responses vary significantly depending on the value of the model temperature. Multiple studies have found that with a higher temperature, models can achieve a higher \textit{pass@k} score at higher samples, despite producing more erroneous code. Across multiple studies, researchers found optimal performance at T0.6, with T0.2 and T0.8 also performing well. Temperature and sample size were found to be proportional, this is likely due to the diversity of code at higher temperatures needing a higher sample rate to score.\cite{stackOVerflowAndTemperature, SysEvaOfLLMofCode, CodexRelPaper}.
+\textit{Thirdly}, responses vary significantly depending on the value of the model temperature. Multiple studies have found that with a higher temperature, models can achieve a higher \textit{pass@k} score at higher samples, despite producing more erroneous code. Across multiple studies, researchers found optimal performance at T0.6, with T0.2 and T0.8 also performing well. Temperature and sample size were found to be proportional, this is likely due to the diversity of code at higher temperatures needing a higher sample rate to score.\cite{stackOVerflowAndTemperature, SysEvaOfLLMofCode, CodexRelPaper}.
 
-Fourthly, there is a significant reason to question whether the success of generated code translates into actual programmer performance, even with their access becoming more streamlined. CoPilot can directly embed into your IDE, finishing off lines or blocks of code for the user. There is also a chat option in VS Code where prompts can be given and code can be directly copied into the user's file. However, when a programmer uses a piece of code, it might be buggy, a sub-optimal solution or poorly written. In a study of 24 participants using Copilot\cite{Expectation_vs_Experience}, they found that even though code generation gave promising results, it did not improve overall programming time or the success rate of those participants using the tool. CoPilot even led to more task failures in the medium and hard category, where programmers might have not understood the generated code or spent longer debugging the code than if they had just written it themselves. However, 23/24 of the participants still found it more useful than Intellisense and the majority "overwhelmingly preferred using Copilot in their programming workflow since Copilot often provided a good starting point to approach the programming task." In this sense, generation acts as a double-edged sword for productivity and learning. On the one hand, it can allow a programmer to instantly generate an often feasible solution to a task, a useful tool. However, in doing so they remove themselves from the task of problem-solving, which often exposes the programmer to online discussion and related topics, advancing their technical skill. Other researchers have discussed this problem, hypothesising that code generation is an efficient tool for seasoned programmers, but can turn into a liability when used by novice programmers who do not fully understand the problem, context and generated solution.\cite{CopilotPairProgrammer}.
+\textit{Fourthly}, there is a significant reason to question whether the success of generated code translates into actual programmer performance, even with their access becoming more streamlined. CoPilot can directly embed into your IDE, finishing off lines or blocks of code for the user. There is also a chat option in VS Code where prompts can be given and code can be directly copied into the user's file. However, when a programmer uses a piece of code, it might be buggy, a sub-optimal solution or poorly written. In a study of 24 participants using Copilot\cite{Expectation_vs_Experience}, they found that even though code generation gave promising results, it did not improve overall programming time or the success rate of those participants using the tool. CoPilot even led to more task failures in the medium and hard category, where programmers might have not understood the generated code or spent longer debugging the code than if they had just written it themselves. However, 23/24 of the participants still found it more useful than Intellisense and the majority "overwhelmingly preferred using Copilot in their programming workflow since Copilot often provided a good starting point to approach the programming task." In this sense, generation acts as a double-edged sword for productivity and learning. On the one hand, it can allow a programmer to instantly generate an often feasible solution to a task, a useful tool. However, in doing so they remove themselves from the task of problem-solving, which often exposes the programmer to online discussion and related topics, advancing their technical skill. Other researchers have discussed this problem, hypothesising that code generation is an efficient tool for seasoned programmers, but can turn into a liability when used by novice programmers who do not fully understand the problem, context and generated solution.\cite{CopilotPairProgrammer}.
 
 \section{Quality Code}
 % Importance of code analysis, reference Dijkstra, maybe clean code and Goole/Ibm
@@ -216,7 +219,7 @@ with n vertices, e edges, and p connected components is}
 Cyclomatic complexity can be viewed as building up graphs from smaller components, examples of which McCabe included.
 \begin{figure}[h]
     \includegraphics[width=8cm]{controlFlowDia.jpg}
-    \caption{Generated Control Structure Graphs}
+    \caption{Generated Control Structure Graphs \cite{A_Complexity_Measure}}
     \label{fig:CC Graphs}
     \centering
 \end{figure}
@@ -226,32 +229,142 @@ However, Cyclomatic complexity does not tell the full picture of code, especiall
 % Talk about how there is a gap in the research when it comes to the analysis of generated code
 To accurately ascertain a meaningful judgement of code quality, several measurements must be taken that account for the complexity of each line \textit{and} the path the code can take throughout the program. This approach of using code metrics to judge LLM generation is sparse in the current field of research\cite{CopilotPairProgrammer, CopilotSuggestionsEval}, with researchers focusing on functional performance. The practicality of code generation relies in large part on the maintainability of the code, not just its functional performance, and is in need of better understanding.
 
-\section{Aim of Research}
+\section{The Research}
 % Research Question & Hypothesis
 \textbf{RQ:} Can large language models generate code for small-scale problems that compete with model, human-written answers.\\
-\textbf{Hypothesis:} Large language model can generate code for small-scale coding problems that produces equal or better scoring in given code metrics when compared to model, human answers.
+\textbf{Hypothesis \(H_0\):} Large language model can generate code for small-scale coding problems that produces equal or better scoring in given code metrics when compared to model, human answers.
+
+\subsection{Research Methods}
+% Philosophical Position of a positivist ontological position
+My research will be grounded in a positivist ontological stance, attempting to gather an objective view of performance that can be replicated consistently elsewhere. GPT3.5 will be tasked with solving 20 questions of varying difficulty. GPT's functional performance and maintainability, as defined by \textit{pass@k} and two metric scores, will be compared to the human answers. If the model can produce code that scores in all 3 measurements an average equal to or higher than the model answers' scores then the \(H_0\) will be accepted - GPT is competitive.
+
+% Research Method (Sampling/Measurements/Experimental Design)
+All data pre-analysis will be in the form of floats. Several samples will be taken at different temperatures at different sample rates. Temperatures will range from T = 0.3 - 0.9 and sample sizes will range from k = 10 - 100. This is following what OpenAI's team has done with the \textit{pass@k} metric so that my data is easily comparable with theirs and other researchers in the field. Nine groups of data will be produced from this, each with the answers to each question in the set. The size of each group will be different depending on the sample rate.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c}
+        0 & T = 0.3 & T = 0.6 & T = 0.9\\
+        k = 10 & G13 & G16 & G19\\
+        k = 50 & G53 & G56 & G59\\
+        k = 100 & G103 & G106 & G109\\
+    \end{tabular}
+    \caption{Groups of Samples}
+    \label{tab:sampleGroups}
+    \vspace{-10mm}
+\end{table}
+
+For example, G32 will have \(20 * 100 -> 2,000\) generations while G19 will have \(20 * 10 -> 200\) generations. The generations will be evaluated for functional performance, this will allow me to gauge the difficulty of the questions from a results-based perspective. The groups will then be combined, to form one group of 160 attempts at each question, totalling 3,200 generations per temperature, 9,600 generations in total. Lexical analysis will extract tokens for calculating the Halstead and Cyclomatic Complexity per generation. These will be summed and averaged for each question for each temperature.
+
+% Update section to involve analysis against Joe's answers.
+A pilot study which is already taking place uses only 6 simple programming questions, the same range of temperature and only Halstead metrics. Throughout this, it found that GPT produces competitive code against model answers for these simple problems, aligning with results from other research \cite{Codex_CS1_CS2_Test}. Informed by this, only medium to difficult questions will be used. An example of one of these problems, as it was given in prompt form, is shown below, along with one of the generated responses. The complete set of questions is viewable in appendix section .1.
+\\ \\
+\textbf{Problem 2}: \textit{Given a string s containing just the characters '(', ')', '{', '}', ' [' and ']', determine if the input string is valid. An input string is valid if: Open brackets must be closed by the same type of brackets. Open brackets must be closed in the correct order. Every close bracket has a corresponding open bracket of the same type. Return a Boolean Value. Name the function P2}
+
+
+\textbf{Generated Solution, T = 0.6} - (\textit{mapping has been renamed to m for spacing})
+\begin{lstlisting}[language=Python]
+def P2(s):
+ stack = []
+ m = {')': '(', '}': '{', ']': '['}
+ for char in s:
+   if char in m:
+       if not stack or stack.pop() != m[char]:
+           return False
+   else:
+       stack.append(char)
+ return not stack
+\end{lstlisting}
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|} \hline
+         \textbf{Halstead Metric} & P1 & P2 & P3 & P4 & P5 \\
+         \hline
+         Temperature & 0.6 & 0.6 & 0.6 & 0.6 & 0.6 \\
+         Distinct Operators & 12.0 & 18.0 & 14.0 & 6.0 & 5.0 \\
+         Distinct Operands & 9.0 & 15.0 & 10.0 & 6.0 & 4.0 \\
+         Total Operators & 16.0 & 41.0 & 32.0 & 12.0 & 7.0 \\
+         Total Operands & 13.0 & 27.0 & 27.0 & 8.0 & 5.0 \\
+         Vocabulary & 21.0 & 33.0 & 24.0 & 12.0 & 9.0 \\
+         Length & 29.0 & 68.0 & 59.0 & 20.0 & 12.0 \\
+         Estim Prog Len & 71.55 & 133.66 & 86.52 & 31.02 & 19.61 \\
+         Volume & 127.38 & 343.02 & 270.51 & 71.7 & 38.04 \\
+         Difficulty & 8.67 & 16.2 & 18.9 & 4.0 & 3.12 \\
+         Effort & 1103.04 & 5556.9 & 5112.69 & 286.8 & 118.87 \\
+         Time & 61.33 & 308.72 & 284.04 & 15.93 & 6.6 \\
+         Estim Bugs & 0.04 & 0.11 & 0.09 & 0.02 & 0.01 \\
+    \end{tabular}
+    \caption{Table of Halstead Scores, P6 omitted for space}
+    \label{tab:HalsteadMetrics}
+\end{table}
+
+%% Compare to Joe here, replace p1,p2,p3,p4,p5 with just Joe's solutions and generated solutions to p1,p2
+Table 2 shows the calculated Halstead scores for generated solutions to problems p1-p5.
+
+% Ethical Considerations (Joe as a collaborator, no participants)
+\subsection{Ethical Considerations}
+As the nature of this research is a desk-based experiment, there is no need for participants. For the human-written answers to problems, I will be carefully constructing answers which abide by commonly accepted coding standards, rather than sourcing the answers from participants. Using an LLM runs the risk of the model producing code that matches private code in its training data, however, not only is matching code extremely rare for GPT models ("< 0.1\%") \cite{CodexRelPaper}, all training data is public access which is exempt from copyright under research use \cite{ExceptionToCopyright}.
+
+For the pilot study, I had one collaborator, Joseph Walton-Rivers, a lecturer at Falmouth University. He provided the human-written code solutions for the pilot study's comparison. No personal data was collected about him or his submissions and the code was collected before the pilot study began, he had no involvement or responsibilities during the study. In answers can be viewed in the appendix section .2. %UPDATE WHEN ANSWERS ARE ACUALLY THERE%
+
+\section{Hypothesis Testing}
+% Stats, R n more
+To test whether
 
 \section{Artefact}
 % Rich Description
+The artefact for this project will be a combination of several components, code generation, response testing and metric gathering, all combined in one pipeline streamlining the research.
+\begin{itemize}
+    \item Generation\\
+    Each question will have a response generated using OpenAIs API, using the GPT-3.5 turbo model. Each question can be sent \textit{k} number of times, depending on the desired sample rate, temperature can also be varied per request from 0.3 - 0.8. While prompt engineering can almost guarantee only valid code is returned, some level of response cleaning will have to take place to remove extra text returned, such as non-commented comments explaining the code.
+    \item Testing\\
+    The gathered responses will written to a file and automatically run against a wide range of test cases, suited for each question, to test whether the return code can pass the question. Even if the code fails, it will still undergo code analysis. These are viewable in the appendix section .3.
+    \item Code Analysis\\
+    The generated code will be analysed through two methods, Halstead and Cyclomatic Complexity. Halstead will provide a wide range of 12 metric scores about the generated code, while cyclomatic complexity will provide a single score about the generated code's complexity.
+\end{itemize}
 
+Development is already underway due to the preceding pilot study. The artefact and generated code will all be written in Python. Results of the study will be written to a csv file for all calculations, allowing for easy storage, use and transportation of data.
+
+\begin{figure}[h]
+    \includegraphics[width=8cm]{finishedPipline.jpg}
+    \caption{Generation to Metrics Pipeline}
+    \label{fig:CC Pipeline}
+    \centering
+\end{figure}
+
+\subsection{Development Lifecycle}
 % Development Method (System Lifecycle)
+Development will take place with an active use of version control through Github.
+Unit testing will be used to ensure the lexer, Halstead calculations and cyclomatic complexity score return the correct values.
 
-% Quality Assurance
+Testing of the artefact will involve 5 types of tests,
+\begin{itemize}
+    \item \textbf{Unit testing} of every individual function that is necessary to ensure functionality. Carried out by unit tests
+    \item \textbf{Integration Testing} to ensure that all components can function together. Carried out by a range of unit tests
+    \item \textbf{Stress Testing} to ensure that the artefact can handle at least twice the maximum expected input size. To test, the software, large Python files will be run against the analyser to ensure the components, working together, can handle long input.
+    \item \textbf{Acceptance Testing} to ensure that the artefact can meet the requirements of the study.
+    \item \textbf{A Sanity Test} after every push to the main branch.
+\end{itemize}
 
-\section{Research Methods}
-% Philosophical Position
 
-% Research Method (Sampling/Measurements/Experimental Design)
+\section{Issues and Implications Generative Code}
+% Go over some of the wider ethical implications of generative code
+Within programming circles, the prevalence of generative models shows no sign of slowing down in common use; if the generation of code is shown to be practical, the implications of such must be considered.
+\subsection{Plagiarism}
+% Argument of Stolen Code
+As previously discussed, generated code is formed through prediction. Every line of code generated is technically new since it's never directly copied and the model has no knowledge of its training data, \textit{however} all its training has come from human-written code. There is a non-zero chance it might directly replicate lines of code from its training data. This can be argued in an ethical and legal sense as plagiarism, no matter how unintentional. The current way developed circumvent this is to use open-source repositories as the data set, where coping the code is under a fair licence. This is also not an issue if the model has been fine-tuned on private company repos for in-house use, which is now a feature offered by CoPilot. However, the use of generated code is still in complete control of the user making the request, therefor it is reasonable to view the code as akin to auto-complete, and still the user's own.
+\subsection{Workload}
+% Argument of programmers becoming too reliant on code
+The use of generative models might also have a considerable impact on programmers' workflow and involved labour markets. As generative code becomes more and more feasible for use, the impact on a programmer's workload is uncertain, but it's likely their focus will drift to their other responsibilities, such as architectural design \& analysis, integration, maintenance and client management. This could have effects on the hiring process and structure of development teams if the impact of generation is large enough. Models also import libraries at different rates, "learning" from the habits of their training data. Most likely, this would reinforce already popular and standard imports while making it harder for newly released libraries to gain prominence.
+\subsection{Education}
+% Educational argument that students could pass off generated code as their work
+% If the hypothesis is true, then it means the skills of programmers and the quality of computing graduates might drop.
+The use of ChatGPT is already prominent in education, with significant use in essay writing, tools to discover such use, such as ChatGptZero have shown promising results but still result in many false negatives and positives. Generated code is harder to detect, since two implementations of the same algorithm are likely to be very similar to one another, as is the nature of programming. The challenges students face during their studies are often better suited for code generation, as they are smaller in scale than problems faced by \textit{real-world} software engineers. Educators face a difficult challenge in identifying when a student has written code themselves, or simply passed the problems through a model and copied the answer. Not only does this hurt the reputability of education, it affects the quality of the students learning. Reliance on generation removes the student from the difficult process of learning to program; critical thinking, implementation, debugging and research. However, it might also provide a fast starting point for students to start their research. Clearly, more study is needed to evaluate the impacts of code generation in education.
 
-% Ethical Considerations (Joe as a collaborator, no participants)
 
-\section{Hypothesis Testing}
-% Stats and R n shit
 
-\section{Issues and Implications of the Study}
-% Students could become too reliant
-% Students could pass of generated code as their own in the same way humanity students can with ChatGPT. This has far-reaching implications.
-%
 
 
 
@@ -260,7 +373,7 @@ To accurately ascertain a meaningful judgement of code quality, several measurem
 %% identification of the section in the article metadata, and the
 %% consistent spelling of the heading.
 \begin{acks}
-Thank you Joseph Walton-Rivers for providing the model answers
+Thank you Joseph Walton-Rivers for providing the model answers in the pilot study
 \end{acks}
 
 %%
@@ -268,6 +381,66 @@ Thank you Joseph Walton-Rivers for providing the model answers
 %% the bibliography file.
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{base}
+
+\section{Appendix}
+
+\subsection{Six Problems Used in Pilot Study}
+
+\textbf{P1:} You are given a non-negative floating-point number rounded to two decimal places celsius, that denotes the temperature in Celsius. You should convert Celsius into Kelvin and Fahrenheit and return it as an array ans = [kelvin, fahrenheit] Name the function P1.\\
+
+\textbf{P2:} Given a string s containing just the characters '(', ')', '{', '}', ' [' and ']', determine if the input string is valid. An input string is valid if: Open brackets must be closed by the same type of brackets. Open brackets must be closed in the correct order. Every close bracket has a corresponding open bracket of the same type. Return a Boolean Value. Name the function P2\\
+
+\textbf{P3:} Given a string of unknown length, find the longest, unbroken sequence of the same character. For example, “aaa” is an unbroken sequence of length 3. In the string “asdjrrrraduu”, “rrrr” is the longest sequence of length 4. Return the length. Name the function P3.\\
+
+\textbf{P4:} Given an array of strings, remove, if any, all duplicate elements. Duplicate elements are elements in the array that are evaluated as the same, so “John” == “John” but “sam” ≠ “Sam” and “John” ≠ “Sam”. Return the length of the new array. Name the function P4.\\
+
+\textbf{P5:} Given an unsorted array of integers, return the array in sorted order, with index 0 being the smallest and the last index being the largest in the array. Duplicates can be in either order next to each other. Name the function P5\\
+
+\textbf{P6:} Given two arrays of strings, combine them into one sorted array, with the shortest length string at index 0 and the longest length string at the last index. If two strings are the same length, sum up each string’s characters’ ASCII value, and use that total, inserting the smallest first. Return the new array. Name the function P6.\\
+
+\subsection{Human Written Answers to Problems}
+
+\subsection{Example Unit Test for Generated and Human Code from The Pilot Study}
+\begin{lstlisting}[language=Python]
+class TestP2(unittest.TestCase):
+    def test_valid_brackets(self):
+        self.assertTrue(P2("()"))
+        self.assertTrue(P2("[]"))
+        self.assertTrue(P2("{}"))
+        self.assertTrue(P2("()[]{}"))
+        self.assertTrue(P2("{[()]}"))
+    def test_invalid_brackets(self):
+        self.assertFalse(P2("(("))
+        self.assertFalse(P2("))"))
+        self.assertFalse(P2("({"))
+        self.assertFalse(P2(")}"))
+        self.assertFalse(P2("]["))
+        self.assertFalse(P2("}{"))
+        self.assertFalse(P2("({["))
+        self.assertFalse(P2("]})"))
+        self.assertFalse(P2("({[)}]"))
+
+class TestP5(unittest.TestCase):
+ def test_sort_array(self):
+  self.assertEqual(P5([]), [])
+  self.assertEqual(P5([3, 1, 2]),
+                      [1, 2, 3])
+  self.assertEqual(P5([5, 4, 3, 2, 1]),
+                      [1, 2, 3, 4, 5])
+  self.assertEqual(P5([1, 1, 1, 1, 1]),
+                        [1, 1, 1, 1, 1])
+  self.assertEqual(P5([1]), [1])
+  self.assertEqual(P5([-1, -2, -3]),
+                      [-3, -2, -1])
+ def test_large_array(self):
+  large_array = [i for i in range(-2**16,
+                                 2**16)]
+  shuffled = random.sample(large_array,
+                      len(large_array))
+  self.assertEqual(P5(shuffled),
+                    large_array)
+\end{lstlisting}
+
 
 
 \end{document}
