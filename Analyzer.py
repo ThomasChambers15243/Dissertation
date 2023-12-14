@@ -113,13 +113,7 @@ def TokeniseCode(SourceCodeFilePath):
 
     with open(SourceCodeFilePath, "r") as file:
         for sline in file:
-            # Convert each line into a raw string so that escape chars can be managed
-            line = r""
-            for i in sline:
-                line+=i
-            # Adds a buffer at the end of every line
-            line += "   "
-
+            line = r"".join(sline) + "   "
             # Set up token search
             current = 0
             while current < len(line):
@@ -127,14 +121,13 @@ def TokeniseCode(SourceCodeFilePath):
                 if token in nullTolkens:
                     current += 1
                     continue
-
                 # Skip Comments
                 if token == "#":
                     current = len(line)
                     continue
-                if token == "'" or token == '"' or token == '`':
+                if token in ["'", '"', '`']:
                     quote = line[current] + line[current+1] + line[current+2]
-                    if quote == r"'''" or quote == r'"""' or quote == r"```":
+                    if quote in [r"'''", r'"""', r"```"]:
                         current += 3
                         continue
 
@@ -167,7 +160,7 @@ def TokeniseCode(SourceCodeFilePath):
                     continue
 
                 # String
-                if token == '"' or token == "'":
+                if token in ['"', "'"]:
                     stringValue = ""
                     current += 1
                     while line[current] != token:
@@ -185,9 +178,7 @@ def TokeniseCode(SourceCodeFilePath):
                 if token in OP_TABLE:
                     if token not in distinctOperators:
                         distinctOperators[token] = OP_TABLE[token]
-                    operatorCount += 1
                     current += 1
-                    continue
                 else:
                     value = ""
                     while value not in OP_TABLE:
@@ -195,8 +186,7 @@ def TokeniseCode(SourceCodeFilePath):
                         current += 1
                     if value not in distinctOperators:
                         distinctOperators[value] = value
-                    operatorCount += 1
-                    continue
+                operatorCount += 1
     return [(operatorCount,distinctOperators), (operandCount, distinctOperands)]
 
 # DistinctOperatorCount,distinctOperandCount,totalOperatorCount,totalOperandCount
