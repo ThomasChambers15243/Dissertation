@@ -154,6 +154,9 @@ def TokeniseCode(SourceCodeFilePath):
                     while line[current].isdigit():
                         number += line[current]
                         current += 1
+                        if line[current] == '.':
+                            number += line[current]
+                            current += 1
                     if number not in distinctOperands:
                         distinctOperands[number] = number
                     operandCount += 1
