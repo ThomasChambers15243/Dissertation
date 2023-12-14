@@ -216,34 +216,30 @@ def Length(totalOperatorCount, totalOperandCount):
 def EstimatedProgramLength(distinctOperatorCount, distinctOperandCount):
     lhs = distinctOperatorCount * math.log2(distinctOperatorCount)
     rhs = distinctOperandCount * math.log2(distinctOperandCount)
-    eProgLength = lhs + rhs
-    return eProgLength
+    return lhs + rhs
 
 def Volume(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount):
-    volume = Length(totalOperatorCount, totalOperandCount) * math.log2(Vocabulary(distinctOperatorCount,distinctOperandCount))
-    return volume
+    return Length(totalOperatorCount, totalOperandCount) * math.log2(
+        Vocabulary(distinctOperatorCount, distinctOperandCount)
+    )
 
 def Difficulty(distinctOperatorCount, distinctOperandCount, totalOperandCount):
-    difficulty = (distinctOperatorCount / 2) * (totalOperandCount / distinctOperandCount)
-    return difficulty
+    return (distinctOperatorCount / 2) * (totalOperandCount / distinctOperandCount)
 
 def Effort(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount, difficulty=None, volume=None):
-    if difficulty != None and volume != None:
-        return difficulty * volume
-    effort = Difficulty(distinctOperatorCount, distinctOperandCount, totalOperandCount) * Volume(totalOperatorCount, totalOperandCount, distinctOperatorCount)
-    return effort
+    if difficulty is None or volume is None:
+        return Difficulty(distinctOperatorCount, distinctOperandCount, totalOperandCount) * Volume(totalOperatorCount, totalOperandCount, distinctOperatorCount)
+    return difficulty * volume
 
 def Time(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount, effort=None):
-    if effort != None:
-        return effort / 18
-    effort = Effort(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount)
-    return effort
+    if effort is None:
+        effort = Effort(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount)
+    return effort / 18
 
 def BugsEstimate(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount,volume=None):
-    if volume != None:
-        return volume / 3000
-    bugsEstimate = Volume(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount) / 3000
-    return bugsEstimate
+    if volume is None:
+        return Volume(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount) / 3000
+    return volume / 3000
 
 # Calculates all Halstead Metrics and returns them as a dictionary
 def CalculateAllHalsteadMetrics(sourceCodeFilePath):
@@ -266,7 +262,7 @@ def CalculateAllHalsteadMetrics(sourceCodeFilePath):
     time = Time(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount, effort)
     bugsEstimate = BugsEstimate(totalOperatorCount, totalOperandCount, distinctOperatorCount,distinctOperandCount, volume)
 
-    metrics = {
+    return{
         "distinctOperatorCount": distinctOperatorCount,
         "distinctOperandCount" : distinctOperandCount,
         "totalOperatorCount": totalOperatorCount,
@@ -279,8 +275,6 @@ def CalculateAllHalsteadMetrics(sourceCodeFilePath):
         "effort": effort,
         "time": time,
         "bugsEstimate": bugsEstimate}
-
-    return metrics
 
 
 
