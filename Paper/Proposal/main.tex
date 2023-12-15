@@ -37,7 +37,12 @@
 
 % Package for Coding Formatting
 \documentclass[manuscript,screen,review,sigconf]{acmart}
+% For code snippits
 \usepackage{listings}
+% For E symbol in pass@k appendix
+\usepackage{dsfont}
+% Macro for fractions without lines
+\newcommand\myatop[2]{{#1\atop#2}}
 
 %%
 %% \BibTeX command to typeset BibTeX logo in the docs
@@ -187,7 +192,7 @@ GPT stands for \textbf{G}enerative \textbf{P}re-trained \textbf{T}ransformer. Th
 
 %%% Discussion about the studies performance of LLM tools already in use %%%
 
-In 2021 OpenAI released their fine-tuned model GPT-3 codex, trained on 54 million public software repositories hosted on GitHub \cite{CodexRelPaper}. Released the same year \cite{GitHub_2021}, Github's CoPilot is a generation model with a heavy reliance on Codex. To test the functional performance of Codex, the team behind OpenAI released the humanEval data set. A public repository to benchmark the performance of generated code. They also implemented the technique \textit{pass@k}. An unbiased calculator to estimate the success of a model given \textit{k} samples. Functional performance is found by the ability to generate code from a prompt that successfully passes given unit tests, failures often due to syntax errors, invoking out-of-scope functions or referencing non-existent variables. Within their data set, Codex had a higher performance than all previous GPT-model, solving 70.2\% of problems with 100 samples. The functional performance of Codex and models alike have been replicated numerously \cite{SysEvaOfLLMofCode, PerformanceParsonProblems, CopilotSuggestionsEval, CoPilotForTeaching}, with Codex being able to outperform students in even CS1 questions and, although performance dropped, still compete with students in CS2 questions \cite{Codex_CS1_CS2_Test}. CS1 questions covered the basics of programming, with topics such as "variables, arithmetic, conditional branches, loops, reading and writing to files, and functions". CS2 took questions further, covering questions about hashing, discrete mathematics, OOP and ADTs. During these questions, the model could recognise algorithms by name and produce efficient solutions for those problems, such as tree or graph searches and modifications.
+In 2021 OpenAI released their fine-tuned model GPT-3 codex, trained on 54 million public software repositories hosted on GitHub \cite{CodexRelPaper}. Released the same year \cite{GitHub_2021}, Github's CoPilot is a generation model with a heavy reliance on Codex. To test the functional performance of Codex, the team behind OpenAI released the humanEval data set. A public repository to benchmark the performance of generated code. They also implemented the technique \textit{pass@k}, the formula for which can be seen in the appendix section .4. An unbiased calculator to estimate the success of a model given \textit{k} samples. Functional performance is found by the ability to generate code from a prompt that successfully passes given unit tests, failures often due to syntax errors, invoking out-of-scope functions or referencing non-existent variables. Within their data set, Codex had a higher performance than all previous GPT-model, solving 70.2\% of problems with 100 samples. The functional performance of Codex and models alike have been replicated numerously \cite{SysEvaOfLLMofCode, PerformanceParsonProblems, CopilotSuggestionsEval, CoPilotForTeaching}, with Codex being able to outperform students in even CS1 questions and, although performance dropped, still compete with students in CS2 questions \cite{Codex_CS1_CS2_Test}. CS1 questions covered the basics of programming, with topics such as "variables, arithmetic, conditional branches, loops, reading and writing to files, and functions". CS2 took questions further, covering questions about hashing, discrete mathematics, OOP and ADTs. During these questions, the model could recognise algorithms by name and produce efficient solutions for those problems, such as tree or graph searches and modifications.
 
 \subsection{Issues with the Current State of Code Generation}
  Large language models have proven to appear highly performant, however, several technical and practical limitations should be carefully understood.
@@ -348,7 +353,7 @@ The artefact for this project will be a combination of several components, code 
     The generated code will be analysed through two methods, Halstead and Cyclomatic Complexity. Halstead will provide a wide range of 12 metric scores about the generated code, while cyclomatic complexity will provide a single score about the generated code's complexity. Both methods will be implemented within the artefact, according to the original algorithms as written by Halstead and McCabe, rather than being imported through an external library.
 \end{itemize}
 
-Development is already underway due to the preceding pilot study. The artefact and generated code will all be written in Python, due to the non-time-critical nature of the code, and the ease with which Python can handle API requests, file I/O and unit tests. Results of the study will be written to a csv file for all calculations, allowing for easy storage, use and transportation of data into R for further analysis..
+Development is already underway due to the preceding pilot study. The artefact and generated code will all be written in Python, due to the non-time-critical nature of the code, and the ease with which Python can handle API requests, file I/O and unit tests. Results of the study will be written to a csv file for all calculations, allowing for easy storage, use and transportation of data into R for further analysis.
 
 \begin{figure}[h]
     \includegraphics[width=8cm]{finishedPipline.jpg}
@@ -359,8 +364,8 @@ Development is already underway due to the preceding pilot study. The artefact a
 
 \subsection{Development Lifecycle}
 % Development Method (System Lifecycle)
-Development will take place with an active use of version control through Github. To program the artefact, a waterfall-like approach with elements of Test Driven Development will be used. Tests for the lexer and metrics will be written before their complete implementation, to ensure the implementation is true to the original implementations. A waterfall-like approach will be taken to ensure academic integrity within the metrics and sub-sequence analysis. However, there is room for iteration upon some of the tools used, such as changing language if necessary or the lexing approach.
-Unit testing will be used to ensure the lexer parses the correct amount of tokens and that the Halstead calculations and cyclomatic complexity score return the correct values.
+Development will take place with an active use of version control through Github. To program the artefact, a waterfall-agile hybrid approach with elements of Test Driven Development will be used. Tests for the lexer and metrics will be written before their complete implementation, to ensure the implementation is true to the original implementations. A waterfall-like approach will be taken to ensure academic integrity within the metrics and sub-sequence analysis since if the design changed during the implementation of these features this would invite bias into the study. However, there is room for an iterative agile-like approach for the tools used, such as changing programming language if necessary or modifying the lexing approach.
+Testing of the artefact is described below.
 
 Testing of the artefact will involve 5 types of tests,
 \begin{itemize}
@@ -368,7 +373,7 @@ Testing of the artefact will involve 5 types of tests,
     \item \textbf{Integration Testing} to ensure that all components can function together. Carried out by a range of unit tests
     \item \textbf{Stress Testing} to ensure that the artefact can handle at least twice the maximum expected input size. To test, the software, large Python files will be run against the analyser to ensure the components, working together, can handle long input.
     \item \textbf{Acceptance Testing} to ensure that the artefact can meet the requirements of the study.
-    \item \textbf{A Sanity Test} after every push to the main branch.
+    \item \textbf{A Sanity Test} after every push to the main branch to ensure that all the main features are still functional.
 \end{itemize}
 
 
@@ -377,16 +382,16 @@ Testing of the artefact will involve 5 types of tests,
 Within programming circles, the prevalence of generative models shows no sign of slowing down in common use; if the generation of code is shown to be practical, the implications of such must be considered.
 \subsection{Plagiarism}
 % Argument of Stolen Code
-As previously discussed, generated code is formed through prediction. Every line of code generated is technically new since it's never directly copied and the model has no knowledge of its training data, \textit{however} all its training has come from human-written code. There is a non-zero chance it might directly replicate lines of code from its training data. This can be argued in an ethical and legal sense as plagiarism, no matter how unintentional. The current way developed circumvent this is to use open-source repositories as the data set, where coping the code is under a fair licence. This is also not an issue if the model has been fine-tuned on private company repos for in-house use, which is now a feature offered by CoPilot. However, the use of generated code is still in complete control of the user making the request, it is reasonable to view the code as akin to auto-complete, and still the user's own.
+As previously discussed, generated code is formed through prediction. Every line of code generated is technically new since it's never directly copied and the model has no knowledge of its training data, \textit{however} all its training has come from human-written code, therefore there is a non-zero chance it could directly replicate lines of code from its training data. This can be argued from an ethical and legal perspective as plagiarism, no matter how unintentional. The current method to circumvent this is to use repositories with licensing that allows free use of its code. This is also not an issue if the model has been fine-tuned on private company repositories for in-house use, which is now a feature offered by CoPilot \cite{GitHub_2021}. However, the use of generated code is still in complete control of the user making the request, it is reasonable to view the code as akin to auto-complete, and thus still the user's own work.
 \subsection{Workload}
 % Argument of programmers becoming too reliant on code
 The use of generative models might also have a considerable impact on programmers' workflow and involved labour markets. As generative code becomes more and more feasible for use, the impact on a programmer's workload is uncertain, but it's likely their focus will drift to their other responsibilities, such as architectural design \& analysis, integration, maintenance and client management. This could have effects on the hiring process and structure of development teams if the impact of generation is large enough. Models also import libraries at different rates, "learning" from the most common habits of their training data, displaying a bias towards \textit{mediocrity }. Most likely, this would reinforce already popular and standard imports while making it harder for newly released libraries to gain prominence.
 \subsection{Security}
-Programmers must be aware of their inclusion of generations due to possible security concerns within the code. The entire set of training data has not been vetted for possible vulnerabilities and erroneous generations could produce further vulnerabilities. Bad faith actors might also attempt to \textit{poison} the training data. If they can include vulnerable code in the training set, through manipulation or large creation of public repositories, LLM may bias and generate this code, exposing users to high risks.
+Programmers must be aware of their inclusion of generations due to possible security concerns within the code. The entire set of training data has not been vetted for possible vulnerabilities and erroneous generations could produce further vulnerabilities \cite{CodexRelPaper}. Bad faith actors might also attempt to \textit{poison} the training data. If they can include vulnerable code in the training set, through manipulation or large creation of public repositories, LLM may bias and generate this code, exposing users to high risks.
 \subsection{Education}
 % Educational argument that students could pass off generated code as their work
 % If the hypothesis is true, then it means the skills of programmers and the quality of computing graduates might drop.
-The use of ChatGPT is already prominent in education, with significant use in essay writing, tools to discover such use, such as ChatGptZero have shown promising results but still result in many false negatives and positives. Generated code is harder to detect, since two implementations of the same algorithm are likely to be very similar to one another, as is the nature of programming. The challenges students face during their studies are often better suited for code generation, as they are smaller in scale than problems faced by \textit{real-world} software engineers. Educators face a difficult challenge in identifying when a student has written code themselves, or simply passed the problems through a model and copied the answer. Not only does this hurt the reputability of education, it affects the quality of the students learning. Reliance on generation removes the student from the difficult process of learning to program; critical thinking, implementation, debugging and research. However, it might also provide a fast starting point for students to start their research. More study is needed to evaluate the impacts of code generation in education.
+The use of ChatGPT is already prominent in education \cite{GPTEducationImpact}, with significant use in essay writing, tools to discover such use, such as ChatGptZero \cite{tian2023gptzero} have shown promising results but still result in many false negatives and positives, making it an unreliable method to identify generated works \cite{farrokhhabibzadeh_2023}. Generated code is harder to detect, since two implementations of the same algorithm are likely to be very similar to one another, as is the nature of programming. The challenges students face during their studies are often better suited for code generation, as they are smaller in scale than problems faced by \textit{real-world} software engineers. Educators face a difficult challenge in identifying when a student has written code themselves, or simply passed the problems through a model and copied the answer. Not only does this hurt the reputability of education, it affects the quality of the students learning. Reliance on generation removes the student from the difficult process of learning to program; critical thinking, implementation, debugging and research. However, it might also provide a fast starting point for students to start their research. More study is needed to evaluate the impacts of code generation in education.
 
 \section{Conclusion}
 The use of LLM is only increasing as are the possible use cases and ethical issues along with them. The best practical understanding we can achieve will help equip students, workers, researchers, educators and businesses to utilize them without exposing themselves to a wide range of issues. This research should provide insight into understanding these generations and hopefully help inform the next steps for LLM uses.
@@ -438,6 +443,10 @@ class TestP2(unittest.TestCase):
         for i in invalid:
             self.assertFalse(P2(i))
 \end{lstlisting}
+
+\subsection{\textit{pass@k} \cite{CodexRelPaper}}
+
+\[pass@k := \myatop{\mathds{E}}{Problems} \left[1-\myatop{(\myatop{n-c}{k})}{(\myatop{n}{k})}\ \right]\]
 
 
 \end{document}
