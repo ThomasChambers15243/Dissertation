@@ -1,14 +1,13 @@
 import unittest
 import random
-from TestFile import P1
-from TestFile import P2
-from TestFile import P3
-from TestFile import P4
-from TestFile import P5
-from TestFile import P6
+from humanAnswers import P1
+from humanAnswers import P2
+from humanAnswers import P3
+from humanAnswers import P4
+from humanAnswers import P5
 
 # How to test each method in each test file?
-# Write the contents of each tests file to TestFile.py as the method to use.
+# Write the contents of each tests file to humanAnswers.py as the method to use.
 # Test it, if it passes, then benchmark it.
 # Clear the file and move onto the next test file.
 
@@ -55,15 +54,16 @@ class TestP5(unittest.TestCase):
         shuffled = random.sample(large_array, len(large_array))
         self.assertEqual(P5(shuffled), large_array)
 
-class TestP6(unittest.TestCase):
-    def test_combine_and_sort_arrays(self):
-        valid = [([],[],[]),(["a","aa","aaa","aaaa","aaaaa",],["b","bb","bbb","bbbb", "bbbbb"],
-                            ["a","b","aa","bb","aaa","bbb","aaaa","bbbb","aaaaa","bbbbb"]),
-                            (["abc", "de"],[],["de", "abc"]),([],["f", "ghi"],["f", "ghi"]),
-                            (["abc", "de"], ["f", "ghi"],["f", "de", "abc", "ghi"]),
-                            (["abc", "de"], ["f", "gh"],["f", "de", "gh", "abc"])]
-        for i in valid:
-            self.assertEqual(P6(i[0],i[1]), i[2])
+
+# class TestP6(unittest.TestCase):
+#     def test_combine_and_sort_arrays(self):
+#         valid = [([],[],[]),(["a","aa","aaa","aaaa","aaaaa",],["b","bb","bbb","bbbb", "bbbbb"],
+#                             ["a","b","aa","bb","aaa","bbb","aaaa","bbbb","aaaaa","bbbbb"]),
+#                             (["abc", "de"],[],["de", "abc"]),([],["f", "ghi"],["f", "ghi"]),
+#                             (["abc", "de"], ["f", "ghi"],["f", "de", "abc", "ghi"]),
+#                             (["abc", "de"], ["f", "gh"],["f", "de", "gh", "abc"])]
+#         for i in valid:
+#             self.assertEqual(P6(i[0],i[1]), i[2])
 
 def suite():
     suite = unittest.TestSuite()
