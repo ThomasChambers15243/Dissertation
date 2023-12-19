@@ -1,10 +1,10 @@
 import unittest
 import random
-from humanAnswers import P1
-from humanAnswers import P2
-from humanAnswers import P3
-from humanAnswers import P4
-from humanAnswers import P5
+from Code.humanAnswers import P1
+from Code.humanAnswers import P2
+from Code.humanAnswers import P3
+from Code.humanAnswers import P4
+from Code.humanAnswers import P5
 
 # How to test each method in each test file?
 # Write the contents of each tests file to humanAnswers.py as the method to use.
@@ -80,5 +80,5 @@ def suite():
 
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()
-    a = runner.run(suite())
-    print(a)
+    testRun = runner.run(suite())
+    print(testRun)

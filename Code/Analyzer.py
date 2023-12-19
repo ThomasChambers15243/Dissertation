@@ -1,5 +1,5 @@
 import math
-import Lexer
+from Code import Lexer
 # File for analyzing code and Performing Halstead Calculations
 
 # Halstead Calculations
