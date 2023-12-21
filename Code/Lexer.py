@@ -76,10 +76,11 @@ OP_TABLE = {
     "with" : "op",
     "yield" : "op",
 }
-
-# Turns the code into useable tokens for Halstead Calculations
-# Returns an array of two tuples
-# [ (int: Operator Count , dict: Unique Operators) , (int: Operand Count , dict: Unique Operands)
+'''
+Turns the code into useable tokens for Halstead Calculations
+Returns an tuple of two tuples
+( (int: Operator Count , dict: Unique Operators) , (int: Operand Count , dict: Unique Operands) )
+'''
 def TokeniseCode(SourceCodeFilePath):
     operatorCount = 0;
     operandCount = 0;
@@ -110,6 +111,8 @@ def TokeniseCode(SourceCodeFilePath):
                         continue
 
                 # Letter
+                # Abstract away, return word and use len(word) to calculate how much to
+                # increment current by
                 if token.isalpha() or token == "_" or ((token + line[current+1]) == "__"):
                     word = ""
                     while line[current].isalpha() or line[current] == "_" or line[current].isdigit():
@@ -168,4 +171,4 @@ def TokeniseCode(SourceCodeFilePath):
                     if value not in distinctOperators:
                         distinctOperators[value] = value
                 operatorCount += 1
-    return [(operatorCount,distinctOperators), (operandCount, distinctOperands)]
+    return ((operatorCount,distinctOperators), (operandCount, distinctOperands))
