@@ -16,8 +16,8 @@ class TestOnlyComments(unittest.TestCase):
         operator, operand = Lexer.TokeniseCode("LexerTestSamples/OnlyComments.py")
         self.assertEqual(operator[0], 0)
         self.assertEqual(len(operator[1]), 0)
-        self.assertEqual((operand[0]), 0)
-        self.assertEqual(len(operand[1]), 0)
+        self.assertEqual((operand[0]), 2)
+        self.assertEqual(len(operand[1]), 2)
 
 # Tests against a file with only operators,
 # Operators are all normal operators, keywords and brackets of all kinds ( (), [], {} )

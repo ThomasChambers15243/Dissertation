@@ -76,6 +76,26 @@ OP_TABLE = {
     "with" : "op",
     "yield" : "op",
 }
+
+def SkipNullTokens(token, current) -> (bool,int):
+    nullTolkens = [' ', '\n', ',']
+    if token in nullTolkens:
+        current += 1
+        return True, current
+    return False, current
+
+def SkipSingleComments(token, current, line) -> (bool, int):
+    # Skip Hash Comments
+    if token == "#":
+        return True, len(line)
+    return False, current
+
+def isBlockQuote(token, current, line) -> bool:
+    isQuote = token + line[current + 1] + line[current + 2]
+    if isQuote == token * 3:
+        return True
+    return False
+
 '''
 Turns the code into useable tokens for Halstead Calculations
 Returns an tuple of two tuples
@@ -88,32 +108,43 @@ def TokeniseCode(SourceCodeFilePath):
     distinctOperators = {}
     distinctOperands = {}
 
-    nullTolkens = [' ', '\n',',']
-
     with open(SourceCodeFilePath, "r") as file:
+        inQuoteBlock = False
+        blockQuoteChars = ["'", '"', '`', '\"', "\'", "\`"]
         for sline in file:
             line = r"".join(sline) + "   "
             # Set up token search
             current = 0
+
             while current < len(line):
-                token = line[current]
-                if token in nullTolkens:
-                    current += 1
-                    continue
-                # Skip Comments
-                if token == "#":
-                    current = len(line)
-                    continue
-                if token in ["'", '"', '`']:
-                    quote = line[current] + line[current+1] + line[current+2]
-                    if quote in [r"'''", r'"""', r"```"]:
-                        current += 3
+                # Skip Code Block
+                if line[current] in blockQuoteChars or inQuoteBlock:
+                    blockQuote = isBlockQuote(line[current], current, line)
+                    if inQuoteBlock:
+                        current = len(line)
+                        if blockQuote:
+                            inQuoteBlock = False
                         continue
+                    else:
+                        current = len(line)
+                        if blockQuote:
+                            inQuoteBlock = True
+                        continue
+
+                # Skip null Tokens
+                valid, current = SkipNullTokens(line[current], current)
+                if valid:
+                    continue;
+
+                # Skip Single Comments
+                valid, current = SkipSingleComments(line[current], current, line)
+                if valid:
+                    continue;
 
                 # Letter
                 # Abstract away, return word and use len(word) to calculate how much to
                 # increment current by
-                if token.isalpha() or token == "_" or ((token + line[current+1]) == "__"):
+                if line[current].isalpha() or line[current] == "_" or ((line[current] + line[current+1]) == "__"):
                     word = ""
                     while line[current].isalpha() or line[current] == "_" or line[current].isdigit():
                         word += line[current]
@@ -130,7 +161,7 @@ def TokeniseCode(SourceCodeFilePath):
                     continue
 
                 # Number
-                if token.isdigit():
+                if line[current].isdigit():
                     number = ""
                     while line[current].isdigit():
                         number += line[current]
@@ -144,10 +175,10 @@ def TokeniseCode(SourceCodeFilePath):
                     continue
 
                 # String
-                if token in ['"', "'"]:
+                if line[current] in ['"', "'"]:
                     stringValue = ""
                     current += 1
-                    while line[current] != token:
+                    while line[current] != line[current]:
                         stringValue += line[current]
                         current += 1
                         if line[current] == r'\\':
@@ -159,9 +190,9 @@ def TokeniseCode(SourceCodeFilePath):
                     continue
 
                 # Single Ops
-                if token in OP_TABLE:
-                    if token not in distinctOperators:
-                        distinctOperators[token] = OP_TABLE[token]
+                if line[current] in OP_TABLE:
+                    if line[current] not in distinctOperators:
+                        distinctOperators[line[current]] = OP_TABLE[line[current]]
                     current += 1
                 else:
                     value = ""
