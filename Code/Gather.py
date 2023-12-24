@@ -1,11 +1,11 @@
-import Analyzer
-import Generation
+from Code import Analyzer
+from Code import Generation
 import csv
 import json
 import os
 
 class Gather:
-    def __innit(self,
+    def __init__(self,
                 RAW_RESULTS_CSV_FILE_PATH,
                 SAMPLE_RESULTS_CSV_FILE_PATH,
                 SOLUTIONS_FILE_PATH,
@@ -29,7 +29,9 @@ class Gather:
 
     # One method to gather all data from the proposed samples
     def GetData(self):
-        #for temperature in self.TEMPERATURE_RANGES:
+
+        self.InnitSampleCSV(self.SAMPLE_RESULTS_CSV_FILE_PATH)
+
         for problemNumber, problem in enumerate(self.PROBLEMS):
             # Remove any files from solutions
             self.InnitSolutionsFolder()
@@ -49,7 +51,7 @@ class Gather:
             self.sampleScore[problem] = self.CalculateSampleScore(totalSumMetrics)
 
             # Write metric average to csv
-            self.WriteSampleResults(self.SAMPLE_RESULTS_CSV_FILE_PATH, problemNumber)
+            self.WriteSampleResults(problemNumber)
 
 
 
@@ -68,13 +70,20 @@ class Gather:
                 os.mkdir(f"{self.SOLUTIONS_FILE_PATH}problem{i}")
 
     # Sets up headers for results .csv
-    def InnitCSV(self, csvPath):
+    def InnitRawCSV(self, csvPath):
         # Create CSV File with appropriate headers
         with open(f"{csvPath}", 'w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(["Problem", "Distinct Operators", "Distinct Operands", "Total Operators", "Total Operands",
                              "Vocabulary", "Length", "Estimated Program Length", "Volume", "Difficulty", "Effort",
                              "Time", "Bugs Estimate"])
+
+    # Sets up headers for sample results .csv
+    def InnitSampleCSV(self, csvPath):
+        # Create CSV File with appropriate headers
+        with open(f"{csvPath}", 'w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(["Problem", "Sample", "Score"])
 
     # Generates solutions for all problems at
     # given temperature
@@ -132,8 +141,9 @@ class Gather:
         return sum(value for key, value in metrics.items())
 
     def WriteSampleResults(self, problemNumber):
-        with open(self.SAMPLE_RESULTS_CSV_FILE_PATH, "a", newline=' ') as file:
+        with open(self.SAMPLE_RESULTS_CSV_FILE_PATH, "a", newline='') as file:
             writer = csv.writer(file)
+            print(self.sampleScore)
             for key,value in self.sampleScore.items():
                 writer.writerow([problemNumber, key,value])
 
