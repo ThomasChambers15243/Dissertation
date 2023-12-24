@@ -46,10 +46,10 @@ class Gather:
             totalSumMetrics = self.CalculateAverageMetric(totalSumMetrics)
 
             # Calculate Sample Score
-            self.sampleScore[problem] = self.CalculateSampleScore()
+            self.sampleScore[problem] = self.CalculateSampleScore(totalSumMetrics)
 
             # Write metric average to csv
-
+            self.WriteSampleResults(self.SAMPLE_RESULTS_CSV_FILE_PATH, problemNumber)
 
 
 
@@ -129,19 +129,27 @@ class Gather:
     # Calculates one value from the entire metrics dictionary
     # Needs to be updated with scoring weights
     def CalculateSampleScore(self, metrics):
-        score = 0
-        for key, value in metrics.items():
-            score += value
-        return score
+        return sum(value for key, value in metrics.items())
 
-    def WriteSampleResults(self, problemNumber, sampleResultsFilePath):
-        with open(sampleResultsFilePath, "a", newline=' ') as file:
+    def WriteSampleResults(self, problemNumber):
+        with open(self.SAMPLE_RESULTS_CSV_FILE_PATH, "a", newline=' ') as file:
             writer = csv.writer(file)
             for key,value in self.sampleScore.items():
-                writer.writerow([key,value])
+                writer.writerow([problemNumber, key,value])
 
-    def WriteRawResults(self,rawResultsFilePath):
-        raise NotImplementedError
-
-    def WriteResults(self):
-        raise NotImplementedError
+    def WriteRawResults(self, problemNumber):
+        with open(self.RAW_RESULTS_CSV_FILE_PATH, "a", newline=' ') as file:
+            writer = csv.writer(file)
+            writer.writerow([problemNumber,
+                             round(problemNumber["distinctOperatorCount"], 2),
+                             round(problemNumber["distinctOperandCount"], 2),
+                             round(problemNumber["totalOperatorCount"], 2),
+                             round(problemNumber["totalOperandCount"], 2),
+                             round(problemNumber["vocab"], 2),
+                             round(problemNumber["length"], 2),
+                             round(problemNumber["eProgLength"], 2),
+                             round(problemNumber["volume"], 2),
+                             round(problemNumber["difficulty"], 2),
+                             round(problemNumber["effort"], 2),
+                             round(problemNumber["time"], 2),
+                             round(problemNumber["bugsEstimate"], 2)])
