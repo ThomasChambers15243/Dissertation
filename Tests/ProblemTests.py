@@ -1,10 +1,10 @@
 import unittest
 import random
-from Code.humanAnswers import P1
-from Code.humanAnswers import P2
-from Code.humanAnswers import P3
-from Code.humanAnswers import P4
-from Code.humanAnswers import P5
+from Solutions.humanAnswers import P1
+from Solutions.humanAnswers import P2
+from Solutions.humanAnswers import P3
+from Solutions.humanAnswers import P4
+from Solutions.humanAnswers import P5
 
 # How to test each method in each test file?
 # Write the contents of each tests file to humanAnswers.py as the method to use.

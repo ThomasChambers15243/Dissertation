@@ -4,7 +4,8 @@ from Code import Lexer
 # Tests against an emtpy file
 class TestEmpty(unittest.TestCase):
     def test_BlankInput(self):
-        operator, operand = Lexer.TokeniseCode("LexerTestSamples/EmtpyFile.py")
+        lexer = Lexer.Lexer
+        operator, operand = lexer.TokeniseCode("LexerTestSamples/EmtpyFile.py")
         self.assertEqual(operator[0], 0)
         self.assertEqual(len(operator[1]), 0)
         self.assertEqual(operand[0], 0)
@@ -13,7 +14,8 @@ class TestEmpty(unittest.TestCase):
 # Tests against a file with only comments
 class TestOnlyComments(unittest.TestCase):
     def test_OnlyComments(self):
-        operator, operand = Lexer.TokeniseCode("LexerTestSamples/OnlyComments.py")
+        lexer = Lexer.Lexer
+        operator, operand = lexer.TokeniseCode("LexerTestSamples/OnlyComments.py")
         self.assertEqual(operator[0], 0)
         self.assertEqual(len(operator[1]), 0)
         self.assertEqual((operand[0]), 2)
@@ -27,12 +29,13 @@ class TestOnlyComments(unittest.TestCase):
 class TestOnlyOperators(unittest.TestCase):
     def test_OnlyOperatorsUnique(self):
         return True
+        lexer = Lexer.Lexer
         with open("LexerTestSamples/OnlyOperators.py", "w") as file:
             # Writes most up-to-date OPERATORS
-            for key, value in Lexer.OP_TABLE.items():
+            for key, value in lexer.__OP_TABLE.items():
                 file.writelines(key)
                 file.writelines('\n')
-        operator, operand = Lexer.TokeniseCode("LexerTestSamples/OnlyOperators.py")
+        operator, operand = lexer.TokeniseCode("LexerTestSamples/OnlyOperators.py")
         self.assertEqual(operator[0], 69)
         self.assertEqual(len(operator[1]),69)
 
@@ -40,7 +43,8 @@ class TestOnlyOperators(unittest.TestCase):
 # Operands are variables, methods, constants (False, True, strings and other data type values)
 class TestOnlyOperands(unittest.TestCase):
     def test_OnlyOperandsUnique(self):
-        operator, operand = Lexer.TokeniseCode("LexerTestSamples/OnlyOperands.py")
+        lexer = Lexer.Lexer
+        operator, operand = lexer.TokeniseCode("LexerTestSamples/OnlyOperands.py")
         self.assertEqual(operand[0], 36)
         self.assertEqual(len(operand[1]), 18)
         return True

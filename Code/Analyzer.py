@@ -21,7 +21,6 @@ from Code import Lexer
 
 
 
-
 # DistinctOperatorCount,distinctOperandCount,totalOperatorCount,totalOperandCount
 # n1                    n2                 N1                   N2
 def ShowOperatorAndOperandStats(sourceCodeFilePath):
