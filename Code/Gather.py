@@ -25,29 +25,34 @@ class Gather:
         self.k_iterations = k_iterations
 
         # Research Outputs
-        self.metrics = {}
+        self.sampleScore = {}
 
     # One method to gather all data from the proposed samples
     def GetData(self):
-        for temperature in self.TEMPERATURE_RANGES:
+        #for temperature in self.TEMPERATURE_RANGES:
+        for problemNumber, problem in enumerate(self.PROBLEMS):
             # Remove any files from solutions
             self.InnitSolutionsFolder()
 
             # Generate Solutions to problems at given temperature,
             # writing them to files
-            self.GenerateSolutions(temperature)
+            for temperature in self.TEMPERATURE_RANGES:
+                self.GenerateSolutions(temperature, problemNumber, problem)
 
-            # Pass at K here
+            # Calculate pass@K here
 
             # Calculate average scores and write them to a csv for each sample/problem
-            for problemNumber, problem in enumerate(self.PROBLEMS):
-                totalSumMetrics = self.SumMetricScores(f"{self.SOLUTIONS_FILE_PATH}problem{problemNumber}/")
-                totalSumMetrics = self.CalculateAverageMetric(totalSumMetrics)
+            totalSumMetrics = self.SumMetricScores(f"{self.SOLUTIONS_FILE_PATH}problem{problemNumber}/")
+            totalSumMetrics = self.CalculateAverageMetric(totalSumMetrics)
 
-                # Write metric average to csv
+            # Calculate Sample Score
+            self.sampleScore[problem] = self.CalculateSampleScore()
+
+            # Write metric average to csv
 
 
-        raise NotImplementedError
+
+
 
 
     # Cleans the Solutions Folder
@@ -74,12 +79,11 @@ class Gather:
     # Generates solutions for all problems at
     # given temperature
     # given number of iterations
-    def GenerateSolutions(self, temperature):
-        for problemNumber, problem in enumerate(self.PROBLEMS):
-            for i in range(self.k_iterations):
-                with open(f"{self.SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--{i}.py", "w") as file:
-                    response = Generation.GetResponce(self.PROBLEMS[problem], temperature)
-                    file.write(response)
+    def GenerateSolutions(self, temperature, problemNumber, problem):
+        for i in range(self.k_iterations):
+            with open(f"{self.SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--n{i}T{temperature}.py", "w") as file:
+                response = Generation.GetResponce(self.PROBLEMS[problem], temperature)
+                file.write(response)
 
     # Given a folder with solutions,
     # returns one dictionary with the total
@@ -102,11 +106,11 @@ class Gather:
 
         # For each Solution to that problem
         for i in range(self.k_iterations):
-            metrics = self.CalculateMetrics(f"{problemFolderPath}generated--{i}.py")
-            # Add the metrics to the running total
-            for key, values in metrics.items():
-                totalMetrics[key] += values
-
+            for temperature in self.TEMPERATURE_RANGES:
+                metrics = self.CalculateMetrics(f"{problemFolderPath}generated--n{i}T{temperature}.py")
+                # Add the metrics to the running total
+                for key, values in metrics.items():
+                    totalMetrics[key] += values
         return totalMetrics
 
     # Calculates average metric scores
@@ -122,13 +126,21 @@ class Gather:
     def CalculateMetrics(self, solutionFilePath):
         return Analyzer.CalculateAllHalsteadMetrics(solutionFilePath)
 
-    def CalculateSampleScore(self):
-        raise NotImplementedError
+    # Calculates one value from the entire metrics dictionary
+    # Needs to be updated with scoring weights
+    def CalculateSampleScore(self, metrics):
+        score = 0
+        for key, value in metrics.items():
+            score += value
+        return score
+
+    def WriteSampleResults(self, problemNumber, sampleResultsFilePath):
+        with open(sampleResultsFilePath, "a", newline=' ') as file:
+            writer = csv.writer(file)
+            for key,value in self.sampleScore.items():
+                writer.writerow([key,value])
 
     def WriteRawResults(self,rawResultsFilePath):
-        raise NotImplementedError
-
-    def WriteSampleResults(self, sampleResultsFilePath):
         raise NotImplementedError
 
     def WriteResults(self):
