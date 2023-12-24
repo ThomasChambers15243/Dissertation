@@ -1,5 +1,5 @@
 # Hash Map of all operator Tokens in Python
-OP_TABLE = {
+__OP_TABLE = {
     # Assingment
     "+=" : "op",
     "*=" : "op",
@@ -149,9 +149,9 @@ def TokeniseCode(SourceCodeFilePath):
                     while line[current].isalpha() or line[current] == "_" or line[current].isdigit():
                         word += line[current]
                         current += 1
-                    if word in OP_TABLE:
+                    if word in __OP_TABLE:
                         if word not in distinctOperators:
-                            distinctOperators[word] = OP_TABLE[word]
+                            distinctOperators[word] = __OP_TABLE[word]
                         operatorCount += 1
                         current += 1
                     else:
@@ -190,13 +190,13 @@ def TokeniseCode(SourceCodeFilePath):
                     continue
 
                 # Single Ops
-                if line[current] in OP_TABLE:
+                if line[current] in __OP_TABLE:
                     if line[current] not in distinctOperators:
-                        distinctOperators[line[current]] = OP_TABLE[line[current]]
+                        distinctOperators[line[current]] = __OP_TABLE[line[current]]
                     current += 1
                 else:
                     value = ""
-                    while value not in OP_TABLE:
+                    while value not in __OP_TABLE:
                         value += line[current]
                         current += 1
                     if value not in distinctOperators:
