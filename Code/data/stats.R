@@ -1,4 +1,4 @@
-library(ggpubr)
+library("ggpubr")
 library(dplyr)
 
 # Organise Data into Box Plots
@@ -24,15 +24,16 @@ ggboxplot(data, x="group", y="score",
 
 
 # Shapiro Test
-# If p is > alpha then data is not significantly different from the normal distribution
+#If p is > alpha then data is not significantly different from the normal distribution
 with(testData, shapiro.test(testData$gpt))
-with(testData, shapiro.test(testData$human))
 
-# F-test
-# If the p > alpha then there is no significant difference between the variances
-res.ftest <- var.test(testData$gpt, testData$human, alternative="two.sided")
-res.ftest
+ggqqplot(testData$gpt, ylab = "GPT Answers", xlab = "Human",
+         ggtheme = theme_minimal())
+
+# Calulate Human mean for single test
+humanMean <- testData$human
+result.mean <- mean(x)
 
 # Two Sample t-test
-res = t.test(testData$gpt,testData$human, alternative="greater", var.equal = TRUE)
+res = t.test(testData$gpt,mu = result.mean, alternative="greater")
 res
