@@ -34,56 +34,56 @@ class Gather:
 
     def GetGPTData(self, temperature):
         # Sets up csv's headers
-        self.InnitSampleCSV(self.SAMPLE_RESULTS_CSV_FILE_PATH)
+        self.__InnitSampleCSV(self.SAMPLE_RESULTS_CSV_FILE_PATH)
 
         # Remove any files from solutions
-        self.InnitSolutionsFolder()
+        self.__InnitSolutionsFolder()
 
         # Generate Solutions to problems at given temperature,
         for problemNumber, problem in enumerate(self.PROBLEMS):
-            self.GenerateSolutions(self.TEMPERATURE_RANGES[temperature], problemNumber, problem)
+            self.__GenerateSolutions(self.TEMPERATURE_RANGES[temperature], problemNumber, problem)
             # Collects the Solutions metrics and stores them in self.sampleScore["problem"]
             filePath = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--"
-            self.CollectMetrics(problem, filePath)
+            self.__CollectMetrics(problem, filePath)
 
         # Write metric score to csv
-        self.WriteResults(self.SAMPLE_RESULTS_CSV_FILE_PATH)
+        self.__WriteResults(self.SAMPLE_RESULTS_CSV_FILE_PATH)
 
     ''' 
     Gathers data for Human responses
     '''
 
     def GetHumanData(self, temperature):
-        self.InnitSampleCSV(self.HUMAN_RESULTS_CSV_FILE_PATH)
+        self.__InnitSampleCSV(self.HUMAN_RESULTS_CSV_FILE_PATH)
 
         # Collects the Solutions metrics and stores them in self.sampleScore["problem"]
         for problemNumber, problem in enumerate(self.PROBLEMS):
             filePath = f"{self.HUMAN_SOLUTIONS_FILE_PATH}problem{problemNumber}/human--"
-            self.CollectMetrics(problem, filePath)
+            self.__CollectMetrics(problem, filePath)
 
         # Write metric score to csv
-        self.WriteResults(self.HUMAN_RESULTS_CSV_FILE_PATH)
+        self.__WriteResults(self.HUMAN_RESULTS_CSV_FILE_PATH)
 
     '''
     Collects metrics from the problem folder
     '''
-    def CollectMetrics(self, problem, filePath):
+    def __CollectMetrics(self, problem, filePath):
         # Calculate pass@K here
 
         # Calculate average scores and write them to a csv for each sample/problem
         # Sum all metrics for each solution
-        totalSumMetrics = self.SumMetricScores(filePath)
+        totalSumMetrics = self.__SumMetricScores(filePath)
 
         # Calculate average metric
-        totalSumMetrics = self.CalculateAverageMetric(totalSumMetrics)
+        totalSumMetrics = self.__CalculateAverageMetric(totalSumMetrics)
 
         # Total up all scores to produce one value
-        self.sampleScore[problem] = self.CalculateSampleScore(totalSumMetrics)
+        self.sampleScore[problem] = self.__CalculateSampleScore(totalSumMetrics)
 
     '''
     Wipes any previous generations in solutions
     '''
-    def InnitSolutionsFolder(self):
+    def __InnitSolutionsFolder(self):
         # Checks if the folder exists, if so, wipes the contents so the study starts anew
         for i in range(self.PROBLEM_AMOUNT):
             if os.path.exists(f"{self.GPT_SOLUTIONS_FILE_PATH}problem{i}"):
@@ -97,7 +97,7 @@ class Gather:
     '''
     Sets up headers for Raw CSV Data
     '''
-    def InnitRawCSV(self, csvPath):
+    def __InnitRawCSV(self, csvPath):
         # Create CSV File with appropriate headers
         with open(f"{csvPath}", 'w', newline='') as file:
             writer = csv.writer(file)
@@ -108,7 +108,7 @@ class Gather:
     '''
     Sets up headers for Sample Score CSV Data
     '''
-    def InnitSampleCSV(self, csvPath):
+    def __InnitSampleCSV(self, csvPath):
         # Create CSV File with appropriate headers
         with open(f"{csvPath}", 'w', newline='') as file:
             writer = csv.writer(file)
@@ -118,7 +118,7 @@ class Gather:
     Generated Solutions k number of times for the 
     given problem and temperature
     '''
-    def GenerateSolutions(self, temperature, problemNumber, problem):
+    def __GenerateSolutions(self, temperature, problemNumber, problem):
         for i in range(self.k_iterations):
             with open(f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--n{i}.py", "w") as file:
                 response = Generation.GetResponce(self.PROBLEMS[problem], temperature)
@@ -129,7 +129,7 @@ class Gather:
     returns one dictionary with the total
     metrics of each solution
     '''
-    def SumMetricScores(self, filePath):
+    def __SumMetricScores(self, filePath):
         # Dictionary to hold the sum total of metrics
         totalMetrics = {
             "distinctOperatorCount": 0,
@@ -147,7 +147,7 @@ class Gather:
 
         # For each Solution to that problem
         for i in range(self.k_iterations):
-            metrics = self.CalculateMetrics(f"{filePath}n{i}.py")
+            metrics = self.__CalculateMetrics(f"{filePath}n{i}.py")
 
             # Add the metrics to the running total
             for key, values in metrics.items():
@@ -158,7 +158,7 @@ class Gather:
     '''
     Calculates average metric scores
     '''
-    def CalculateAverageMetric(self, totalMetrics):
+    def __CalculateAverageMetric(self, totalMetrics):
         # Calculates the mean for each metric
         for key, values in totalMetrics.items():
             totalMetrics[key] = values / self.k_iterations
@@ -168,21 +168,21 @@ class Gather:
     Given a code file, return the metric scores as a dictionary
     Returns a Dictionary
     '''
-    def CalculateMetrics(self, solutionFilePath):
+    def __CalculateMetrics(self, solutionFilePath):
         return Analyzer.CalculateAllHalsteadMetrics(solutionFilePath)
 
     '''
     Calculates one value from the entire metrics dictionary
     Needs to be updated with scoring weights
     '''
-    def CalculateSampleScore(self, metrics):
+    def __CalculateSampleScore(self, metrics):
         # return sum(value for key, value in metrics.items()) % 100
         return sum(value for key, value in metrics.items())
 
     '''
     Writes the sample score to given csv file
     '''
-    def WriteResults(self, filePath):
+    def __WriteResults(self, filePath):
         with open(filePath, "a", newline='') as file:
             writer = csv.writer(file)
             for key, value in self.sampleScore.items():
@@ -191,7 +191,7 @@ class Gather:
     '''
     Writes the raw results to raw csv file
     '''
-    def WriteRawResults(self, problemNumber):
+    def __WriteRawResults(self, problemNumber):
         with open(self.RAW_RESULTS_CSV_FILE_PATH, "a", newline=' ') as file:
             writer = csv.writer(file)
             writer.writerow([problemNumber,
