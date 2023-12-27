@@ -63,7 +63,11 @@ def Volume(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinc
         return 0
 
 def Difficulty(distinctOperatorCount, distinctOperandCount, totalOperandCount):
-    return (distinctOperatorCount / 2) * (totalOperandCount / distinctOperandCount)
+    try:
+        difficulty = (distinctOperatorCount / 2) * (totalOperandCount / distinctOperandCount)
+        return difficulty
+    except ValueError:
+        return 0
 
 def Effort(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount, difficulty=None, volume=None):
     if difficulty is None or volume is None:

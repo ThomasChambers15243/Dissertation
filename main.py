@@ -1,26 +1,25 @@
 from Code.Gather import Gather
 
 
-
 # Initialize Research Parameters
 STUDY_PARAMS = {
-"SampleResultsPath" : "Code/data/SampleResults.csv",
-"RawResultsPath" : "Code/data/RawResults.csv",
-"SolutionsPath" : "Solutions/",
-"ProblemsPath" : "Code/data/pilotProblems.json",
-"ProblemAmount" : 5,
-"TemperatureRange" : [0.3, 0.6, 0.9],
-"kIterations" : 1,
+"SAMPLE_RESULTS_CSV_FILE_PATH" : "Code/data/SampleResults.csv",
+"RAW_RESULTS_CSV_FILE_PATH" : "Code/data/RawResults.csv",
+"HUMAN_RESULTS_CSV_FILE_PATH" : "Code/data/HumanResults.csv",
+"GPT_SOLUTIONS_FILE_PATH" : "Solutions/",
+"HUMAN_SOLUTIONS_FILE_PATH" : "HumanSolutions/",
+"PROBLEMS_FILE_PATH" : "Code/data/pilotProblems.json",
+"PROBLEM_AMOUNT" : 5,
+"TEMPERATURE_RANGES" : {"0.3" : 0.4, "0.6" : 0.6, "0.9" : 0.9},
+"K_ITERATIONS" : 1
 }
 
 if __name__ == '__main__':
-    DataGather = Gather(
-        RAW_RESULTS_CSV_FILE_PATH=STUDY_PARAMS["SampleResultsPath"],
-        SAMPLE_RESULTS_CSV_FILE_PATH=STUDY_PARAMS["RawResultsPath"],
-        SOLUTIONS_FILE_PATH=STUDY_PARAMS["SolutionsPath"],
-        PROBLEMS_FILE_PATH=STUDY_PARAMS["ProblemsPath"],
-        PROBLEM_AMOUNT=STUDY_PARAMS["ProblemAmount"],
-        TEMPERATURE_RANGES=STUDY_PARAMS["TemperatureRange"],
-        k_iterations=STUDY_PARAMS["kIterations"])
+    # Set up instance for Study
+    DataGather = Gather(STUDY_PARAMS)
+    # Set desired temperature
+    temperature = "0.6"
 
-    DataGather.GetData()
+    # Collect data in csv files
+    DataGather.GetGPTData(temperature)
+    DataGather.GetHumanData(temperature)
