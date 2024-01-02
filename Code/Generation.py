@@ -17,5 +17,4 @@ def GetResponce(content, temperature=0.6):
         ],
         temperature=temperature,
     )
-
     return response['choices'][0]['message']['content']

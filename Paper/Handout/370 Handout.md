@@ -112,20 +112,20 @@ Each individual method within the curial classes ```Lexer```, ```Analyzer``` and
 # Artefact Diagrams
 ### Class Definitions 
 
-![GatherClass](gather class.jpg)
+![GatherClass](gatherClass.jpg)
 
-![AnalyzerClass](analyzer class.jpg)
+![AnalyzerClass](analyzerClass.jpg)
 
-![LexerClass](Lexer Class.jpg)
+![LexerClass](lexerClass.jpg)
 
 ### Program Flow
 
 **Data Collection**
 This is an overview of the entire program. Only the key sections have been included for brevity.
 
-![DataCollection](data collection uml.jpg)
+![DataCollection](dataCollectionUml.jpg)
 
 Some While and Ifs statements have been combined into IF-WHILE blocks to compact the diagram. The lexer flows through each character as a token, *current* representing the current token on each line
 
-![Lexer](lexer uml.png)
+![Lexer](lexerUml.png)
 
