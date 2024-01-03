@@ -41,6 +41,9 @@ The parameters of the test are:
   
 According Cohen,  using a medium effect size of 0.58 results in a effect "visible to the naked eye of a careful observer". A software engineer using generations can be considered a careful observer, so that results in practically relevant.
 
+![Gpower](GpowerGraph.jpg)
+
+
 For a T-test to be valid, the data must be normally distributed. This can be assured with a Shapiro-Wilk test. 
 
 All tests will be calculated in R using the 'ggpubr' and 'dplyr' library's. The code is shown below.
@@ -50,7 +53,7 @@ All tests will be calculated in R using the 'ggpubr' and 'dplyr' library's. The 
 #If p is > alpha then data is not significantly different from the normal distribution
 with(testData, shapiro.test(testData$gpt))
 ```
-The human mean
+The Human Mean
 
 ```
 # Calculate Human mean for single test
@@ -62,11 +65,11 @@ T-test
 
 ```
 # One Sample t-test
-res = t.test(testData$gpt,mu = result.mean, alternative="greater")
+res = t.test(testData$gpt,mu = result.mean, alternative="less")
 res
 ```
 
-Data will be displayed using a Box and Whisker plot of the two groups, human and generated
+Data will be displayed using a Box and Whisker plot of the two groups: Human and Generated.
 
 ```
 group_by(data, group) %>%
@@ -83,14 +86,46 @@ ggboxplot(data, x="group", y="score",
           )
 ```
 
+Normality can be vied through a Density plot and a Q-Q Plot
+```
+# Q-Q Plot
+ggqqplot(SampleResults$Score, ylab = "GPT Answers", xlab = "Human",
+         ggtheme = theme_minimal())
+
+# Density Plot
+ggdensity(SampleResults$Score,
+          main = "Density Plot of Generated Scores",
+          xlab = "Generated Scores")
+```
+
 ## Quality Assurance
 
 **Documentation**
 
-The software will be written in tangent to thorough documentation of each class and method. All following the Pep Python guidelines [https://peps.python.org/pep-0008]
+The software will be written in tangent to thorough documentation of each class and method. All following the Pep Python guidelines (https://peps.python.org/pep-0008)
 Every method and class will be documented with accurate docstrings.
 
-Files will be organized into a logical file structure with entry to the programn being ```main.py```
+Files will be organized into a logical file structure with entry to the program being ```main.py```
+- ```/Code``` Containing all files required for generation and analysis
+- ```/Code/data``` Containing the .csv files for the calculated results and R code for subsequent analysis.
+- ```/HumanSolutions``` & ```GeneratedSolutions``` Contains the folder for human written and generated code solutions
+- ```/Tests``` Contains all code and code examples for testing 
+- ```/Paper``` contains dissertation documentation
+
+**Software Lifecycle**
+
+Development will take strong inspiration from test-driven approaches. The programs flow and key components
+will be designed before implementation.
+Software implementation will have a 4-step process
+
+4 Steps
+- Design
+- Implement the simplest code in working form 
+- Write Tests
+- Refactor/Debug/Iterate
+
+Halstead, cyclomatic complexity and _pass@k_ cannot be changed from their original design. 
+The rest of the code base is more flexible and iterative in its design and implementation. 
 
 **Test Plan**
 
@@ -106,7 +141,9 @@ Each individual method within the curial classes ```Lexer```, ```Analyzer``` and
 - Test that all methods work with other methods in their chain.
 - Provide specific insights to aid and speed up the debugging process.
 
-
+**Regression Testing** will test all feature that already are working, still work after a change to the code base. Using git branching, 
+major changes or new features will be developed on a different branch to the working main. When they are merged, regression testing ensures that the 
+new changes haven't broken any preexisting . 
 
 
 # Artefact Diagrams
