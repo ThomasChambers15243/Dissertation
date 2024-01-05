@@ -5,7 +5,7 @@ library(dplyr)
 
 data <- data.frame(
   group = rep(c("gpt","human"), each = 20),
-  score = c(testData$gpt, testData$human)
+  score = c(SampleResults$Score, HumanResults$Score)
 )
 
 
@@ -25,15 +25,21 @@ ggboxplot(data, x="group", y="score",
 
 # Shapiro Test
 #If p is > alpha then data is not significantly different from the normal distribution
-with(testData, shapiro.test(testData$gpt))
+with(SampleResults, shapiro.test(SampleResults$Score))
 
-ggqqplot(testData$gpt, ylab = "GPT Answers", xlab = "Human",
+# Q-Q Plot
+ggqqplot(SampleResults$Score, ylab = "GPT Answers", xlab = "Human",
          ggtheme = theme_minimal())
 
-# Calulate Human mean for single test
-humanMean <- testData$human
-result.mean <- mean(x)
+# Density Plot
+ggdensity(SampleResults$Score,
+          main = "Density Plot of Generated Scores",
+          xlab = "Generated Scores")
 
-# Two Sample t-test
-res = t.test(testData$gpt,mu = result.mean, alternative="greater")
+# Calulate Human mean for single test
+humanMean <- HumanResults$Score
+result.mean <- mean(humanMean)
+
+# One Sample t-test
+res = t.test(SampleResults$Score, mu = result.mean, alternative="greater")
 res
