@@ -3,6 +3,8 @@ from Code import Generation
 import csv
 import json
 import os
+import shutil
+from Tests import ProblemTests
 
 '''
 Class to Gather all data from the samples
@@ -34,35 +36,80 @@ class Gather:
 
     def GetGPTData(self, temperature):
         # Sets up csv's headers
-        self.__InnitSampleCSV(self.SAMPLE_RESULTS_CSV_FILE_PATH)
+        self.__InnitCSV(self.SAMPLE_RESULTS_CSV_FILE_PATH, ["Problem", "Generation Amount", "Score"])
 
         # Remove any files from solutions
         self.__InnitSolutionsFolder()
 
-        # Generate Solutions to problems at given temperature,
+        # Generate GeneratedSolutions to problems at given temperature,
         for problemNumber, problem in enumerate(self.PROBLEMS):
             self.__GenerateSolutions(self.TEMPERATURE_RANGES[temperature], problemNumber, problem)
-            # Collects the Solutions metrics and stores them in self.sampleScore["problem"]
+
+            # Tests Functionality of the Code - to be abstracted into method
+            destination = "Tests/MethodTestFile.py"
+            for i in range(self.k_iterations):
+                source = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--n{i}.py"
+                self.TestFunctionality(source, destination, problemNumber)
+
+            # Calc Pass@k
+            # https://github.com/openai/human-eval/blob/master/human_eval/evaluate_functional_correctness.py
+            # https: // github.com / openai / human - eval / blob / master / human_eval / evaluation.py
+
+
+            # Collects the GeneratedSolutions metrics and stores them in self.sampleScore["problem"]
             filePath = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--"
             self.__CollectMetrics(problem, filePath)
 
         # Write metric score to csv
-        self.__WriteResults(self.SAMPLE_RESULTS_CSV_FILE_PATH)
+        self.__WriteResults(self.SAMPLE_RESULTS_CSV_FILE_PATH, "gen")
 
+    '''
+    Tests the functionality of python files
+    '''
+    def TestFunctionality(self, source, destination, probNum):
+        # Checks if file is valid
+        def validFile(fSource):
+            try:
+                with open(fSource, 'r') as file:
+                    fSource = file.read()
+                compile(fSource, fSource, 'exec')
+                return True
+            except Exception as e:
+                return False
+        def CheckTests(passed):
+            if len(passed.failures) > 0:
+                return False
+
+        # Checks if file is valid
+        if not validFile(source):
+            return False
+
+        shutil.copyfile(source, destination)
+        if probNum == 0:
+            return CheckTests(ProblemTests.runTestP1())
+        if probNum == 1:
+            return CheckTests(ProblemTests.runTestP2())
+        if probNum == 2:
+            return CheckTests(ProblemTests.runTestP3())
+        if probNum == 3:
+            return CheckTests(ProblemTests.runTestP4())
+        if probNum == 4:
+            return CheckTests(ProblemTests.runTestP5())
+        return True
     ''' 
     Gathers data for Human responses
     '''
 
-    def GetHumanData(self, temperature):
-        self.__InnitSampleCSV(self.HUMAN_RESULTS_CSV_FILE_PATH)
+    def GetHumanData(self):
+        self.__InnitCSV(self.HUMAN_RESULTS_CSV_FILE_PATH, ["Problem", "Score"])
 
-        # Collects the Solutions metrics and stores them in self.sampleScore["problem"]
+        # Collects the GeneratedSolutions metrics and stores them in self.sampleScore["problem"]
         for problemNumber, problem in enumerate(self.PROBLEMS):
             filePath = f"{self.HUMAN_SOLUTIONS_FILE_PATH}problem{problemNumber}/human--"
             self.__CollectMetrics(problem, filePath)
 
         # Write metric score to csv
-        self.__WriteResults(self.HUMAN_RESULTS_CSV_FILE_PATH)
+        self.__WriteResults(self.HUMAN_RESULTS_CSV_FILE_PATH, "human")
 
     '''
     Collects metrics from the problem folder
@@ -95,27 +142,16 @@ class Gather:
                 os.mkdir(f"{self.GPT_SOLUTIONS_FILE_PATH}problem{i}")
 
     '''
-    Sets up headers for Raw CSV Data
-    '''
-    def __InnitRawCSV(self, csvPath):
-        # Create CSV File with appropriate headers
-        with open(f"{csvPath}", 'w', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow(["Problem", "Distinct Operators", "Distinct Operands", "Total Operators", "Total Operands",
-                             "Vocabulary", "Length", "Estimated Program Length", "Volume", "Difficulty", "Effort",
-                             "Time", "Bugs Estimate"])
-
-    '''
     Sets up headers for Sample Score CSV Data
     '''
-    def __InnitSampleCSV(self, csvPath):
+    def __InnitCSV(self, csvPath, headers):
         # Create CSV File with appropriate headers
         with open(f"{csvPath}", 'w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(["Problem", "Generation Amount", "Score"])
+            writer.writerow(headers)
 
     '''
-    Generated Solutions k number of times for the 
+    Generated GeneratedSolutions k number of times for the 
     given problem and temperature
     '''
     def __GenerateSolutions(self, temperature, problemNumber, problem):
@@ -145,7 +181,6 @@ class Gather:
             "time": 0,
             "bugsEstimate": 0}
 
-        # For each Solution to that problem
         for i in range(self.k_iterations):
             metrics = self.__CalculateMetrics(f"{filePath}n{i}.py")
 
@@ -182,16 +217,26 @@ class Gather:
     '''
     Writes the sample score to given csv file
     '''
-    def __WriteResults(self, filePath):
+    def __WriteResults(self, filePath, sampleType):
         with open(filePath, "a", newline='') as file:
             writer = csv.writer(file)
-            for key, value in self.sampleScore.items():
-                writer.writerow([key, self.k_iterations, value])
+            # Write generation scores
+            if sampleType == "gen":
+                for key, value in self.sampleScore.items():
+                    writer.writerow([key, self.k_iterations, value])
+            # Writes human Scores
+            else:
+                for key, value in self.sampleScore.items():
+                    writer.writerow([key, value])
 
     '''
     Writes the raw results to raw csv file
     '''
     def __WriteRawResults(self, problemNumber):
+        # Raw Headers
+        # ["Problem", "Distinct Operators", "Distinct Operands", "Total Operators", "Total Operands",
+        #                              "Vocabulary", "Length", "Estimated Program Length", "Volume", "Difficulty", "Effort",
+        #                              "Time", "Bugs Estimate"]
         with open(self.RAW_RESULTS_CSV_FILE_PATH, "a", newline=' ') as file:
             writer = csv.writer(file)
             writer.writerow([problemNumber,

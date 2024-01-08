@@ -39,7 +39,7 @@ The parameters of the test are:
 - P-value = 0.05
 - Power = 0.8
   
-According Cohen,  using a medium effect size of 0.58 results in a effect "visible to the naked eye of a careful observer". A software engineer using generations can be considered a careful observer, so that results in practically relevant.
+According to Cohen,  using a medium effect size of 0.58 results in a effect "visible to the naked eye of a careful observer". A software engineer using generations can be considered a careful observer, so that results in practically relevant.
 
 ![Gpower](GpowerGraph.jpg)
 
@@ -86,7 +86,7 @@ ggboxplot(data, x="group", y="score",
           )
 ```
 
-Normality can be vied through a Density plot and a Q-Q Plot
+Normality can be viewed through a Density plot and a Q-Q Plot
 ```
 # Q-Q Plot
 ggqqplot(SampleResults$Score, ylab = "GPT Answers", xlab = "Human",

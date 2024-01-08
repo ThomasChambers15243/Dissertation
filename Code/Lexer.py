@@ -90,7 +90,7 @@ def SkipSingleComments(token, current, line) -> (bool, int):
         return True, len(line)
     return False, current
 
-def isBlockQuote(token, current, line) -> bool:
+def IsBlockQuote(token, current, line) -> bool:
     isQuote = token + line[current + 1] + line[current + 2]
     if isQuote == token * 3:
         return True
@@ -108,9 +108,10 @@ def TokeniseCode(SourceCodeFilePath):
     distinctOperators = {}
     distinctOperands = {}
 
+    blockQuoteChars = ["'", '"', '`', '\"', "\'", "\`"]
+
     with open(SourceCodeFilePath, "r") as file:
         inQuoteBlock = False
-        blockQuoteChars = ["'", '"', '`', '\"', "\'", "\`"]
         for sline in file:
             line = r"".join(sline) + "   "
             # Set up token search
@@ -119,7 +120,7 @@ def TokeniseCode(SourceCodeFilePath):
             while current < len(line):
                 # Skip Code Block
                 if line[current] in blockQuoteChars or inQuoteBlock:
-                    blockQuote = isBlockQuote(line[current], current, line)
+                    blockQuote = IsBlockQuote(line[current], current, line)
                     if inQuoteBlock:
                         current = len(line)
                         if blockQuote:

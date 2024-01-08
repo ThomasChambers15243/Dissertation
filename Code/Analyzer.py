@@ -64,8 +64,12 @@ def Volume(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinc
 
 def Difficulty(distinctOperatorCount, distinctOperandCount, totalOperandCount):
     try:
-        difficulty = (distinctOperatorCount / 2) * (totalOperandCount / distinctOperandCount)
-        return difficulty
+        # Catch divide by 0 error
+        if distinctOperandCount == 0:
+            return 0
+        else:
+            difficulty = (distinctOperatorCount / 2) * (totalOperandCount / distinctOperandCount)
+            return difficulty
     except ValueError:
         return 0
 
@@ -140,4 +144,3 @@ def PrintAllHalsteadMetrics(sourceCodeFilePath):
     print(f"Effort: {metrics['effort']}")
     print(f"Time: {metrics['time']}")
     print(f"Estimated Number of bugs: {metrics['bugsEstimate']}")
-    return 0
