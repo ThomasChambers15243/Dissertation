@@ -1,10 +1,11 @@
 from Code import Analyzer
 from Code import Generation
+from Code import functionality
 import csv
 import json
 import os
-import shutil
-from Tests import ProblemTests
+
+
 
 '''
 Class to Gather all data from the samples
@@ -41,61 +42,27 @@ class Gather:
         # Remove any files from solutions
         self.__InnitSolutionsFolder()
 
+        # Passed Count used in pass@k
+        # failed = k_iterations - passed
+        passed = 0
+
         # Generate GeneratedSolutions to problems at given temperature,
         for problemNumber, problem in enumerate(self.PROBLEMS):
             self.__GenerateSolutions(self.TEMPERATURE_RANGES[temperature], problemNumber, problem)
 
             # Tests Functionality of the Code - to be abstracted into method
-            destination = "Tests/MethodTestFile.py"
-            for i in range(self.k_iterations):
-                source = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--n{i}.py"
-                self.TestFunctionality(source, destination, problemNumber)
-
-            # Calc Pass@k
-            # https://github.com/openai/human-eval/blob/master/human_eval/evaluate_functional_correctness.py
-            # https: // github.com / openai / human - eval / blob / master / human_eval / evaluation.py
-
+            source = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--n"
+            passed += functionality.TestFunctionality(source, problemNumber, self.k_iterations)
 
             # Collects the GeneratedSolutions metrics and stores them in self.sampleScore["problem"]
             filePath = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--"
             self.__CollectMetrics(problem, filePath)
 
+        print(f"Pass@K: {functionality.passAtk(self.k_iterations*self.PROBLEM_AMOUNT, passed, self.k_iterations)}")
+
         # Write metric score to csv
         self.__WriteResults(self.SAMPLE_RESULTS_CSV_FILE_PATH, "gen")
 
-    '''
-    Tests the functionality of python files
-    '''
-    def TestFunctionality(self, source, destination, probNum):
-        # Checks if file is valid
-        def validFile(fSource):
-            try:
-                with open(fSource, 'r') as file:
-                    fSource = file.read()
-                compile(fSource, fSource, 'exec')
-                return True
-            except Exception as e:
-                return False
-        def CheckTests(passed):
-            if len(passed.failures) > 0:
-                return False
-
-        # Checks if file is valid
-        if not validFile(source):
-            return False
-
-        shutil.copyfile(source, destination)
-        if probNum == 0:
-            return CheckTests(ProblemTests.runTestP1())
-        if probNum == 1:
-            return CheckTests(ProblemTests.runTestP2())
-        if probNum == 2:
-            return CheckTests(ProblemTests.runTestP3())
-        if probNum == 3:
-            return CheckTests(ProblemTests.runTestP4())
-        if probNum == 4:
-            return CheckTests(ProblemTests.runTestP5())
-        return True
     ''' 
     Gathers data for Human responses
     '''
