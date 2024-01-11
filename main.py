@@ -1,23 +1,19 @@
+import argparse
+from config import STUDY_PARAMS
 from Code.Gather import Gather
-
-
-# Initialize Research Parameters
-STUDY_PARAMS = {
-"SAMPLE_RESULTS_CSV_FILE_PATH" : "Code/data/SampleResults.csv",
-"RAW_RESULTS_CSV_FILE_PATH" : "Code/data/RawResults.csv",
-"HUMAN_RESULTS_CSV_FILE_PATH" : "Code/data/HumanResults.csv",
-"GPT_SOLUTIONS_FILE_PATH" : "GeneratedSolutions/",
-"HUMAN_SOLUTIONS_FILE_PATH" : "HumanSolutions/",
-"PROBLEMS_FILE_PATH" : "Code/data/pilotProblems.json",
-"PROBLEM_AMOUNT" : 5,
-"TEMPERATURE_RANGES" : {"0.3" : 0.4, "0.6" : 0.6, "0.9" : 0.9},
-"K_ITERATIONS" : 2
-}
 
 if __name__ == '__main__':
     # Set up instance for Study
     DataGather = Gather(STUDY_PARAMS)
-    # Set desired temperature
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--dataCollection", "-dc", choices=["gen", "h"], help="The type of data collection, 'h' for human, 'gen' for generation")
+
+    args = parser.parse_args()
+
+
+
     temperature = "0.6"
 
     # 'h' for human data
@@ -25,9 +21,11 @@ if __name__ == '__main__':
     dataCollect = 'gen'
 
     # Collect data in csv files
-    if dataCollect == 'h' and STUDY_PARAMS["K_ITERATIONS"] == 1:
-        DataGather.GetHumanData()
-    elif dataCollect == 'gen' and STUDY_PARAMS["K_ITERATIONS"] <= 100:
-        DataGather.GetGPTData(temperature)
+    if args.dataCollection == 'h' and STUDY_PARAMS["K_ITERATIONS"] == 1:
+        #DataGather.GetHumanData()
+        print("running human collection")
+    elif args.dataCollection == 'gen' and STUDY_PARAMS["K_ITERATIONS"] <= 100:
+        #DataGather.GetGPTData(temperature)
+        print("Running generation collection")
     else:
         print("Incorrect params")

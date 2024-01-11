@@ -6,12 +6,20 @@ Tests the functionality of python files
 '''
 
 def TestFunctionality(source, probNum, k):
+    '''
+    Tests how many generations passed the task
+    :param source: file to be tested
+    :param probNum: given problem number
+    :param k: total iterations
+    :return: number of successful iterations
+    '''
     passed = 0
     for i in range(k):
         file = f"{source}{i}.py"
         functionality = CanFilePass(file, probNum)
         if functionality:
             passed += 1
+        print('')
     return passed
 
 
@@ -19,9 +27,11 @@ def TestFunctionality(source, probNum, k):
 def passAtk(n,c,k):
     '''
     The probability that at least one of the top k-generated code samples for a problem passes the unit tests
+    Code taken from: https://arxiv.org/pdf/2107.03374.pdf
     :param n: total number of samples
     :param c: number of correct samples
     :param k: k in pass@$k$
+    :return: float
     '''
     if n - c < k:
         return 1.0

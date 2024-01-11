@@ -50,7 +50,7 @@ class Gather:
         for problemNumber, problem in enumerate(self.PROBLEMS):
             self.__GenerateSolutions(self.TEMPERATURE_RANGES[temperature], problemNumber, problem)
 
-            # Tests Functionality of the Code - to be abstracted into method
+            #Tests Functionality of the Code - to be abstracted into method
             source = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--n"
             passed += functionality.TestFunctionality(source, problemNumber, self.k_iterations)
 
@@ -58,7 +58,9 @@ class Gather:
             filePath = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--"
             self.__CollectMetrics(problem, filePath)
 
-        print(f"Pass@K: {functionality.passAtk(self.k_iterations*self.PROBLEM_AMOUNT, passed, self.k_iterations)}")
+        # Example Pass@k
+        # print(f"Pass@K: {functionality.passAtk((100 * 20), 50, 100)}")
+        print(f"Pass@K: {functionality.passAtk( (self.k_iterations*self.PROBLEM_AMOUNT), passed, self.k_iterations)}")
 
         # Write metric score to csv
         self.__WriteResults(self.SAMPLE_RESULTS_CSV_FILE_PATH, "gen")
