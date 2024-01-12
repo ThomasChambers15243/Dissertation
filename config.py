@@ -10,3 +10,6 @@ STUDY_PARAMS = {
 "TEMPERATURE_RANGES" : {"0.3" : 0.4, "0.6" : 0.6, "0.9" : 0.9},
 "K_ITERATIONS" : 1
 }
+
+''' ADD API KEY HERE '''
+API_KEY = ""

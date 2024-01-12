@@ -39,6 +39,7 @@ def passAtk(n,c,k):
 
 
 def CanFilePass(source, probNum):
+    # sourcery skip: assign-if-exp, reintroduce-else
     '''
     Checks Whether the python file passes the given task
     Returns True if successful, else False
@@ -70,10 +71,7 @@ Returns False if their were errors,
 else True
 '''
 def CheckTests(passed):
-    print(passed.failures)
-    if len(passed.failures) > 0:
-        return False
-    return True
+    return len(passed.failures) == 0
 
 '''
 Checks if the file if a valid python file, free of syntax errors
