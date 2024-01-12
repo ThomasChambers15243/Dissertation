@@ -56,9 +56,9 @@ def EstimatedProgramLength(distinctOperatorCount, distinctOperandCount):
 
 def Volume(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount):
     try:
-        Volume = Length(totalOperatorCount, totalOperandCount) * math.log2(
-        Vocabulary(distinctOperatorCount, distinctOperandCount))
-        return Volume
+        return Length(totalOperatorCount, totalOperandCount) * math.log2(
+            Vocabulary(distinctOperatorCount, distinctOperandCount)
+        )
     except ValueError:
         return 0
 
@@ -68,8 +68,7 @@ def Difficulty(distinctOperatorCount, distinctOperandCount, totalOperandCount):
         if distinctOperandCount == 0:
             return 0
         else:
-            difficulty = (distinctOperatorCount / 2) * (totalOperandCount / distinctOperandCount)
-            return difficulty
+            return (distinctOperatorCount / 2) * (totalOperandCount / distinctOperandCount)
     except ValueError:
         return 0
 
