@@ -52,6 +52,7 @@ def suite():
     suite.addTest(TestOnlyOperators("test_OnlyOperatorsUnique"))
     suite.addTest(TestOnlyOperands("test_OnlyOperandsUnique"))
     suite.addTest(TestOnlyComments("test_OnlyComments"))
+    return suite
 
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()
