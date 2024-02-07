@@ -1,0 +1,7 @@
+config.py
+Code/miscTestFile.py
+GeneratedSolutions/
+.pytest_cache/
+/.idea/
+/Code/data/HumanResults.csv
+/Code/data/SampleResults.csv
