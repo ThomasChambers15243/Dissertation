@@ -5,3 +5,6 @@ GeneratedSolutions/
 /.idea/
 /Code/data/HumanResults.csv
 /Code/data/SampleResults.csv
+Code/__pychache__/
+Tests/__pychache__/
+__pychache__/
