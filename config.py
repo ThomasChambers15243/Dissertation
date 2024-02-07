@@ -1,3 +1,8 @@
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 # Initialize Research Parameters
 STUDY_PARAMS = {
 "SAMPLE_RESULTS_CSV_FILE_PATH" : "Code/data/SampleResults.csv",
@@ -12,4 +17,4 @@ STUDY_PARAMS = {
 }
 
 ''' ADD API KEY HERE '''
-API_KEY = ""
+API_KEY = os.getenv('API_KEY')
