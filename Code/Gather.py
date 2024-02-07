@@ -50,7 +50,7 @@ class Gather:
         for problemNumber, problem in enumerate(self.PROBLEMS):
             self.__GenerateSolutions(self.TEMPERATURE_RANGES[temperature], problemNumber, problem)
 
-            #Tests Functionality of the Code - to be abstracted into method
+            # Tests Functionality of the Code - to be abstracted into method
             source = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--n"
             passed += functionality.TestFunctionality(source, problemNumber, self.k_iterations)
 

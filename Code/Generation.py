@@ -4,6 +4,7 @@ from config import API_KEY
 
 openai.api_key = API_KEY
 
+
 MODEL = "gpt-3.5-turbo"
 
 
