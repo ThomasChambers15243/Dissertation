@@ -66,6 +66,9 @@ def parserArguemts():
     if args.K_iterations != 1 and args.dataCollection == "h":
         print(f"\nError: Invalid iterations for dataCollection. If dc = gen, k must equal 1, not {args.K_iterations}\n")
         raise SystemExit
+    if not args.K_iterations and args.dataCollection == "gen":
+        print("Must input iterations, -k {num}")
+        raise SystemExit
     if args.K_iterations < 1 or args.K_iterations >= 100:
         print(f"\nError: Invalid K. Must be 1 <= K <= 100, not {args.K_iterations}\n")
         raise SystemExit
@@ -90,7 +93,7 @@ if __name__ == '__main__':
         #DataGather.GetHumanData()
         print("running human collection")
     elif args.dataCollection == 'gen' and STUDY_PARAMS["K_ITERATIONS"] <= 100:
-        #DataGather.GetGPTData(temperature)
+        DataGather.GetGPTData(temperature)
         print("Running generation collection")
     else:
         print("Incorrect params")
