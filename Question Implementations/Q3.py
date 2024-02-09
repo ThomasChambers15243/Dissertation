@@ -10,5 +10,5 @@ e.g. “[(())]” is valid “[[()]” is not valid
 '''
 
 #TODO
-def Q3(s) -> bool:
+def Q3(s : str) -> bool:
     raise NotImplementedError

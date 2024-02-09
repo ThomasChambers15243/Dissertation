@@ -24,6 +24,10 @@ class Node():
             self.AddChild(Node(randrange(0, 10)))
 
 
+# TODO
+def Q5(root: Node) -> Node:
+    raise NotImplementedError
+
 def MakeTree(node: Node, numChildren: int, depth: int, level: int) -> bool:
     '''
     Makes the tree given the number of children per node and the desired depth of the tree
@@ -34,8 +38,3 @@ def MakeTree(node: Node, numChildren: int, depth: int, level: int) -> bool:
     level += 1
     for child in node.children:
         MakeTree(child, randrange(1, 10), depth, level)
-
-
-# TODO
-def Q5(root: Node) -> Node:
-    raise NotImplementedError

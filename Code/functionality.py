@@ -1,6 +1,6 @@
 import shutil
 import numpy as np
-from Tests import ProblemTests
+from Tests import PilotProblemTests
 '''
 Tests the functionality of python files
 '''

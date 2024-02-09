@@ -12,6 +12,7 @@ class Node:
 def Q4(node : Node) -> Node:
     raise NotImplementedError
 
+## ToMove
 from random import randrange
 
 def MakeList(node: Node, amount, current):

@@ -6,5 +6,5 @@ e.g. “Python” = 642
 '''
 
 #TODO
-def Q1(s) -> int:
+def Q1(s : str) -> int:
     raise NotImplementedError
