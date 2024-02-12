@@ -27,7 +27,7 @@ class TestOnlyComments(unittest.TestCase):
 class TestOnlyOperators(unittest.TestCase):
     def test_OnlyOperatorsUnique(self):
         return True
-        with open("LexerTestSamples/OnlyOperators.py", "w") as file:
+        with open("TestFiles/LexerTestSamples/OnlyOperators.py", "w") as file:
             # Writes most up-to-date OPERATORS
             for key, value in Lexer.OP_TABLE.items():
                 file.writelines(key)
