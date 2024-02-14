@@ -116,12 +116,63 @@ class Test_Q4(unittest.TestCase):
         self.isNodeSorted(MethodTestFile.Q4(self.CreateList([96879,5785,567,3543,234,243,23,98,6])))
 
 class Test_Q5(unittest.TestCase):
-    def testNoDups(self):
-        raise NotImplementedError
+    class Node:
+        '''
+        Implementation of each Node in the tree.
+        '''
+        def __init__(self, data=-1):
+            self.data = data
+            self.children = []
+
+        def AddChild(self, node):
+            self.children.append(node)
+
+        def AddChildren(self, numChildren: int, childrenData: list[int]):
+            for child in range(numChildren):
+                self.AddChild(Test_Q5.Node(childrenData[child]))
+
+    def MakeTree(self, root, numChildren: int, childrenData : list[int], depth: int, level: int) -> Node:
+        '''
+        Makes the tree given the number of children per node and the desired depth of the tree
+        '''
+        if level == depth:
+            return True
+        root.AddChildren(numChildren, childrenData)
+        level += 1
+        for child in root.children:
+            self.MakeTree(child, numChildren, childrenData, depth, level)
+        return root
+
+    class TreeSearch:
+        def __init__(self, node):
+            self.values = [node.data]
+            self.node = node
+            self.Search(node)
+
+        def Search(self, node):
+            if len(node.children) == 0:
+                return node.data
+            for child in node.children:
+                value = self.Search(child)
+                if value is not None:
+                    self.values.append(value)
+            return node.data
+
+    def test_NoDups(self):
+        importlib.reload(MethodTestFile)
+
+        treeZeroDupes = MethodTestFile.Q5(self.MakeTree(self.Node(0), 2, [1,2], 1, 0))
+        treeDupes = MethodTestFile.Q5(self.MakeTree(self.Node(0), 5, [1, 2, 3, 4, 5], 5, 0))
+
+        searchZeroDupes = self.TreeSearch(treeZeroDupes)
+        searchDupes = self.TreeSearch(treeDupes)
+
+        # A set does not have duplicate values, even if they are added.
+        self.assertEqual(len(searchZeroDupes.values), len(set(searchZeroDupes.values)))
+        self.assertEqual(len(searchDupes.values), len(set(searchDupes.values)))
 
 
 
-'''
 def run_Q1_Tests():
     Q1_Suite = unittest.TestLoader().loadTestsFromTestCase(Test_Q1)
     return unittest.TextTestRunner().run(Q1_Suite)
@@ -137,7 +188,6 @@ def run_Q3_Tests():
 def run_Q4_Tests():
     Q4_Suite = unittest.TestLoader().loadTestsFromTestCase(Test_Q4)
     return unittest.TextTestRunner().run(Q4_Suite)
-'''
 
 def run_Q5_tests():
     Q5_Suite = unittest.TestLoader().loadTestsFromTestCase(Test_Q5)
