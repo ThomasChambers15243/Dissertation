@@ -11,16 +11,3 @@ class Node:
 #TODO
 def Q4(node : Node) -> Node:
     raise NotImplementedError
-
-## ToMove
-from random import randrange
-
-def MakeList(node: Node, amount, current):
-    if current < amount:
-        node.next = Node(randrange(0,1000))
-        MakeList(node.next,amount,current+1)
-    return
-
-node = Node(0)
-MakeList(node,10,0)
-print("Stop")

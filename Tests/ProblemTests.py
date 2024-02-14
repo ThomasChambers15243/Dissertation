@@ -133,7 +133,12 @@ class Test_Q5(unittest.TestCase):
 
     def MakeTree(self, root, numChildren: int, childrenData : list[int], depth: int, level: int) -> Node:
         '''
-        Makes the tree given the number of children per node and the desired depth of the tree
+        Makes the tree
+        :param root: The root node
+        :param numChildren: The number of children each node will have
+        :param childrenData: The data for each child
+        :param depth: The depth of the tree
+        :param level: The current level of the tree
         '''
         if level == depth:
             return True
@@ -144,6 +149,9 @@ class Test_Q5(unittest.TestCase):
         return root
 
     class TreeSearch:
+        '''
+        Searches the tree and collects all values as a list
+        '''
         def __init__(self, node):
             self.values = [node.data]
             self.node = node
