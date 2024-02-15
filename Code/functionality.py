@@ -1,6 +1,6 @@
 import shutil
 import numpy as np
-from Tests import PilotProblemTests
+from Tests import ProblemTests
 '''
 Tests the functionality of python files
 '''
@@ -22,7 +22,11 @@ def TestFunctionality(source, probNum, k):
         print('')
     return passed
 
-
+def TestHumanFunctionality(source,probNum):
+    file = f"{source}{probNum}.py"
+    if CanFilePass(file, probNum):
+        return True
+    return False
 
 def passAtk(n,c,k):
     '''
@@ -39,7 +43,6 @@ def passAtk(n,c,k):
 
 
 def CanFilePass(source, probNum):
-    # sourcery skip: assign-if-exp, reintroduce-else
     '''
     Checks Whether the python file passes the given task
     Returns True if successful, else False
@@ -52,15 +55,15 @@ def CanFilePass(source, probNum):
 
     shutil.copyfile(source, destination)
     if probNum == 0:
-        return CheckTests(ProblemTests.runTestP1())
+        return CheckTests(ProblemTests.run_Q1_Tests())
     if probNum == 1:
-        return CheckTests(ProblemTests.runTestP2())
+        return CheckTests(ProblemTests.run_Q2_Tests())
     if probNum == 2:
-        return CheckTests(ProblemTests.runTestP3())
+        return CheckTests(ProblemTests.run_Q3_Tests())
     if probNum == 3:
-        return CheckTests(ProblemTests.runTestP4())
+        return CheckTests(ProblemTests.run_Q4_Tests())
     if probNum == 4:
-        return CheckTests(ProblemTests.runTestP5())
+        return CheckTests(ProblemTests.run_Q5_tests())
     return True
 
 
@@ -78,9 +81,10 @@ Checks if the file if a valid python file, free of syntax errors
 '''
 def validFile(source):
     try:
-        with open(source, 'r') as file:
+        with open(source, 'r', encoding="utf8") as file:
             fSource = file.read()
         compile(fSource, fSource, 'exec')
         return True
     except Exception as e:
+        print(f"Not valid file, Error: {e}")
         return False

@@ -108,9 +108,14 @@ def TokeniseCode(SourceCodeFilePath):
     distinctOperators = {}
     distinctOperands = {}
 
+    ## FOR TESTING
+    distinctOperands = {"int" : "int", "sum":"sum"}
+    distinctOperators = {"+" : "+", "-":"-", "+":"+"}
+    return ((10, distinctOperators), (20, distinctOperands))
+
     blockQuoteChars = ["'", '"', '`', '\"', "\'", "\`"]
 
-    with open(SourceCodeFilePath, "r") as file:
+    with open(SourceCodeFilePath, "r", encoding="utf8") as file:
         inQuoteBlock = False
         for sline in file:
             line = r"".join(sline) + "   "

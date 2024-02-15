@@ -21,7 +21,7 @@ class Gather:
         self.HUMAN_RESULTS_CSV_FILE_PATH = params["HUMAN_RESULTS_CSV_FILE_PATH"]
         self.GPT_SOLUTIONS_FILE_PATH = params["GPT_SOLUTIONS_FILE_PATH"]
         self.HUMAN_SOLUTIONS_FILE_PATH = params["HUMAN_SOLUTIONS_FILE_PATH"]
-        self.PROBLEMS = json.load(open(params["PROBLEMS_FILE_PATH"]))
+        self.PROBLEMS = json.load(open(params["PROBLEMS_FILE_PATH"], encoding="utf8"))
 
         # Research Parameters
         self.PROBLEM_AMOUNT = params["PROBLEM_AMOUNT"]
@@ -71,12 +71,13 @@ class Gather:
 
     def GetHumanData(self):
         self.__InnitCSV(self.HUMAN_RESULTS_CSV_FILE_PATH, ["Problem", "Score"])
-
+        passed = 0
         # Collects the GeneratedSolutions metrics and stores them in self.sampleScore["problem"]
         for problemNumber, problem in enumerate(self.PROBLEMS):
             filePath = f"{self.HUMAN_SOLUTIONS_FILE_PATH}problem{problemNumber}/human--"
+            passed += functionality.TestHumanFunctionality(filePath, problemNumber)
             self.__CollectMetrics(problem, filePath)
-
+        print(f"Passed {passed}")
         # Write metric score to csv
         self.__WriteResults(self.HUMAN_RESULTS_CSV_FILE_PATH, "human")
 

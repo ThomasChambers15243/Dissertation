@@ -40,9 +40,9 @@ class Test_Q1(unittest.TestCase):
         self.assertEqual(MethodTestFile.Q1("Python"),642)
 
         # Logic is better to be avoided, but its a simple .txt load
-        with open("TestFiles/RomeoJuilet.txt") as file:
+        with open("Tests/TestFiles/RomeoJuilet.txt") as file:
             stringOfPlay = ""
-            for line in file:
+            for _ in file:
                 for char in file:
                     stringOfPlay += char
             self.assertEqual(MethodTestFile.Q1(stringOfPlay), 11443225)
