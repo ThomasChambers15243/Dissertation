@@ -109,9 +109,9 @@ class Test_Q4(unittest.TestCase):
         # Backwards Test
         self.isNodeSorted(MethodTestFile.Q4(self.CreateList(list(range(10, 0, -1)))))
         # Large Backwards
-        self.isNodeSorted(MethodTestFile.Q4(self.createList(list(range(10000, 0, -1)))))
+        self.isNodeSorted(MethodTestFile.Q4(self.CreateList(list(range(10000, 0, -1)))))
         # Unsorted
-        self.isNodeSorted(MethodTestFile.Q4(self.createList([1, 3, 2, 4, 5, 7, 6, 8, 9, 10])))
+        self.isNodeSorted(MethodTestFile.Q4(self.CreateList([1, 3, 2, 4, 5, 7, 6, 8, 9, 10])))
         self.isNodeSorted(MethodTestFile.Q4(self.CreateList([31,765475,324,5435,654,234,7548768,23435,756,2342])))
         self.isNodeSorted(MethodTestFile.Q4(self.CreateList([96879,5785,567,3543,234,243,23,98,6])))
 
