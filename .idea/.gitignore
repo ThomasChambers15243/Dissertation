@@ -1,7 +1,0 @@
-# Default ignored files
-/shelf/
-/workspace.xml
-# Remove some files from proposal
-/proposal/*
-!\proposal\main.txt
-!\proposal\sample-base.bib
