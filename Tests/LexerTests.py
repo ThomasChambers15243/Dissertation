@@ -1,10 +1,11 @@
 import unittest
-from Code import Lexer
+from Code import newLexer
 
 # Tests against an emtpy file
 class TestEmpty(unittest.TestCase):
     def test_BlankInput(self):
-        operator, operand = Lexer.TokeniseCode("LexerTestSamples/EmtpyFile.py")
+        lexer = newLexer.Lexer()
+        operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/EmtpyFile.py")
         self.assertEqual(operator[0], 0)
         self.assertEqual(len(operator[1]), 0)
         self.assertEqual(operand[0], 0)
@@ -13,7 +14,8 @@ class TestEmpty(unittest.TestCase):
 # Tests against a file with only comments
 class TestOnlyComments(unittest.TestCase):
     def test_OnlyComments(self):
-        operator, operand = Lexer.TokeniseCode("LexerTestSamples/OnlyComments.py")
+        lexer = newLexer.Lexer()
+        operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/OnlyComments.py")
         self.assertEqual(operator[0], 0)
         self.assertEqual(len(operator[1]), 0)
         self.assertEqual((operand[0]), 2)
@@ -26,24 +28,26 @@ class TestOnlyComments(unittest.TestCase):
     # So higher total count, less unique
 class TestOnlyOperators(unittest.TestCase):
     def test_OnlyOperatorsUnique(self):
-        return True
-        with open("TestFiles/LexerTestSamples/OnlyOperators.py", "w") as file:
-            # Writes most up-to-date OPERATORS
-            for key, value in Lexer.OP_TABLE.items():
-                file.writelines(key)
-                file.writelines('\n')
-        operator, operand = Lexer.TokeniseCode("LexerTestSamples/OnlyOperators.py")
-        self.assertEqual(operator[0], 69)
-        self.assertEqual(len(operator[1]),69)
+        lexer = newLexer.Lexer()
+        operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/OnlyOperators.py")
+        self.assertEqual(69, operator[0])
+        self.assertEqual(len(operator[1]), 69)
 
 # Tests against a file with only operands,
 # Operands are variables, methods, constants (False, True, strings and other data type values)
 class TestOnlyOperands(unittest.TestCase):
     def test_OnlyOperandsUnique(self):
-        operator, operand = Lexer.TokeniseCode("LexerTestSamples/OnlyOperands.py")
-        self.assertEqual(operand[0], 36)
-        self.assertEqual(len(operand[1]), 18)
-        return True
+        lexer = newLexer.Lexer()
+        operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/OnlyOperands.py")
+        self.assertEqual(40, operand[0])
+        self.assertEqual(20, len(operand[1]))
+
+# Tests against a file with only operands,
+# Operands are variables, methods, constants (False, True, strings and other data type values)
+class TestExampleScripts(unittest.TestCase):
+    def test_script1(self):
+        lexer = newLexer.Lexer()
+        operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/ExampleScript1.py")
 
 
 def suite():
@@ -52,6 +56,7 @@ def suite():
     suite.addTest(TestOnlyOperators("test_OnlyOperatorsUnique"))
     suite.addTest(TestOnlyOperands("test_OnlyOperandsUnique"))
     suite.addTest(TestOnlyComments("test_OnlyComments"))
+    suite.addTest(TestExampleScripts("test_script1"))
     return suite
 
 if __name__ == '__main__':
