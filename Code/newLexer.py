@@ -16,9 +16,6 @@ class Lexer:
         self.commentChar = "#"
         self.stringChars = ["'", '"']
         self.nullTolkens = [' ', '\n', ',']
-        self.inQuoteBlock = False
-        self.inString = False
-        self.currentString = ""
         self.operatorTable = {
             # Assingment
             "+=": "op",
@@ -61,7 +58,7 @@ class Lexer:
             ":": "op",
             ";": "op",
             "@": "op",
-            "->" : "op",
+            "->": "op",
             # Keyword
             "and": "op",
             "or": "op",
@@ -97,112 +94,134 @@ class Lexer:
             "with": "op",
             "yield": "op",
         }
-        # get the current working directory
-        print(os.getcwd())
+        self.inQuoteBlock = False
+        self.inString = False
+        self.currentString = ""
+
+        self.line = ""
+        self.current = 0
+
 
     def TokeniseCode(self, file):
         self.file = file
         # Gets each line in the file and stores tokens in a list
         with open(self.file, 'r', encoding="utf8") as file:
             for line in file:
-                line = r"".join(line)
-                line = line.split()
+                self.line = r"".join(line) + "     "
+                a = self.line
 
-                # Calculates what each token is
-                for token in line:
+                # Letter
+                self.current = 0
+                # Loop through each line
+                while self.current <= len(self.line) - 3:
                     if not self.inString:
                         # Skip Comment lines
-                        if self.skipComment(token[0]):
+                        if self.skipComment(self.line[self.current]) and not self.inQuoteBlock:
+                            self.current = 0
                             break
+
+                        # TODO Work on skipping quotes
                         # Skip block quotes
-                        if self.skipBlockQuoteThree(token):
-                            self.inQuoteBlock = not self.inQuoteBlock
-                            continue
-                        if self.skipBlockQuoteSix(token):
-                            continue
+                        if self.isQuoteBlockChars():
+                            self.current += 3
+                            if self.inQuoteBlock:
+                                self.inQuoteBlock = False
+                            else:
+                                self.inQuoteBlock = True
+                                continue
                         if self.inQuoteBlock:
+                            self.current += 1
                             continue
 
-                    # Letter
-                    if self.lexLine(line):
-                        break
-                    # If Number
+
 
                     # If String
+                    self.inStringBlock(self.line[self.current])
+                    if self.inString:
+                        string = ""
+                        self.current += 1
+                        while self.inStringBlock(self.line[self.current]):
+                            string += self.line[self.current]
+                            self.current += 1
+                            if self.line[self.current] == '\\':
+                                self.current += 2
+                            '''
+                            # Break out of self.line but stay in block
+                            if self.current >= len(self.line)-2:
+                                self.self.currentString += string
+                                return
+                            '''
+                        self.addToken(string)
+                        self.current += 1
 
-                    # Single Op
+                    # Skip Null Tokens
+                    if self.skipNullTokens():
+                        continue
+                    # If Letter
+                    if self.line[self.current].isalpha() or self.line[self.current] == '_':
+                        word = ""
+                        while self.line[self.current].isalpha() or self.line[self.current] == '_' or self.line[self.current].isdigit():
+                            word += self.line[self.current]
+                            self.current += 1
+
+                        if word != "":
+                            self.addToken(word)
+
+                    # Skip Null Tokens
+                    if self.skipNullTokens():
+                        continue
+
+                    # If Operator
+                    # Edge case of ! not being an individual operator
+                    if self.line[self.current] in self.operatorTable or self.line[self.current] == '!':
+                        operator = ""
+                        while self.line[self.current] in self.operatorTable or self.line[self.current] == '!':
+                            operator += self.line[self.current]
+                            self.current += 1
+                        if operator != "":
+                            self.addToken(operator)
+
+                    # Skip Null Tokens
+                    if self.skipNullTokens():
+                        continue
+
+                    # Digit/number
+                    number = ""
+                    if self.line[self.current].isdigit():
+                        while self.line[self.current].isdigit():
+                            number += self.line[self.current]
+                            self.current += 1
+                            if self.line[self.current] == '.':
+                                number += self.line[self.current]
+                                self.current += 1
+                        self.addToken(number)
+
 
         return ((self.operatorCount, self.distinctOperators), (self.operandCount, self.distinctOperands))
 
     def skipComment(self, token : str) -> bool:
         return token == self.commentChar
 
-    def skipBlockQuoteThree(self, token : str) -> bool:
-        return token in self.blockQuoteCharsThree
+    def isQuoteBlockChars(self):
+        isQuote = self.line[self.current]
+        for i in range(1, 3):
+            isQuote += self.line[self.current + i]
+        a = isQuote in self.blockQuoteCharsThree
+        return isQuote in self.blockQuoteCharsThree
 
-    def skipBlockQuoteSix(self, token : str) -> bool:
-        return token in self.blockQuoteCharsSix
 
-    def lexLine(self, line : list[str]):
-        line = " ".join(line) + "   "
-        current = 0
-        while current < len(line) - 3:
-            # If String
-            self.inStringBlock(line[current])
-            if self.inString:
-                string = ""
-                current += 1
-                while self.inStringBlock(line[current]):
-                    string += line[current]
-                    current += 1
-                    if line[current] == '\\':
-                        current += 2
-                    '''
-                    # Break out of line but stay in block
-                    if current >= len(line)-2:
-                        self.currentString += string
-                        return
-                    '''
-                self.addToken(string)
-                current += 1
-
-            # Skip Null Tokens
-            while self.skipNullTokens(line[current]):
-                if current >= len(line) - 3:
-                    return
-                current += 1
-
-            # If Letter
-            if line[current].isalpha() or line[current] == '_':
-                word = ""
-                while line[current].isalpha() or line[current] == '_' or line[current].isdigit():
-                    word += line[current]
-                    current += 1
-                # Hacky but works for now.
-                if line[current-1].isalpha() or line[current] == '_' or line[current].isdigit():
-                    current -= 1
-                if word != "":
-                    self.addToken(word)
-            else:
-                # If Operator
-                operator = ""
-                a = line[current]
-                # Edge case of ! not being an individual operator
-                while line[current] in self.operatorTable or line[current] == '!':
-                    operator += line[current]
-                    current += 1
-                if line[current] not in self.operatorTable:
-                    current -= 1
-                self.addToken(operator)
-            current += 1
-        return True
+    def skipNullTokens(self):
+        while self.isNullToken(self.line[self.current]):
+            self.current += 1
+            if self.current >= len(self.line)-2:
+                return True
 
     def inStringBlock(self, token):
         if token in self.stringChars:
             self.inString = not self.inString
         return self.inString
 
-    def skipNullTokens(self, token):
+    def isNullToken(self, token):
         return token in self.nullTolkens
 
     def addToken(self, token):
