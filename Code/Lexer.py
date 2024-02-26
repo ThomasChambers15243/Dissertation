@@ -179,7 +179,7 @@ class Lexer:
                             operator += self.line[self.current]
                             self.current += 1
                         if operator != "":
-                            self.addToken(operator)
+                            self.addTokenOperator(operator)
 
                     # Skip Null Tokens
                     if self.skipNullTokens():
@@ -231,6 +231,14 @@ class Lexer:
         else:
             self.operandCount += 1
             self.distinctOperands[token] = token
+
+    def addTokenOperator(self, token):
+        if token in self.operatorTable:
+            self.operatorCount += 1
+            self.distinctOperators[token] = token
+        else:
+            for t in token:
+                self.addToken(t)
 
 
 #lex = Lexer("lexerEG.py")
