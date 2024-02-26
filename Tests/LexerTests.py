@@ -40,8 +40,8 @@ class TestOnlyOperands(unittest.TestCase):
     def test_OnlyOperandsUnique(self):
         lexer = Lexer.Lexer()
         operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/OnlyOperands.py")
-        self.assertEqual(40, operand[0])
-        self.assertEqual(20, len(operand[1]))
+        self.assertEqual(44, operand[0])
+        self.assertEqual(22, len(operand[1]))
 
 
 # Tests against a example python scripts
@@ -71,14 +71,22 @@ class TestExampleScripts(unittest.TestCase):
     def testsScript_3(self):
         lexer = Lexer.Lexer()
         operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/ExampleScript3.py")
-        operatorDict = {}
-        operandDict = {}
-'''
-        self.assertEqual(0,operator[0])
-        self.assertEqual(0, operand[0])
+        operatorDict = {'class': 'class', '(': '(', ')': ')', ':': ':', 'def': 'def', '=': '=', '-': '-', '.': '.',
+                        '[': '[', ']': ']', 'for': 'for', 'in': 'in', '->': '->', 'if': 'if', '==': '==',
+                        'return': 'return', 'while': 'while', '>': '>', '+=': '+='}
+        operandDict = {'Node': 'Node', '__init__': '__init__', 'self': 'self', 'data': 'data', '1': '1',
+                        'children': 'children', 'AddChild': 'AddChild', 'node': 'node', 'append': 'append',
+                        'AddChildren': 'AddChildren', 'numChildren': 'numChildren', 'int': 'int',
+                        'childrenData': 'childrenData', 'list': 'list', 'child': 'child', 'range': 'range',
+                        'Q5': 'Q5', 'root': 'root', 'len': 'len', '0': '0', 'foundValues': 'foundValues',
+                        'searchStack': 'searchStack', 'currentNode': 'currentNode', 'pop': 'pop', 'set': 'set',
+                        'newRoot': 'newRoot', 'i': 'i'}
+
+        self.assertEqual(107,operator[0])
+        self.assertEqual(82, operand[0])
         self.assertEqual(operatorDict, operator[1])
         self.assertEqual(operandDict, operand[1])
-'''
+
 
 
 def runTests():

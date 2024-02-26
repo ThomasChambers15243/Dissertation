@@ -12,9 +12,10 @@ _________var_________
 _sf234__dsf3w4FSD____3GsdgG___
 True
 False
-ppp
-
+"      \"string"
+f' fstring\'with \" escapes'
 first, second, _third_, _4th, _5th
+
 var
 var1
 v1a2r3
@@ -29,5 +30,6 @@ _________var_________
 _sf234__dsf3w4FSD____3GsdgG___
 True
 False
-ppp
+"      \"string"
+f' fstring\'with \" escapes'
 first, second, _third_, _4th, _5th

@@ -144,6 +144,7 @@ class Lexer:
                             string += self.line[self.current]
                             self.current += 1
                             if self.line[self.current] == '\\':
+                                string += self.line[self.current + 1]
                                 self.current += 2
                             '''
                             # Break out of self.line but stay in block
