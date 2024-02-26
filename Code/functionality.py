@@ -19,6 +19,7 @@ def TestGenerationFunctionality(source: str, probNum: int, k: int) -> int:
             passed += 1
     return passed
 
+# TODO fix file paths
 def TestFunctionality(source: str, probNum: int) -> bool:
     """
     Tests whether the given file passed the problem

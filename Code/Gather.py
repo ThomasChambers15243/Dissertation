@@ -138,26 +138,23 @@ class Gather:
     def __SumMetricScores(self, filePath):
         # Dictionary to hold the sum total of metrics
         totalMetrics = {
-            "distinctOperatorCount": 0,
-            "distinctOperandCount": 0,
-            "totalOperatorCount": 0,
-            "totalOperandCount": 0,
-            "vocab": 0,
-            "length": 0,
-            "eProgLength": 0,
-            "volume": 0,
-            "difficulty": 0,
-            "effort": 0,
-            "time": 0,
-            "bugsEstimate": 0}
+            "DistinctOperatorCount": 0,
+            "DistinctOperandCount": 0,
+            "TotalOperatorCount": 0,
+            "TotalOperandCount": 0,
+            "Vocabulary": 0,
+            "Length": 0,
+            "EstProgLength": 0,
+            "Volume": 0,
+            "Difficulty": 0,
+            "Effort": 0,
+            "Time": 0,
+            "BugsEstimate": 0}
 
         for i in range(self.k_iterations):
-            metrics = self.__CalculateMetrics(f"{filePath}n{i}.py")
-
             # Add the metrics to the running total
-            for key, values in metrics.items():
+            for key, values in self.__CalculateMetrics(f"{filePath}{i}.py").items():
                 totalMetrics[key] += values
-
         return totalMetrics
 
     '''
@@ -174,7 +171,9 @@ class Gather:
     Returns a Dictionary
     '''
     def __CalculateMetrics(self, solutionFilePath):
-        return Analyzer.CalculateAllHalsteadMetrics(solutionFilePath)
+        halstead = Analyzer.HalsteadMetrics(solutionFilePath)
+        return halstead.Metrics
+
 
     '''
     Calculates one value from the entire metrics dictionary
@@ -210,15 +209,15 @@ class Gather:
         with open(self.RAW_RESULTS_CSV_FILE_PATH, "a", newline=' ') as file:
             writer = csv.writer(file)
             writer.writerow([problemNumber,
-                             round(problemNumber["distinctOperatorCount"], 2),
-                             round(problemNumber["distinctOperandCount"], 2),
-                             round(problemNumber["totalOperatorCount"], 2),
-                             round(problemNumber["totalOperandCount"], 2),
-                             round(problemNumber["vocab"], 2),
-                             round(problemNumber["length"], 2),
-                             round(problemNumber["eProgLength"], 2),
-                             round(problemNumber["volume"], 2),
-                             round(problemNumber["difficulty"], 2),
-                             round(problemNumber["effort"], 2),
-                             round(problemNumber["time"], 2),
-                             round(problemNumber["bugsEstimate"], 2)])
+                             round(problemNumber["DistinctOperatorCount"], 2),
+                             round(problemNumber["DistinctOperandCount"], 2),
+                             round(problemNumber["TotalOperatorCount"], 2),
+                             round(problemNumber["TotalOperandCount"], 2),
+                             round(problemNumber["Vocab"], 2),
+                             round(problemNumber["Length"], 2),
+                             round(problemNumber["EstProgLength"], 2),
+                             round(problemNumber["Volume"], 2),
+                             round(problemNumber["Difficulty"], 2),
+                             round(problemNumber["Effort"], 2),
+                             round(problemNumber["Time"], 2),
+                             round(problemNumber["BugsEstimate"], 2)])

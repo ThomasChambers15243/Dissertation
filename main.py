@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
     # Collect data in csv files
     if args.dataCollection == 'h' and STUDY_PARAMS["K_ITERATIONS"] == 1:
-        #DataGather.GetHumanData()
+        DataGather.GetHumanData()
         print("running human collection")
     elif args.dataCollection == 'gen' and STUDY_PARAMS["K_ITERATIONS"] <= 100:
         #DataGather.GetGPTData(temperature)

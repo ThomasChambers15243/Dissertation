@@ -29,15 +29,30 @@ class HalsteadMetrics:
     """
 
     def __init__(self, source: str):
-        n1, n2, N1, N2 = Lexer.Lexer.TokenizeCode(source)
-        self.distinctOperators = N1
+        lexer = Lexer.Lexer()
+        n1, n2, N1, N2 = lexer.TokenizeCode(source)
+        self.distinctOperators = n2
         self.distinctOperands = N2
         self.distinctOperatorCount = len(self.distinctOperators)
         self.distinctOperandCount = len(self.distinctOperands)
         self.totalOperatorCount = n1
-        self.totalOperandCount = n2
+        self.totalOperandCount = n1
+
         # Calculates and stores the Halstead metrics for the given file
-        self.Metrics = {}
+        self.Metrics = {
+            "DistinctOperatorCount": 0,
+            "DistinctOperandCount": 0,
+            "TotalOperatorCount": 0,
+            "TotalOperandCount": 0,
+            "Vocabulary": 0,
+            "Length": 0,
+            "EstProgLength": 0,
+            "Volume": 0,
+            "Difficulty": 0,
+            "Effort": 0,
+            "Time": 0,
+            "BugsEstimate": 0
+        }
         self.SetMetrics()
 
     def SetMetrics(self):
@@ -45,6 +60,10 @@ class HalsteadMetrics:
         Sets the instances metrics
         :return: None
         """
+        self.Metrics["DistinctOperatorCount"] = self.distinctOperatorCount
+        self.Metrics["DistinctOperandCount"] = self.distinctOperandCount
+        self.Metrics["TotalOperatorCount"] = self.totalOperatorCount
+        self.Metrics["TotalOperandCount"] = self.totalOperandCount
         self.Metrics["Vocabulary"] = self.Vocabulary()
         self.Metrics["Length"] = self.Length()
         self.Metrics["EstProgLength"] = self.EstimatedProgramLength()
