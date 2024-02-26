@@ -1,11 +1,11 @@
 import unittest
-from Code import newLexer
+from Code import Lexer
 
 
 # Tests against an emtpy file
 class TestEmpty(unittest.TestCase):
     def test_BlankInput(self):
-        lexer = newLexer.Lexer()
+        lexer = Lexer.Lexer()
         operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/EmtpyFile.py")
         self.assertEqual(operator[0], 0)
         self.assertEqual(len(operator[1]), 0)
@@ -16,7 +16,7 @@ class TestEmpty(unittest.TestCase):
 # Tests against a file with only comments
 class TestOnlyComments(unittest.TestCase):
     def test_OnlyComments(self):
-        lexer = newLexer.Lexer()
+        lexer = Lexer.Lexer()
         operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/OnlyComments.py")
         self.assertEqual(operator[0], 0)
         self.assertEqual(len(operator[1]), 0)
@@ -26,12 +26,9 @@ class TestOnlyComments(unittest.TestCase):
 
 # Tests against a file with only operators,
 # Operators are all normal operators, keywords and brackets of all kinds ( (), [], {} )
-# Currently fails due to lexer not catching operators such as '+='
-# It splits them up into '+' '='
-# So higher total count, less unique
 class TestOnlyOperators(unittest.TestCase):
     def test_OnlyOperatorsUnique(self):
-        lexer = newLexer.Lexer()
+        lexer = Lexer.Lexer()
         operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/OnlyOperators.py")
         self.assertEqual(69, operator[0])
         self.assertEqual(len(operator[1]), 69)
@@ -41,17 +38,16 @@ class TestOnlyOperators(unittest.TestCase):
 # Operands are variables, methods, constants (False, True, strings and other data type values)
 class TestOnlyOperands(unittest.TestCase):
     def test_OnlyOperandsUnique(self):
-        lexer = newLexer.Lexer()
+        lexer = Lexer.Lexer()
         operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/OnlyOperands.py")
         self.assertEqual(40, operand[0])
         self.assertEqual(20, len(operand[1]))
 
 
-# Tests against a file with only operands,
-# Operands are variables, methods, constants (False, True, strings and other data type values)
+# Tests against a example python scripts
 class TestExampleScripts(unittest.TestCase):
     def test_script_1(self):
-        lexer = newLexer.Lexer()
+        lexer = Lexer.Lexer()
         operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/ExampleScript1.py")
         operatorDict = {'=': '=', '(': '(', ')': ')'}
         operandDict = {'a': 'a', '0': '0', 'b': 'b', '10': '10', 'print': 'print', 'Worked': 'Worked'}
@@ -61,7 +57,7 @@ class TestExampleScripts(unittest.TestCase):
         self.assertEqual(operandDict, operand[1])
 
     def testScript_2(self):
-        lexer = newLexer.Lexer()
+        lexer = Lexer.Lexer()
         operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/ExampleScript2.py")
         operatorDict = {'def': 'def', '(': '(', ':': ':', ')': ')', '->': '->', 'return': 'return',
                         'for': 'for', 'in': 'in', 'if': 'if', '!=': '!='}
@@ -72,6 +68,17 @@ class TestExampleScripts(unittest.TestCase):
         self.assertEqual(operatorDict, operator[1])
         self.assertEqual(operandDict, operand[1])
 
+    def testsScript_3(self):
+        lexer = Lexer.Lexer()
+        operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/ExampleScript3.py")
+        operatorDict = {}
+        operandDict = {}
+'''
+        self.assertEqual(0,operator[0])
+        self.assertEqual(0, operand[0])
+        self.assertEqual(operatorDict, operator[1])
+        self.assertEqual(operandDict, operand[1])
+'''
 
 
 def runTests():
