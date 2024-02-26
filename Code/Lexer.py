@@ -104,7 +104,7 @@ class Lexer:
         self.line = ""
         self.current = 0
 
-    def TokeniseCode(self, file : str) -> tuple:
+    def TokenizeCode(self, file: str) -> tuple:
         """
         Tokenises the code in the file as compatible Halstead operands and operators
         :param file: File Path
@@ -149,7 +149,7 @@ class Lexer:
                     if self.line[self.current].isdigit():
                         self.addNumber()
 
-        return (self.operatorCount, self.distinctOperators), (self.operandCount, self.distinctOperands)
+        return self.operatorCount, self.distinctOperators, self.operandCount, self.distinctOperands
 
     def handleComments(self) -> bool:
         """

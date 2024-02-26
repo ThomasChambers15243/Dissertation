@@ -52,7 +52,7 @@ class Gather:
 
             # Tests Functionality of the Code - to be abstracted into method
             source = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--n"
-            passed += functionality.TestFunctionality(source, problemNumber, self.k_iterations)
+            passed += functionality.TestGenerationFunctionality(source, problemNumber, self.k_iterations)
 
             # Collects the GeneratedSolutions metrics and stores them in self.sampleScore["problem"]
             filePath = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--"
@@ -75,7 +75,7 @@ class Gather:
         # Collects the GeneratedSolutions metrics and stores them in self.sampleScore["problem"]
         for problemNumber, problem in enumerate(self.PROBLEMS):
             filePath = f"{self.HUMAN_SOLUTIONS_FILE_PATH}problem{problemNumber}/human--"
-            passed += functionality.TestHumanFunctionality(filePath, problemNumber)
+            passed += functionality.TestFunctionality(filePath, problemNumber)
             self.__CollectMetrics(problem, filePath)
         print(f"Passed {passed}")
         # Write metric score to csv

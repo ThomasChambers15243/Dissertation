@@ -1,32 +1,32 @@
 import shutil
 import numpy as np
 from Tests import ProblemTests
-'''
-Tests the functionality of python files
-'''
 
-def TestFunctionality(source, probNum, k):
-    '''
-    Tests how many generations passed the task
+# Tests the functionality of python files
+
+
+def TestGenerationFunctionality(source: str, probNum: int, k: int) -> int:
+    """
+    Tests how many generations passed the problem
     :param source: file to be tested
     :param probNum: given problem number
     :param k: total iterations
     :return: number of successful iterations
-    '''
+    """
     passed = 0
-    for i in range(k):
-        file = f"{source}{i}.py"
-        functionality = CanFilePass(file, probNum)
-        if functionality:
+    for attempt in range(k):
+        if TestFunctionality(f"{source}{attempt}.py", probNum):
             passed += 1
-        print('')
     return passed
 
-def TestHumanFunctionality(source,probNum):
-    file = f"{source}{probNum}.py"
-    if CanFilePass(file, probNum):
-        return True
-    return False
+def TestFunctionality(source: str, probNum: int) -> bool:
+    """
+    Tests whether the given file passed the problem
+    :param source:
+    :param probNum:
+    :return: bool
+    """
+    return CanFilePass(f"{source}{probNum}.py", probNum)
 
 def passAtk(n,c,k):
     '''
@@ -42,11 +42,13 @@ def passAtk(n,c,k):
     return 1.0 - np.prod(1.0 - k / np.arange(n - c + 1, n + 1))
 
 
-def CanFilePass(source, probNum):
-    '''
-    Checks Whether the python file passes the given task
-    Returns True if successful, else False
-    '''
+def CanFilePass(source: str, probNum: int) -> bool:
+    """
+    Checks whether the give python file passes the given task
+    :param source: File path
+    :param probNum: Problem number
+    :return: bool
+    """
     # Checks if file is valid
     if not validFile(source):
         return False
@@ -54,6 +56,8 @@ def CanFilePass(source, probNum):
     destination = "Tests/MethodTestFile.py"
 
     shutil.copyfile(source, destination)
+
+    # Runs tests
     if probNum == 0:
         return CheckTests(ProblemTests.run_Q1_Tests())
     if probNum == 1:
@@ -67,19 +71,21 @@ def CanFilePass(source, probNum):
     return True
 
 
-
-'''
-Checks if the tests passed. 
-Returns False if their were errors,
-else True
-'''
 def CheckTests(passed):
+    """
+    Checks if the tests were successful or not
+    :param passed: unnitest results
+    :return: bool
+    """
     return len(passed.failures) == 0
 
-'''
-Checks if the file if a valid python file, free of syntax errors
-'''
+
 def validFile(source):
+    """
+    Checks if the file is a valid python file that can compile
+    :param source: File path
+    :return: bools
+    """
     try:
         with open(source, 'r', encoding="utf8") as file:
             fSource = file.read()

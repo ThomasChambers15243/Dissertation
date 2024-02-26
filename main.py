@@ -1,25 +1,15 @@
 import argparse
-#from config import STUDY_PARAMS
+from config import STUDY_PARAMS
 from Code.Gather import Gather
 
-STUDY_PARAMS = {
-"SAMPLE_RESULTS_CSV_FILE_PATH" : "Code/data/SampleResults.csv",
-"RAW_RESULTS_CSV_FILE_PATH" : "Code/data/RawResults.csv",
-"HUMAN_RESULTS_CSV_FILE_PATH" : "Code/data/HumanResults.csv",
-"GPT_SOLUTIONS_FILE_PATH" : "GeneratedSolutions/",
-"HUMAN_SOLUTIONS_FILE_PATH" : "HumanSolutions/",
-"PROBLEMS_FILE_PATH" : "Code/data/pilotProblems.json",
-"PROBLEM_AMOUNT" : 5,
-"TEMPERATURE_RANGES" : {"0.3" : 0.4, "0.6" : 0.6, "0.9" : 0.9},
-"K_ITERATIONS" : 1
-}
 
 def parserArguemts():
-    '''
+    """
     Gets arguments passed
     :return: namespace of arguments
-    '''
-    # Gets arguments
+    """
+
+    # Gets passed through arguments
     parser = argparse.ArgumentParser()
 
     # Critical Arguments
@@ -27,7 +17,7 @@ def parserArguemts():
                         help="The type of data collection, 'h' for human, 'gen' for generation")
     parser.add_argument("--temperature", "-t", "-T", type=float,
                         help="The temperature to use for the GPT-3 API")
-    parser.add_argument("--K_iterations","-k","-K", type=int,
+    parser.add_argument("--K_iterations", "-k", "-K", type=int,
                         help="The amount of times to run the study. K in pass@k")
 
     # Optional Arguments
@@ -47,33 +37,61 @@ def parserArguemts():
     args = parser.parse_args()
 
     # Checks Arguments exist
+    if areValidArgs(args):
+        return args
+    raise SystemExit
+
+
+def areValidArgs(args) -> bool:
+    """
+    Checks if the arguments are valid
+    :param args: cli arguments
+    :return: bool
+    """
+    return argsExists(args) and fitRules(args)
+
+
+def argsExists(args) -> bool:
+    """
+    Checks if the arguments exit
+    :param args: CLI arguments
+    :return: bool
+    """
     if not args.dataCollection:
         print("Missing args dataCollection (-dc)")
-        raise SystemExit
+        return False
     if not args.temperature:
         print("Missing args temperature(-t)")
-        raise SystemExit
+        return False
+    # TODO IS not raising a systme exit/system False intentional or did i forget?
     if not args.K_iterations:
         print("Missing args k_iterations (-k)")
+    return True
 
+
+def fitRules(args) -> bool:
+    """
+    :param args: CLI arguments
+    :return: bool
+    """
     # Checks Arguments are valid
-    if not(args.dataCollection == "gen" or args.dataCollection == "h"):
+    if args.dataCollection not in ["gen", "h"]:
         print(f"\nError: Invalid data collection. Must be: gen || h, not {args.dataCollection}\n")
-        raise SystemExit
+        return False
     if args.temperature <= 0 or args.temperature > 1:
         print(f"\nError: Invalid temperature. Must be 0 < T <= 1, not {args.temperature}\n")
-        raise SystemExit
+        return False
     if args.K_iterations != 1 and args.dataCollection == "h":
         print(f"\nError: Invalid iterations for dataCollection. If dc = gen, k must equal 1, not {args.K_iterations}\n")
-        raise SystemExit
+        return False
     if not args.K_iterations and args.dataCollection == "gen":
         print("Must input iterations, -k {num}")
-        raise SystemExit
+        return False
     if args.K_iterations < 1 or args.K_iterations >= 100:
         print(f"\nError: Invalid K. Must be 1 <= K <= 100, not {args.K_iterations}\n")
-        raise SystemExit
+        return False
+    return True
 
-    return args
 
 if __name__ == '__main__':
 
@@ -90,10 +108,10 @@ if __name__ == '__main__':
 
     # Collect data in csv files
     if args.dataCollection == 'h' and STUDY_PARAMS["K_ITERATIONS"] == 1:
-        DataGather.GetHumanData()
+        #DataGather.GetHumanData()
         print("running human collection")
     elif args.dataCollection == 'gen' and STUDY_PARAMS["K_ITERATIONS"] <= 100:
-        DataGather.GetGPTData(temperature)
+        #DataGather.GetGPTData(temperature)
         print("Running generation collection")
     else:
         print("Incorrect params")

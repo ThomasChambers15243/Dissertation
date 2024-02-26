@@ -1,38 +1,33 @@
 import math
 from Code import Lexer
-# File for analyzing code and Performing Halstead Calculations
+'''
+File for analyzing code and Performing Halstead Calculations
 
-# Halstead Calculations
-#
-# n1 = the number of distinct operators
-# n2 = the number of distinct operands
-# N1 = the total number of operators
-# N2 = the total number of operands
-#
-# Program vocabulary: n = n1 + n2
-# Program length: N = N1 + N2
-# Calculated program length: N'=n1log2(n1)+n2log2(n2)
-# Volume: V= Nlog2(n)
-# Difficulty: D= (n1/2) * (N2/n2)
-# Effort: E= DV
+Halstead Calculations
 
-# Operators are all normal operators, keywords and brackets of all kinds ( (), [], {} )
-# Operands are variables, methods, constants (False, True, strings and other data type values)
+    n1 = the number of distinct operators
+    n2 = the number of distinct operands
+    N1 = the total number of operators
+    N2 = the total number of operands
+    
+    Program vocabulary: n = n1 + n2
+    Program length: N = N1 + N2
+    Calculated program length: N'=n1log2(n1)+n2log2(n2)
+    Volume: V= Nlog2(n)
+    Difficulty: D= (n1/2) * (N2/n2)
+    Effort: E= DV
 
+Operators are all normal operators, keywords and brackets of all kinds ( (), [], {} )
+Operands are variables, methods, constants (False, True, strings and other data type values)
+'''
 
-
-
-# DistinctOperatorCount,distinctOperandCount,totalOperatorCount,totalOperandCount
-# n1                    n2                 N1                   N2
-def ShowOperatorAndOperandStats(sourceCodeFilePath):
+def ShowOperatorAndOperandStats(sourceCodeFilePath: str):
     # Tokenize the code and get the metrics
-    operators, operands = Lexer.TokeniseCode(sourceCodeFilePath)
+    totalOperatorCount, distinctOperators, totalOperandCount, distinctOperands = Lexer.TokeniseCode(sourceCodeFilePath)
 
     # Acquires the Halstead metrics as n1, n2, N1, N2
-    distinctOperatorCount = len(operators[1])
-    distinctOperandCount = len(operands[1])
-    totalOperatorCount = operators[0]
-    totalOperandCount = operands[0]
+    distinctOperatorCount = len(distinctOperators)
+    distinctOperandCount = len(distinctOperands)
 
     # Prints out above counts
     print(f"Number of Distinct Operators: {distinctOperatorCount}\n")
@@ -88,24 +83,29 @@ def BugsEstimate(totalOperatorCount, totalOperandCount, distinctOperatorCount, d
     return volume / 3000
 
 # Calculates all Halstead Metrics and returns them as a dictionary
-def CalculateAllHalsteadMetrics(sourceCodeFilePath):
+def CalculateAllHalsteadMetrics(sourceCodeFilePath: str):
     # Tokenize the code and get the metrics
-    operators, operands = Lexer.TokeniseCode(sourceCodeFilePath)
+    totalOperatorCount, distinctOperators, totalOperandCount, distinctOperands = Lexer.Lexer.TokenizeCode(sourceCodeFilePath)
 
     # Acquires the Halstead metrics as n1, n2, N1, N2
-    distinctOperatorCount = len(operators[1])
-    distinctOperandCount = len(operands[1])
-    totalOperatorCount = operators[0]
-    totalOperandCount = operands[0]
+    distinctOperatorCount = len(distinctOperators)
+    distinctOperandCount = len(distinctOperands)
 
     # Calculate Metrics
     vocabulary = Vocabulary(distinctOperatorCount, distinctOperandCount)
+
     length = Length(totalOperatorCount, totalOperandCount)
+
     estimatedProgramLength = EstimatedProgramLength(distinctOperatorCount, distinctOperandCount)
+
     volume = Volume(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount)
+
     difficulty = Difficulty(distinctOperatorCount, distinctOperandCount, totalOperandCount)
+
     effort = Effort(totalOperatorCount,totalOperandCount, distinctOperatorCount, distinctOperandCount, difficulty, volume)
+
     time = Time(totalOperatorCount, totalOperandCount, distinctOperatorCount, distinctOperandCount, effort)
+
     bugsEstimate = BugsEstimate(totalOperatorCount, totalOperandCount, distinctOperatorCount,distinctOperandCount, volume)
 
     return{

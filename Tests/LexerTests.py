@@ -6,7 +6,7 @@ from Code import Lexer
 class TestEmpty(unittest.TestCase):
     def test_BlankInput(self):
         lexer = Lexer.Lexer()
-        operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/EmtpyFile.py")
+        operator, operand = lexer.TokenizeCode("TestFiles/LexerTestSamples/EmtpyFile.py")
         self.assertEqual(operator[0], 0)
         self.assertEqual(len(operator[1]), 0)
         self.assertEqual(operand[0], 0)
@@ -17,7 +17,7 @@ class TestEmpty(unittest.TestCase):
 class TestOnlyComments(unittest.TestCase):
     def test_OnlyComments(self):
         lexer = Lexer.Lexer()
-        operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/OnlyComments.py")
+        operator, operand = lexer.TokenizeCode("TestFiles/LexerTestSamples/OnlyComments.py")
         self.assertEqual(operator[0], 0)
         self.assertEqual(len(operator[1]), 0)
         self.assertEqual((operand[0]), 2)
@@ -29,7 +29,7 @@ class TestOnlyComments(unittest.TestCase):
 class TestOnlyOperators(unittest.TestCase):
     def test_OnlyOperatorsUnique(self):
         lexer = Lexer.Lexer()
-        operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/OnlyOperators.py")
+        operator, operand = lexer.TokenizeCode("TestFiles/LexerTestSamples/OnlyOperators.py")
         self.assertEqual(69, operator[0])
         self.assertEqual(len(operator[1]), 69)
 
@@ -39,7 +39,7 @@ class TestOnlyOperators(unittest.TestCase):
 class TestOnlyOperands(unittest.TestCase):
     def test_OnlyOperandsUnique(self):
         lexer = Lexer.Lexer()
-        operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/OnlyOperands.py")
+        operator, operand = lexer.TokenizeCode("TestFiles/LexerTestSamples/OnlyOperands.py")
         self.assertEqual(44, operand[0])
         self.assertEqual(22, len(operand[1]))
 
@@ -48,7 +48,7 @@ class TestOnlyOperands(unittest.TestCase):
 class TestExampleScripts(unittest.TestCase):
     def test_script_1(self):
         lexer = Lexer.Lexer()
-        operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/ExampleScript1.py")
+        operator, operand = lexer.TokenizeCode("TestFiles/LexerTestSamples/ExampleScript1.py")
         operatorDict = {'=': '=', '(': '(', ')': ')'}
         operandDict = {'a': 'a', '0': '0', 'b': 'b', '10': '10', 'print': 'print', 'Worked': 'Worked'}
         self.assertEqual(4, operator[0])
@@ -58,7 +58,7 @@ class TestExampleScripts(unittest.TestCase):
 
     def testScript_2(self):
         lexer = Lexer.Lexer()
-        operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/ExampleScript2.py")
+        operator, operand = lexer.TokenizeCode("TestFiles/LexerTestSamples/ExampleScript2.py")
         operatorDict = {'def': 'def', '(': '(', ':': ':', ')': ')', '->': '->', 'return': 'return',
                         'for': 'for', 'in': 'in', 'if': 'if', '!=': '!='}
         operandDict = {'Q1': 'Q1', 's': 's', 'str': 'str', 'int': 'int', 'sum': 'sum', 'ord': 'ord',
@@ -70,7 +70,7 @@ class TestExampleScripts(unittest.TestCase):
 
     def testsScript_3(self):
         lexer = Lexer.Lexer()
-        operator, operand = lexer.TokeniseCode("TestFiles/LexerTestSamples/ExampleScript3.py")
+        operator, operand = lexer.TokenizeCode("TestFiles/LexerTestSamples/ExampleScript3.py")
         operatorDict = {'class': 'class', '(': '(', ')': ')', ':': ':', 'def': 'def', '=': '=', '-': '-', '.': '.',
                         '[': '[', ']': ']', 'for': 'for', 'in': 'in', '->': '->', 'if': 'if', '==': '==',
                         'return': 'return', 'while': 'while', '>': '>', '+=': '+='}
