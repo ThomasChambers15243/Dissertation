@@ -332,4 +332,3 @@ def GetGraphs(fileName: str, threshold=None) -> list[dict]:
         and graph.complexity() >= threshold
         or threshold is None
     ]
-print(GetGraphs("Gather.py"))

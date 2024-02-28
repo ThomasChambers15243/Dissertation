@@ -15,14 +15,14 @@ def TestGenerationFunctionality(source: str, probNum: int, k: int) -> int:
     :param k: total iterations
     :return: number of successful iterations
     """
-    numAttempts = len(os.listdir(f"../GeneratedSolutions/problem{probNum}"))
+    numAttempts = len(os.listdir(f"GeneratedSolutions/problem{probNum}"))
     if k != numAttempts:
         print("Incorrect amount of generated problem files")
         raise SystemError
 
     return sum(
         1
-        for attempt in range(numAttempts)
+        for attempt in range(k)
         if CanFilePass(f"{source}{attempt}.py", probNum)
     )
 

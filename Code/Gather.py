@@ -51,19 +51,22 @@ class Gather:
             self.__GenerateSolutions(self.TEMPERATURE_RANGES[temperature], problemNumber, problem)
 
             # Tests Functionality of the Code - to be abstracted into method
-            source = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--"
+            source = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--n"
             passed += functionality.TestGenerationFunctionality(source, problemNumber, self.k_iterations)
 
             # Collects the GeneratedSolutions metrics and stores them in self.sampleScore["problem"]
-            filePath = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--"
+            filePath = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--n"
             self.__CollectMetrics(problem, filePath)
 
         # Example Pass@k
         # print(f"Pass@K: {functionality.passAtk((100 * 20), 50, 100)}")
-        print(f"Pass@K: {functionality.passAtk( (self.k_iterations*self.PROBLEM_AMOUNT), passed, self.k_iterations)}")
+        print(f"Passed: {passed}.\nPass@K: {functionality.passAtk( (self.k_iterations*self.PROBLEM_AMOUNT), passed, self.k_iterations)}")
 
         # Write metric score to csv
         self.__WriteResults(self.SAMPLE_RESULTS_CSV_FILE_PATH, "gen")
+
+        # Reset methodTestFile
+        self.clearTestWriteFile()
 
     ''' 
     Gathers data for Human responses
@@ -72,15 +75,19 @@ class Gather:
     def GetHumanData(self):
         self.__InnitCSV(self.HUMAN_RESULTS_CSV_FILE_PATH, ["Problem", "Score"])
         passed = 0
+
         # Collects the GeneratedSolutions metrics and stores them in self.sampleScore["problem"]
         for problemNumber, problem in enumerate(self.PROBLEMS):
             filePath = f"{self.HUMAN_SOLUTIONS_FILE_PATH}problem{problemNumber}/human--n"
             passed += functionality.TestHumanFunctionality(filePath, problemNumber)
             self.__CollectMetrics(problem, filePath)
+
         print(f"Passed {passed}")
         # Write metric score to csv
         self.__WriteResults(self.HUMAN_RESULTS_CSV_FILE_PATH, "human")
 
+        # Reset methodTestFile
+        self.clearTestWriteFile()
     '''
     Collects metrics from the problem folder
     '''
@@ -171,8 +178,7 @@ class Gather:
     Returns a Dictionary
     '''
     def __CalculateMetrics(self, solutionFilePath):
-        halstead = Analyzer.HalsteadMetrics(solutionFilePath)
-        return halstead.Metrics
+        return Analyzer.HalsteadMetrics(solutionFilePath).Metrics
 
 
     '''
@@ -221,3 +227,6 @@ class Gather:
                              round(problemNumber["Effort"], 2),
                              round(problemNumber["Time"], 2),
                              round(problemNumber["BugsEstimate"], 2)])
+
+    def clearTestWriteFile(self):
+        open("Tests/MethodTestFile.py", 'w').close()

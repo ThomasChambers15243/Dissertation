@@ -20,10 +20,11 @@ def GetResponce(prompt: str, temperature=0.6) -> str:
         messages=[
             {
             "role": "user", "content": prompt },
-            {"role": "user", "content": "Any code you are asked to write, return only the code. No explenation or "
-                                        "tests of the code. No extra notes. All of the responce should be able to "
-                                        "immediately run. The first line of code should be the first function in the "
-                                        "programn. No comments or explenations of the code"}
+            {"role": "user", "content": """Any code you are asked to write, return only the code. No explanation or
+                                        tests of the code. No extra notes. All of the responses should be able to
+                                        immediately run. The first line of code should be the first function in the
+                                        program. No comments or explanations of the code. 
+                                        Include any code as provided in the prompt without changes to that code"""}
         ],
         temperature=temperature,
     )

@@ -149,7 +149,7 @@ class Lexer:
                     if self.line[self.current].isdigit():
                         self.addNumber()
 
-        return self.operatorCount, self.distinctOperators, self.operandCount, self.distinctOperands
+        return self.distinctOperators, self.distinctOperands, self.operatorCount, self.operandCount
 
     def handleComments(self) -> bool:
         """

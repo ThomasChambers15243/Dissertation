@@ -1,3 +1,4 @@
+open("Tests/MethodTestFile.py", 'w').close()
 import argparse
 from config import STUDY_PARAMS
 from Code.Gather import Gather
@@ -92,9 +93,7 @@ def fitRules(args) -> bool:
         return False
     return True
 
-
 if __name__ == '__main__':
-
     args = parserArguemts()
 
     # Set up instance for Study
@@ -111,7 +110,7 @@ if __name__ == '__main__':
         DataGather.GetHumanData()
         print("running human collection")
     elif args.dataCollection == 'gen' and STUDY_PARAMS["K_ITERATIONS"] <= 100:
-        #DataGather.GetGPTData(temperature)
+        DataGather.GetGPTData(temperature)
         print("Running generation collection")
     else:
         print("Incorrect params")
