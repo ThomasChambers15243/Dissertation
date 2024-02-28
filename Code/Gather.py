@@ -1,6 +1,7 @@
 from Code import Analyzer
 from Code import Generation
 from Code import functionality
+from Code import mccabe
 import csv
 import json
 import os
@@ -156,12 +157,19 @@ class Gather:
             "Difficulty": 0,
             "Effort": 0,
             "Time": 0,
-            "BugsEstimate": 0}
+            "BugsEstimate": 0,
+            "MccabeComplexity": 0}
 
         for i in range(self.k_iterations):
-            # Add the metrics to the running total
-            for key, values in self.__CalculateMetrics(f"{filePath}{i}.py").items():
+            kFile = f"{filePath}{i}.py"
+            # Only add valid python files
+            if not functionality.validFile(kFile):
+                continue
+            # Add Halstead metric scores
+            for key, values in Analyzer.HalsteadMetrics(kFile).Metrics.items():
                 totalMetrics[key] += values
+            # Add Mccabe Metric scores
+            totalMetrics["MccabeComplexity"] = mccabe.GetTotalValue(kFile)
         return totalMetrics
 
     '''
@@ -173,12 +181,6 @@ class Gather:
             totalMetrics[key] = values / self.k_iterations
         return totalMetrics
 
-    '''
-    Given a code file, return the metric scores as a dictionary
-    Returns a Dictionary
-    '''
-    def __CalculateMetrics(self, solutionFilePath):
-        return Analyzer.HalsteadMetrics(solutionFilePath).Metrics
 
 
     '''
@@ -187,6 +189,7 @@ class Gather:
     '''
     def __CalculateSampleScore(self, metrics):
         # return sum(value for key, value in metrics.items()) % 100
+        print(metrics)
         return sum(value for key, value in metrics.items())
 
     '''
@@ -226,7 +229,8 @@ class Gather:
                              round(problemNumber["Difficulty"], 2),
                              round(problemNumber["Effort"], 2),
                              round(problemNumber["Time"], 2),
-                             round(problemNumber["BugsEstimate"], 2)])
+                             round(problemNumber["BugsEstimate"], 2)
+                             ])
 
     def clearTestWriteFile(self):
         open("Tests/MethodTestFile.py", 'w').close()

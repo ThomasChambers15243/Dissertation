@@ -31,7 +31,14 @@ class HalsteadMetrics:
     """
 
     def __init__(self, source: str):
-        # Only applies calculations to valid python file
+        lexer = Lexer.Lexer()
+        n1, n2, N1, N2 = lexer.TokenizeCode(source)
+        self.distinctOperators = n1
+        self.distinctOperands = n2
+        self.distinctOperatorCount = len(self.distinctOperators)
+        self.distinctOperandCount = len(self.distinctOperands)
+        self.totalOperatorCount = N1
+        self.totalOperandCount = N2
         self.Metrics = {
             "DistinctOperatorCount": 0,
             "DistinctOperandCount": 0,
@@ -46,17 +53,6 @@ class HalsteadMetrics:
             "Time": 0,
             "BugsEstimate": 0
         }
-        if not functionality.validFile(source):
-            return
-        lexer = Lexer.Lexer()
-        n1, n2, N1, N2 = lexer.TokenizeCode(source)
-        self.distinctOperators = n1
-        self.distinctOperands = n2
-        self.distinctOperatorCount = len(self.distinctOperators)
-        self.distinctOperandCount = len(self.distinctOperands)
-        self.totalOperatorCount = N1
-        self.totalOperandCount = N2
-
         # Calculates and stores the Halstead metrics for the given file
         self.SetMetrics()
 

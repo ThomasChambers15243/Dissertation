@@ -332,3 +332,13 @@ def GetGraphs(fileName: str, threshold=None) -> list[dict]:
         and graph.complexity() >= threshold
         or threshold is None
     ]
+
+def GetTotalValue(fileName :str, threshold=None) -> int:
+    """
+    Calculates the sum of all complexity's within the file
+    :param fileName: str of filepath
+    :param threshold: Lowest complexity value to be returned. Default None
+    :return: Integer sum
+    """
+    return sum(graph["Score"] for graph in GetGraphs(fileName, threshold))
+
