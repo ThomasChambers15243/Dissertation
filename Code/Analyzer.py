@@ -14,9 +14,11 @@ Halstead Calculations
     Program vocabulary: n = n1 + n2
     Program length: N = N1 + N2
     Calculated program length: N'=n1log2(n1)+n2log2(n2)
-    Volume: V= Nlog2(n)
-    Difficulty: D= (n1/2) * (N2/n2)
+    Volume: V = Nlog2(n)
+    Difficulty: D = (n1/2) * (N2/n2)
     Effort: E= DV
+    Time = T = E / 18 sec
+    Bugs Estimate = B = V / 3000
 
 Operators are all normal operators, keywords and brackets of all kinds ( (), [], {} )
 Operands are variables, methods, constants (False, True, strings and other data type values)

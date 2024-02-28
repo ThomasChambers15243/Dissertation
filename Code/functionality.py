@@ -1,8 +1,10 @@
 import shutil
 import numpy as np
 from Tests import ProblemTests
+import os
 
 # Tests the functionality of python files
+
 
 
 def TestGenerationFunctionality(source: str, probNum: int, k: int) -> int:
@@ -13,21 +15,32 @@ def TestGenerationFunctionality(source: str, probNum: int, k: int) -> int:
     :param k: total iterations
     :return: number of successful iterations
     """
-    passed = 0
-    for attempt in range(k):
-        if TestFunctionality(f"{source}{attempt}.py", probNum):
-            passed += 1
-    return passed
+    numAttempts = len(os.listdir(f"../GeneratedSolutions/problem{probNum}"))
+    if k != numAttempts:
+        print("Incorrect amount of generated problem files")
+        raise SystemError
 
-# TODO fix file paths
-def TestFunctionality(source: str, probNum: int) -> bool:
+    return sum(
+        1
+        for attempt in range(numAttempts)
+        if CanFilePass(f"{source}{attempt}.py", probNum)
+    )
+
+
+def TestHumanFunctionality(source: str, probNum: int) -> int:
     """
-    Tests whether the given file passed the problem
+    Tests the human solutions
     :param source:
     :param probNum:
     :return: bool
     """
-    return CanFilePass(f"{source}{probNum}.py", probNum)
+    numAttempts = len(os.listdir(f"HumanSolutions/problem{probNum}"))
+    return sum(
+        1
+        for attempt in range(numAttempts)
+        if CanFilePass(f"{source}{attempt}.py", probNum)
+    )
+
 
 def passAtk(n,c,k):
     '''
