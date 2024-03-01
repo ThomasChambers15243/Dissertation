@@ -1,7 +1,6 @@
 import math
 from Code import Lexer
-from Code import functionality
-'''
+"""
 File for analyzing code and Performing Halstead Calculations
 
 Halstead Calculations
@@ -22,7 +21,7 @@ Halstead Calculations
 
 Operators are all normal operators, keywords and brackets of all kinds ( (), [], {} )
 Operands are variables, methods, constants (False, True, strings and other data type values)
-'''
+"""
 
 
 class HalsteadMetrics:

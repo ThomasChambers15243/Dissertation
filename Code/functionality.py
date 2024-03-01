@@ -1,9 +1,9 @@
 import shutil
+import os
 import numpy as np
 from Tests import ProblemTests
-import os
 
-# Tests the functionality of python files
+### Tests the functionality of python files ###
 
 
 
@@ -43,14 +43,14 @@ def TestHumanFunctionality(source: str, probNum: int) -> int:
 
 
 def passAtk(n,c,k):
-    '''
+    """
     The probability that at least one of the top k-generated code samples for a problem passes the unit tests
     Code taken from: https://arxiv.org/pdf/2107.03374.pdf
     :param n: total number of samples
     :param c: number of correct samples
     :param k: k in pass@$k$
     :return: float
-    '''
+    """
     if n - c < k:
         return 1.0
     return 1.0 - np.prod(1.0 - k / np.arange(n - c + 1, n + 1))

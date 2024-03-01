@@ -64,7 +64,7 @@ def argsExists(args) -> bool:
     if not args.temperature:
         print("Missing args temperature(-t)")
         return False
-    # TODO IS not raising a systme exit/system False intentional or did i forget?
+    # TODO IS not raising a system exit/system False intentional or did i forget?
     if not args.K_iterations:
         print("Missing args k_iterations (-k)")
     return True
