@@ -1,5 +1,7 @@
+# Resets the file
 open("Tests/MethodTestFile.py", 'w').close()
 import argparse
+import os
 from config import STUDY_PARAMS
 from Code.Gather import Gather
 
@@ -49,7 +51,9 @@ def areValidArgs(args) -> bool:
     :param args: cli arguments
     :return: bool
     """
-    return argsExists(args) and fitRules(args)
+    if not argsExists(args):
+        return False
+    return fitRules(args)
 
 
 def argsExists(args) -> bool:
@@ -67,6 +71,7 @@ def argsExists(args) -> bool:
     # TODO IS not raising a system exit/system False intentional or did i forget?
     if not args.K_iterations:
         print("Missing args k_iterations (-k)")
+        return False
     return True
 
 
@@ -79,18 +84,27 @@ def fitRules(args) -> bool:
     if args.dataCollection not in ["gen", "h"]:
         print(f"\nError: Invalid data collection. Must be: gen || h, not {args.dataCollection}\n")
         return False
-    if args.temperature <= 0 or args.temperature > 1:
-        print(f"\nError: Invalid temperature. Must be 0 < T <= 1, not {args.temperature}\n")
-        return False
-    if args.K_iterations != 1 and args.dataCollection == "h":
-        print(f"\nError: Invalid iterations for dataCollection. If dc = gen, k must equal 1, not {args.K_iterations}\n")
-        return False
-    if not args.K_iterations and args.dataCollection == "gen":
-        print("Must input iterations, -k {num}")
-        return False
-    if args.K_iterations < 1 or args.K_iterations >= 100:
-        print(f"\nError: Invalid K. Must be 1 <= K <= 100, not {args.K_iterations}\n")
-        return False
+    # Data collection for generations
+    if args.dataCollection == "gen":
+        if not args.temperature:
+            print("\nError: Must input temperature: -t {int}")
+            return False
+        if args.temperature <= 0 or args.temperature > 1:
+            print(f"\nError: Invalid temperature. Must be 0 < T <= 1, not {args.temperature}\n")
+            return False
+        if not args.K_iterations:
+            print("Must input iterations, -k {int}")
+            return False
+        if args.K_iterations < 1 or args.K_iterations >= 100:
+            print(f"\nError: Invalid K. Must be 1 <= K <= 100, not {args.K_iterations}\n")
+            return False
+    # Data collection for human files
+    else:
+        for probNum in range(5):
+            numAttempts = len(os.listdir(f"HumanSolutions/problem{probNum}"))
+            if args.K_iterations != numAttempts:
+                print("Incorrect amount of generated problem files")
+                return False
     return True
 
 if __name__ == '__main__':
@@ -106,7 +120,7 @@ if __name__ == '__main__':
     dataCollect = 'gen'
 
     # Collect data in csv files
-    if args.dataCollection == 'h' and STUDY_PARAMS["K_ITERATIONS"] == 1:
+    if args.dataCollection == 'h':
         DataGather.GetHumanData()
         print("running human collection")
     elif args.dataCollection == 'gen' and STUDY_PARAMS["K_ITERATIONS"] <= 100:
