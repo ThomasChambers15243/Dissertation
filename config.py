@@ -6,7 +6,8 @@ load_dotenv()
 # Initialize Research Parameters
 STUDY_PARAMS = {
 "SAMPLE_RESULTS_CSV_FILE_PATH" : "Code/data/SampleResults.csv",
-"RAW_RESULTS_CSV_FILE_PATH" : "Code/data/RawResults.csv",
+"HUMAN_RAW_RESULTS_CSV_FILE_PATH" : "Code/data/RawHumanResults.csv",
+"GEN_RAW_RESULTS_CSV_FILE_PATH" : "Code/data/RawGenResults.csv",
 "HUMAN_RESULTS_CSV_FILE_PATH" : "Code/data/HumanResults.csv",
 "GPT_SOLUTIONS_FILE_PATH" : "GeneratedSolutions/",
 "HUMAN_SOLUTIONS_FILE_PATH" : "HumanSolutions/",
