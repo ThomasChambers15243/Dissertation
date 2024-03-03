@@ -10,3 +10,5 @@ Tests/__pychache__/
 __pychache__/
 QuestionImplementations/MySolutions/
 HumanSolutions/
+/Code/data/RawGenResults.csv
+/Code/data/RawHumanResults.csv
