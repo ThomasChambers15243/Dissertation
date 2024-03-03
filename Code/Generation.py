@@ -20,11 +20,10 @@ def GetResponce(prompt: str, temperature=0.6) -> str:
         messages=[
             {
             "role": "user", "content": prompt },
-            {"role": "user", "content": """Any code you are asked to write, return only the code. No explanation or
-                                        tests of the code. No extra notes. All of the responses should be able to
-                                        immediately run. The first line of code should be the first function in the
-                                        program. No comments or explanations of the code. 
-                                        Include any code as provided in the prompt without changes to that code"""}
+            {"role": "user", "content": """You will be asked to answer programming questions in Python. You might 
+                                            receive some code to include. When asked, all you should return 
+                                            is only the python code. No comments, no explanation. The method after the 
+                                            TODO comment should be able to immediately run once returned."""}
         ],
         temperature=temperature,
     )
