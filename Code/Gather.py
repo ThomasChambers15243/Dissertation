@@ -33,6 +33,7 @@ class Gather:
 
         # Research Outputs
         self.sampleScore = {}
+        self.notVaild = 0
 
 
     ''' 
@@ -43,9 +44,9 @@ class Gather:
         # Set Type
         self.collectionType = "gen"
         # Sets up csv's headers
-        self.__InnitCSV(self.SAMPLE_RESULTS_CSV_FILE_PATH, ["Problem", "Solution Amount", "Score"])
+        self.__InnitCSV(self.SAMPLE_RESULTS_CSV_FILE_PATH, ["Problem", "Solution Amount", "Not Valid", "Score"])
         self.__InnitRawCSV(self.GEN_RAW_RESULTS_CSV_FILE_PATH, [
-            "Problem", "Solution Amount", "Distinct Operators", "Distinct Operands", "Total Operators",
+            "Problem", "Solution Amount", "Not Valid", "Distinct Operators", "Distinct Operands", "Total Operators",
             "Total Operands", "Vocabulary", "Length", "Estimated Program Length", "Volume",
             "Difficulty", "Effort", "Time", "Bugs Estimate", "Mccabe Complexity"])
 
@@ -71,7 +72,10 @@ class Gather:
 
         # Example Pass@k
         # print(f"Pass@K: {functionality.passAtk((100 * 20), 50, 100)}")
-        print(f"Passed: {passed}.\nPass@K: {functionality.passAtk( (self.k_iterations*self.PROBLEM_AMOUNT), passed, self.k_iterations)}")
+        print(f"""Passed /{self.k_iterations * self.PROBLEM_AMOUNT}: {passed}."
+              f"\nPass@K: {functionality.passAtk((self.k_iterations*self.PROBLEM_AMOUNT), passed, self.k_iterations)}
+              \n""")
+        print(f"Not Valid:{self.notVaild}")
 
         # Write metric score to csv
         self.__WriteResults(self.SAMPLE_RESULTS_CSV_FILE_PATH)
@@ -85,9 +89,9 @@ class Gather:
     def GetHumanData(self):
         # Set Type
         self.collectionType = "h"
-        self.__InnitCSV(self.HUMAN_RESULTS_CSV_FILE_PATH, ["Problem", "Solution Amount", "Score"])
+        self.__InnitCSV(self.HUMAN_RESULTS_CSV_FILE_PATH, ["Problem", "Solution Amount", "Not Valid", "Score"])
         self.__InnitRawCSV(self.HUMAN_RAW_RESULTS_CSV_FILE_PATH, [
-            "Problem", "Solution Amount", "Distinct Operators", "Distinct Operands", "Total Operators",
+            "Problem", "Solution Amount", "Not Valid", "Distinct Operators", "Distinct Operands", "Total Operators",
             "Total Operands", "Vocabulary", "Length", "Estimated Program Length", "Volume",
             "Difficulty", "Effort", "Time", "Bugs Estimate", "Mccabe Complexity"])
         passed = 0
@@ -99,7 +103,8 @@ class Gather:
             totalSumMetrics = self.__CollectMetrics(problem, filePath)
             self.__WriteRawResults(problemNumber, totalSumMetrics)
 
-        print(f"Passed {passed}")
+        print(f"""Passed /{self.k_iterations * self.PROBLEM_AMOUNT}: {passed}.
+              \nNot Valid: {self.notVaild}""")
         # Write metric score to csv
         self.__WriteResults(self.HUMAN_RESULTS_CSV_FILE_PATH)
 
@@ -190,6 +195,7 @@ class Gather:
             kFile = f"{filePath}{attempt}.py"
             # Only add valid python files
             if not functionality.validFile(kFile):
+                self.notVaild += 1
                 continue
             # Add Halstead and mccabe metric scores
             for key, values in Analyzer.HalsteadMetrics(kFile).Metrics.items():
@@ -244,6 +250,7 @@ class Gather:
             writer.writerow([
                             probNumber,
                             self.k_iterations,
+                            self.notVaild,
                             round(metrics["DistinctOperatorCount"], 2),
                             round(metrics["DistinctOperandCount"], 2),
                             round(metrics["TotalOperatorCount"], 2),

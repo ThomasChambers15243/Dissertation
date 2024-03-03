@@ -119,10 +119,10 @@ if __name__ == '__main__':
 
     # Collect data in csv files
     if args.dataCollection == 'h':
-        DataGather.GetHumanData()
         print("running human collection")
+        DataGather.GetHumanData()
     elif args.dataCollection == 'gen' and STUDY_PARAMS["K_ITERATIONS"] <= 100:
-        DataGather.GetGPTData(args.temperature)
         print("Running generation collection")
+        DataGather.GetGPTData(args.temperature)
     else:
         print("Incorrect params")
