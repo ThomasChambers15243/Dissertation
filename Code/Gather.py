@@ -26,7 +26,7 @@ class Gather:
 
         # Research Parameters
         self.PROBLEM_AMOUNT = params["PROBLEM_AMOUNT"]
-        self.TEMPERATURE_RANGES = params["TEMPERATURE_RANGES"]
+        self.TEMPERATURE = params["TEMPERATURE"]
         self.k_iterations = params["K_ITERATIONS"]
 
         # Research Outputs
@@ -38,7 +38,7 @@ class Gather:
 
     def GetGPTData(self, temperature):
         # Sets up csv's headers
-        self.__InnitCSV(self.SAMPLE_RESULTS_CSV_FILE_PATH, ["Problem", "Generation Amount", "Score"])
+        self.__InnitCSV(self.SAMPLE_RESULTS_CSV_FILE_PATH, ["Problem", "Solution Amount", "Score"])
 
         # Remove any files from solutions
         self.__InnitSolutionsFolder()
@@ -49,7 +49,7 @@ class Gather:
 
         # Generate GeneratedSolutions to problems at given temperature,
         for problemNumber, problem in enumerate(self.PROBLEMS):
-            self.__GenerateSolutions(self.TEMPERATURE_RANGES[temperature], problemNumber, problem)
+            self.__GenerateSolutions(self.TEMPERATURE, problemNumber, problem)
 
             # Tests Functionality of the Code - to be abstracted into method
             source = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--n"
@@ -72,9 +72,8 @@ class Gather:
     ''' 
     Gathers data for Human responses
     '''
-
     def GetHumanData(self):
-        self.__InnitCSV(self.HUMAN_RESULTS_CSV_FILE_PATH, ["Problem", "Score"])
+        self.__InnitCSV(self.HUMAN_RESULTS_CSV_FILE_PATH, ["Problem", "Solution Amount", "Score"])
         passed = 0
 
         # Collects the GeneratedSolutions metrics and stores them in self.sampleScore["problem"]
@@ -136,6 +135,9 @@ class Gather:
         for i in range(self.k_iterations):
             with open(f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--n{i}.py", "w") as file:
                 response = Generation.GetResponce(self.PROBLEMS[problem], temperature)
+                # Clean file from ```python & ``` comments in file
+                response = response.replace("```python", "")
+                response = response.replace("```", "")
                 file.write(response)
 
     '''
@@ -182,14 +184,13 @@ class Gather:
         return totalMetrics
 
 
-
     '''
     Calculates one value from the entire metrics dictionary
     Needs to be updated with scoring weights
     '''
     def __CalculateSampleScore(self, metrics):
         # return sum(value for key, value in metrics.items()) % 100
-        print(metrics)
+        # print(metrics)
         return sum(value for key, value in metrics.items())
 
     '''
@@ -198,15 +199,18 @@ class Gather:
     def __WriteResults(self, filePath, sampleType):
         with open(filePath, "a", newline='') as file:
             writer = csv.writer(file)
-            # Write generation scores
-            if sampleType == "gen":
-                for key, value in self.sampleScore.items():
-                    writer.writerow([key, self.k_iterations, value])
-            # Writes human Scores
-            else:
-                for key, value in self.sampleScore.items():
-                    writer.writerow([key, value])
+            # Write Scores
+            for key, value in self.sampleScore.items():
+                writer.writerow([key, self.k_iterations, value])
 
+            # # Write generation scores
+            # if sampleType == "gen":
+            #     for key, value in self.sampleScore.items():
+            #         writer.writerow([key, self.k_iterations, value])
+            # # Writes human Scores
+            # else:
+            #     for key, value in self.sampleScore.items():
+            #         writer.writerow([key, value])
     '''
     Writes the raw results to raw csv file
     '''
