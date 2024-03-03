@@ -68,7 +68,6 @@ def argsExists(args) -> bool:
     if not args.temperature:
         print("Missing args temperature(-t)")
         return False
-    # TODO IS not raising a system exit/system False intentional or did i forget?
     if not args.K_iterations:
         print("Missing args k_iterations (-k)")
         return False
@@ -108,23 +107,22 @@ def fitRules(args) -> bool:
     return True
 
 if __name__ == '__main__':
+    # Get args
     args = parserArguemts()
 
-    # Set up instance for Study
+    # Update Config
+    STUDY_PARAMS["K_ITERATIONS"] = args.K_iterations
+    STUDY_PARAMS["TEMPERATURE"] = args.temperature
+
+    # Creates instance with config file
     DataGather = Gather(STUDY_PARAMS)
-
-    temperature = "0.6"
-
-    # 'h' for human data
-    # 'gen' for generations
-    dataCollect = 'gen'
 
     # Collect data in csv files
     if args.dataCollection == 'h':
         DataGather.GetHumanData()
         print("running human collection")
     elif args.dataCollection == 'gen' and STUDY_PARAMS["K_ITERATIONS"] <= 100:
-        DataGather.GetGPTData(temperature)
+        DataGather.GetGPTData(args.temperature)
         print("Running generation collection")
     else:
         print("Incorrect params")

@@ -12,9 +12,11 @@ STUDY_PARAMS = {
 "HUMAN_SOLUTIONS_FILE_PATH" : "HumanSolutions/",
 "PROBLEMS_FILE_PATH" : "Code/data/pilotProblems.json",
 "PROBLEM_AMOUNT" : 5,
-"TEMPERATURE_RANGES" : {"0.3" : 0.4, "0.6" : 0.6, "0.9" : 0.9},
+"TEMPERATURE": 0.6,
 "K_ITERATIONS" : 1
 }
 
 ''' ADD API KEY HERE '''
 API_KEY = os.getenv('API_KEY')
+
+# Old temperature method: "TEMPERATURE_RANGES" : {"0.3" : 0.4, "0.6" : 0.6, "0.9" : 0.9},
