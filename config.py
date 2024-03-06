@@ -28,4 +28,6 @@ print(ROOT_DIR)
 PATHS = {
     "ROOT_DIR": ROOT_DIR,
     "PYTHON_FILE_TEST_SAMPLES": f"{ROOT_DIR}Tests/TestFiles/PythonFileTestSamples/",
+    "LOG_TESTING": f"{ROOT_DIR}Logs/SystemUnitTests.log",
+    "LOG_GENERATION_RESPONSES" : f"{ROOT_DIR}Logs/GenerationResponses.log"
 }

@@ -66,6 +66,3 @@ def RunTests():
     Suite = unittest.TestLoader().loadTestsFromTestCase(TestEmpty)
     Suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestOperandsWithComments))
     return unittest.TextTestRunner().run(Suite)
-
-
-RunTests()

@@ -158,7 +158,7 @@ class Gather:
     def __GenerateSolutions(self, temperature, problemNumber, problem):
         for i in range(self.k_iterations):
             with open(f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--n{i}.py", "w") as file:
-                response = Generation.GetResponce(self.PROBLEMS[problem], temperature)
+                response = Generation.GetResponce(problemNumber, self.PROBLEMS[problem], temperature)
                 # Clean file from ```python & ``` comments in file
                 response = response.replace("```python", "")
                 response = response.replace("```", "")
