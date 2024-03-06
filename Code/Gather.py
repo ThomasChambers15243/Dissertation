@@ -45,7 +45,7 @@ class Gather:
         self.collectionType = "gen"
         # Sets up csv's headers
         self.__InnitCSV(self.SAMPLE_RESULTS_CSV_FILE_PATH, ["Problem", "Solution Amount", "Not Valid", "Score"])
-        self.__InnitRawCSV(self.GEN_RAW_RESULTS_CSV_FILE_PATH, [
+        self.__InnitCSV(self.GEN_RAW_RESULTS_CSV_FILE_PATH, [
             "Problem", "Solution Amount", "Not Valid", "Distinct Operators", "Distinct Operands", "Total Operators",
             "Total Operands", "Vocabulary", "Length", "Estimated Program Length", "Volume",
             "Difficulty", "Effort", "Time", "Bugs Estimate", "Mccabe Complexity"])
@@ -90,7 +90,7 @@ class Gather:
         # Set Type
         self.collectionType = "h"
         self.__InnitCSV(self.HUMAN_RESULTS_CSV_FILE_PATH, ["Problem", "Solution Amount", "Not Valid", "Score"])
-        self.__InnitRawCSV(self.HUMAN_RAW_RESULTS_CSV_FILE_PATH, [
+        self.__InnitCSV(self.HUMAN_RAW_RESULTS_CSV_FILE_PATH, [
             "Problem", "Solution Amount", "Not Valid", "Distinct Operators", "Distinct Operands", "Total Operators",
             "Total Operands", "Vocabulary", "Length", "Estimated Program Length", "Volume",
             "Difficulty", "Effort", "Time", "Bugs Estimate", "Mccabe Complexity"])
@@ -151,10 +151,6 @@ class Gather:
             writer = csv.writer(file)
             writer.writerow(headers)
 
-    def __InnitRawCSV(self, csvPath, headers):
-        with open(f"{csvPath}", "w",newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow(headers)
 
     '''
     Generated GeneratedSolutions k number of times for the 
