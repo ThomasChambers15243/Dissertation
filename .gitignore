@@ -13,4 +13,5 @@ HumanSolutions/
 /Code/data/RawGenResults.csv
 /Code/data/RawHumanResults.csv
 /Logs/SystemUnitTests.log
-/Logs/GenerationResponses.log
+/Logs/Main.log
+/Logs/Results.log

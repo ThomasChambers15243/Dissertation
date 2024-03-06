@@ -2,18 +2,19 @@ from Code import Analyzer
 from Code import Generation
 from Code import functionality
 from Code import mccabe
+from config import PATHS
+from loguru import logger
 import csv
 import json
 import os
 
-
+# Init Logger
+logger.add(sink=PATHS['LOG_RESULTS'], level="SUCCESS")
 
 '''
 Class to Gather all data from the samples
 Write the human and generated data to csv
 '''
-
-
 class Gather:
     def __init__(self, params):
         # File Paths
@@ -70,15 +71,14 @@ class Gather:
             totalSumMetrics = self.__CollectMetrics(problem, filePath)
             self.__WriteRawResults(problemNumber, totalSumMetrics)
 
-        # Example Pass@k
-        # print(f"Pass@K: {functionality.passAtk((100 * 20), 50, 100)}")
-        print(f"""Passed /{self.k_iterations * self.PROBLEM_AMOUNT}: {passed}."
-              f"\nPass@K: {functionality.passAtk((self.k_iterations*self.PROBLEM_AMOUNT), passed, self.k_iterations)}
-              \n""")
-        print(f"Not Valid:{self.notVaild}")
-
         # Write metric score to csv
         self.__WriteResults(self.SAMPLE_RESULTS_CSV_FILE_PATH)
+
+        # Log results
+        totalSamples = {self.k_iterations * self.PROBLEM_AMOUNT}
+        passK = functionality.passAtk((self.k_iterations*self.PROBLEM_AMOUNT), passed, self.k_iterations)
+        logger.success(f"Generation Collection total: {totalSamples}. Successful: {passed}. "
+                    f"Not Valid: {self.notVaild}. Pass@k: {passK}")
 
         # Reset methodTestFile
         self.clearTestWriteFile()
@@ -100,10 +100,12 @@ class Gather:
             totalSumMetrics = self.__CollectMetrics(problem, filePath)
             self.__WriteRawResults(problemNumber, totalSumMetrics)
 
-        print(f"""Passed /{self.k_iterations * self.PROBLEM_AMOUNT}: {passed}.
-              \nNot Valid: {self.notVaild}""")
         # Write metric score to csv
         self.__WriteResults(self.HUMAN_RESULTS_CSV_FILE_PATH)
+
+        # Log results
+        totalSamples = self.k_iterations * self.PROBLEM_AMOUNT
+        logger.success(f"Human Collection total: {totalSamples}. Successful: {passed}. Not Valid: {self.notVaild}")
 
         # Reset methodTestFile
         self.clearTestWriteFile()
