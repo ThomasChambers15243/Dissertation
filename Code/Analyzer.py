@@ -105,14 +105,14 @@ class HalsteadMetrics:
         Calculates vocabulary score
         :return: int
         """
-        return self.distinctOperatorCount + self.distinctOperandCount
+        return round(self.distinctOperatorCount + self.distinctOperandCount, 2)
 
     def Length(self) -> int:
         """
         Calculates length
         :return: int
         """
-        return self.distinctOperatorCount + self.distinctOperandCount
+        return round(self.distinctOperatorCount + self.distinctOperandCount, 2)
 
     def EstimatedProgramLength(self) -> float:
         """
@@ -124,7 +124,7 @@ class HalsteadMetrics:
             rhs = self.distinctOperandCount * math.log2(float(self.distinctOperandCount))
         except ValueError:
             return 0
-        return lhs + rhs
+        return round(lhs + rhs, 2)
 
     def Volume(self) -> float:
         """
@@ -132,7 +132,7 @@ class HalsteadMetrics:
         :return: float
         """
         try:
-            return self.Length() * math.log2(float(self.Vocabulary()))
+            return round(self.Length() * math.log2(float(self.Vocabulary())), 2)
         except ValueError:
             return 0
 
@@ -146,7 +146,7 @@ class HalsteadMetrics:
             if self.distinctOperandCount == 0:
                 return 0
             else:
-                return (self.distinctOperatorCount / 2) * (self.totalOperandCount / self.distinctOperandCount)
+                return round((self.distinctOperatorCount / 2) * (self.totalOperandCount / self.distinctOperandCount), 2)
         except ValueError:
             return 0
 
@@ -155,18 +155,18 @@ class HalsteadMetrics:
         Calculates Effort score
         :return: float
         """
-        return self.Difficulty() * self.Volume()
+        return round(self.Difficulty() * self.Volume(), 2)
 
     def Time(self) -> float:
         """
         Calculate time to programn score
         :return: float
         """
-        return self.Effort() / 18
+        return round(self.Effort() / 18, 2)
 
     def BugsEstimate(self) -> float:
         """
         Calculate bug estimate
         :return: float
         """
-        return self.Volume() / 3000
+        return round(self.Volume() / 3000, 2)

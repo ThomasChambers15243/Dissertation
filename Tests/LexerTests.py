@@ -6,7 +6,7 @@ from Code import Lexer
 class TestEmpty(unittest.TestCase):
     def test_BlankInput(self):
         lexer = Lexer.Lexer()
-        distinctOperator, distinctOperand, operatorCount, operandCount = lexer.TokenizeCode("TestFiles/LexerTestSamples/EmtpyFile.py")
+        distinctOperator, distinctOperand, operatorCount, operandCount = lexer.TokenizeCode("TestFiles/PythonFileTestSamples/EmtpyFile.py")
         self.assertEqual(len(distinctOperator), 0)
         self.assertEqual(len(distinctOperand), 0)
         self.assertEqual(operatorCount, 0)
@@ -17,7 +17,7 @@ class TestEmpty(unittest.TestCase):
 class TestOnlyComments(unittest.TestCase):
     def test_OnlyComments(self):
         lexer = Lexer.Lexer()
-        distinctOperator, distinctOperand, operatorCount, operandCount = lexer.TokenizeCode("TestFiles/LexerTestSamples/OnlyComments.py")
+        distinctOperator, distinctOperand, operatorCount, operandCount = lexer.TokenizeCode("TestFiles/PythonFileTestSamples/OnlyComments.py")
         self.assertEqual(len(distinctOperator), 0)
         self.assertEqual(len(distinctOperand), 2)
         self.assertEqual(operatorCount, 0)
@@ -29,7 +29,7 @@ class TestOnlyComments(unittest.TestCase):
 class TestOnlyOperators(unittest.TestCase):
     def test_OnlyOperatorsUnique(self):
         lexer = Lexer.Lexer()
-        distinctOperator, distinctOperand, operatorCount, operandCount = lexer.TokenizeCode("TestFiles/LexerTestSamples/OnlyOperators.py")
+        distinctOperator, distinctOperand, operatorCount, operandCount = lexer.TokenizeCode("TestFiles/PythonFileTestSamples/OnlyOperators.py")
         self.assertEqual(69, operatorCount)
         self.assertEqual(len(distinctOperator), 69)
 
@@ -39,16 +39,16 @@ class TestOnlyOperators(unittest.TestCase):
 class TestOnlyOperands(unittest.TestCase):
     def test_OnlyOperandsUnique(self):
         lexer = Lexer.Lexer()
-        distinctOperator, distinctOperand, operatorCount, operandCount = lexer.TokenizeCode("TestFiles/LexerTestSamples/OnlyOperands.py")
+        distinctOperator, distinctOperand, operatorCount, operandCount = lexer.TokenizeCode("TestFiles/PythonFileTestSamples/OnlyOperands.py")
         self.assertEqual(44, operandCount)
         self.assertEqual(22, len(distinctOperand))
 
 
 # Tests against a example python scripts
 class TestExampleScripts(unittest.TestCase):
-    def test_script_1(self):
+    def testScript_1(self):
         lexer = Lexer.Lexer()
-        distinctOperator, distinctOperand, operatorCount, operandCount = lexer.TokenizeCode("TestFiles/LexerTestSamples/ExampleScript1.py")
+        distinctOperator, distinctOperand, operatorCount, operandCount = lexer.TokenizeCode("TestFiles/PythonFileTestSamples/ExampleScript1.py")
         operatorDict = {'=': '=', '(': '(', ')': ')'}
         operandDict = {'a': 'a', '0': '0', 'b': 'b', '10': '10', 'print': 'print', 'Worked': 'Worked'}
         self.assertEqual(4, operatorCount)
@@ -58,7 +58,7 @@ class TestExampleScripts(unittest.TestCase):
 
     def testScript_2(self):
         lexer = Lexer.Lexer()
-        distinctOperator, distinctOperand, operatorCount, operandCount = lexer.TokenizeCode("TestFiles/LexerTestSamples/ExampleScript2.py")
+        distinctOperator, distinctOperand, operatorCount, operandCount = lexer.TokenizeCode("TestFiles/PythonFileTestSamples/ExampleScript2.py")
         operatorDict = {'def': 'def', '(': '(', ':': ':', ')': ')', '->': '->', 'return': 'return',
                         'for': 'for', 'in': 'in', 'if': 'if', '!=': '!='}
         operandDict = {'Q1': 'Q1', 's': 's', 'str': 'str', 'int': 'int', 'sum': 'sum', 'ord': 'ord',
@@ -70,7 +70,7 @@ class TestExampleScripts(unittest.TestCase):
 
     def testsScript_3(self):
         lexer = Lexer.Lexer()
-        distinctOperator, distinctOperand, operatorCount, operandCount = lexer.TokenizeCode("TestFiles/LexerTestSamples/ExampleScript3.py")
+        distinctOperator, distinctOperand, operatorCount, operandCount = lexer.TokenizeCode("TestFiles/PythonFileTestSamples/ExampleScript3.py")
         operatorDict = {'class': 'class', '(': '(', ')': ')', ':': ':', 'def': 'def', '=': '=', '-': '-', '.': '.',
                         '[': '[', ']': ']', 'for': 'for', 'in': 'in', '->': '->', 'if': 'if', '==': '==',
                         'return': 'return', 'while': 'while', '>': '>', '+=': '+='}
@@ -97,6 +97,7 @@ def runTests():
     Suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestOnlyOperands))
     Suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestOnlyComments))
     Suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestExampleScripts))
+
     return unittest.TextTestRunner().run(Suite)
 
 runTests()
