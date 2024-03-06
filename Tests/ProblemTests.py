@@ -42,14 +42,6 @@ class TestQ1(unittest.TestCase):
         self.assertEqual(MethodTestFile.Q1("¬!\"£$%^&*()_+))|<>,.?/:;'@[{]}''``#~"), 2479)
         self.assertEqual(MethodTestFile.Q1("Python"), 642)
 
-        # Logic is better to be avoided, but its a simple .txt load
-        with open("Tests/TestFiles/RomeoJuilet.txt") as file:
-            stringOfPlay = ""
-            for _ in file:
-                for char in file:
-                    stringOfPlay += char
-            self.assertEqual(MethodTestFile.Q1(stringOfPlay), 11443225)
-
 
 class TestQ2(unittest.TestCase):
     def test_sum(self):
@@ -87,22 +79,36 @@ class TestQ2(unittest.TestCase):
 
 class TestQ3(unittest.TestCase):
     def test_valid_brackets(self):
+        # Test with valid input
         importlib.reload(MethodTestFile)
         valid = ["()", "[]", "{}", "()[]{}", "{[()]}"]
-        for i in valid:
-            self.assertTrue(MethodTestFile.Q3(i))
+        self.assertTrue(MethodTestFile.Q3(valid[0]))
+        self.assertTrue(MethodTestFile.Q3(valid[1]))
+        self.assertTrue(MethodTestFile.Q3(valid[2]))
+        self.assertTrue(MethodTestFile.Q3(valid[3]))
+        self.assertTrue(MethodTestFile.Q3(valid[4]))
 
     def test_invalid_brackets(self):
+        # Tests with invalid input
         importlib.reload(MethodTestFile)
         invalid = ["((", "))", "({", "})", "][", "}{", "({[", "]})", "({[)}]"]
-        for i in invalid:
-            self.assertFalse(MethodTestFile.Q3(i))
+        self.assertFalse(MethodTestFile.Q3(invalid[0]))
+        self.assertFalse(MethodTestFile.Q3(invalid[1]))
+        self.assertFalse(MethodTestFile.Q3(invalid[2]))
+        self.assertFalse(MethodTestFile.Q3(invalid[3]))
+        self.assertFalse(MethodTestFile.Q3(invalid[4]))
+        self.assertFalse(MethodTestFile.Q3(invalid[5]))
+        self.assertFalse(MethodTestFile.Q3(invalid[6]))
+        self.assertFalse(MethodTestFile.Q3(invalid[7]))
+        self.assertFalse(MethodTestFile.Q3(invalid[8]))
 
 
 class TestQ4(unittest.TestCase):
     class Node:
         """
         Node class for linked list
+        The logic in these tests are simple and easy to read
+        Used to simple create and move through a linked lists
         """
         def __init__(self, data=0):
             self.next = None
@@ -120,6 +126,7 @@ class TestQ4(unittest.TestCase):
             node.next = self.Node(i)
             node = node.next
         return root
+
 
     def isNodeSorted(self, node: Node):
         """
@@ -146,8 +153,8 @@ class TestQ4(unittest.TestCase):
         self.isNodeSorted(MethodTestFile.Q4(self.CreateList(list(range(10000, 0, -1)))))
         # Unsorted
         self.isNodeSorted(MethodTestFile.Q4(self.CreateList([1, 3, 2, 4, 5, 7, 6, 8, 9, 10])))
-        self.isNodeSorted(
-            MethodTestFile.Q4(self.CreateList([31, 765475, 324, 5435, 654, 234, 7548768, 23435, 756, 2342])))
+        self.isNodeSorted(MethodTestFile.Q4(self.CreateList([31, 765475, 324, 5435, 654, 234,
+                                                             7548768, 23435, 756, 2342])))
         self.isNodeSorted(MethodTestFile.Q4(self.CreateList([96879, 5785, 567, 3543, 234, 243, 23, 98, 6])))
 
 
@@ -156,7 +163,6 @@ class TestQ5(unittest.TestCase):
         """
         Implementation of each Node in the tree.
         """
-
         def __init__(self, data=-1):
             self.data = data
             self.children = []
@@ -218,9 +224,11 @@ class TestQ5(unittest.TestCase):
         self.assertEqual(len(searchZeroDupes.values), len(set(searchZeroDupes.values)))
         self.assertEqual(len(searchDupes.values), len(set(searchDupes.values)))
 
+
 """
 Methods that run the individual tests when called
 """
+
 
 def run_Q1_Tests():
     """

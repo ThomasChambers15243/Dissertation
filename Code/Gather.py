@@ -30,7 +30,10 @@ class Gather:
         self.PROBLEM_AMOUNT = params["PROBLEM_AMOUNT"]
         self.TEMPERATURE = params["TEMPERATURE"]
         self.k_iterations = params["K_ITERATIONS"]
-
+        self.rawCSVHeaders = [  "Problem", "Solution Amount", "Not Valid", "Distinct Operators", "Distinct Operands", "Total Operators",
+                                "Total Operands", "Vocabulary", "Length", "Estimated Program Length", "Volume",
+                                "Difficulty", "Effort", "Time", "Bugs Estimate", "Mccabe Complexity"]
+        self.csvHeaders = ["Problem", "Solution Amount", "Not Valid", "Score"]
         # Research Outputs
         self.sampleScore = {}
         self.notVaild = 0
@@ -44,11 +47,8 @@ class Gather:
         # Set Type
         self.collectionType = "gen"
         # Sets up csv's headers
-        self.__InnitCSV(self.SAMPLE_RESULTS_CSV_FILE_PATH, ["Problem", "Solution Amount", "Not Valid", "Score"])
-        self.__InnitCSV(self.GEN_RAW_RESULTS_CSV_FILE_PATH, [
-            "Problem", "Solution Amount", "Not Valid", "Distinct Operators", "Distinct Operands", "Total Operators",
-            "Total Operands", "Vocabulary", "Length", "Estimated Program Length", "Volume",
-            "Difficulty", "Effort", "Time", "Bugs Estimate", "Mccabe Complexity"])
+        self.__InnitCSV(self.SAMPLE_RESULTS_CSV_FILE_PATH, self.csvHeaders)
+        self.__InnitCSV(self.GEN_RAW_RESULTS_CSV_FILE_PATH, self.rawCSVHeaders)
 
         # Remove any files from solutions
         self.__InnitSolutionsFolder()
@@ -89,11 +89,8 @@ class Gather:
     def GetHumanData(self):
         # Set Type
         self.collectionType = "h"
-        self.__InnitCSV(self.HUMAN_RESULTS_CSV_FILE_PATH, ["Problem", "Solution Amount", "Not Valid", "Score"])
-        self.__InnitCSV(self.HUMAN_RAW_RESULTS_CSV_FILE_PATH, [
-            "Problem", "Solution Amount", "Not Valid", "Distinct Operators", "Distinct Operands", "Total Operators",
-            "Total Operands", "Vocabulary", "Length", "Estimated Program Length", "Volume",
-            "Difficulty", "Effort", "Time", "Bugs Estimate", "Mccabe Complexity"])
+        self.__InnitCSV(self.HUMAN_RESULTS_CSV_FILE_PATH, self.csvHeaders)
+        self.__InnitCSV(self.HUMAN_RAW_RESULTS_CSV_FILE_PATH, self.rawCSVHeaders)
         passed = 0
 
         # Collects the GeneratedSolutions metrics and stores them in self.sampleScore["problem"]
@@ -110,6 +107,8 @@ class Gather:
 
         # Reset methodTestFile
         self.clearTestWriteFile()
+
+
     '''
     Collects metrics from the problem folder
     '''
@@ -205,7 +204,10 @@ class Gather:
     def __CalculateAverageMetric(self, totalMetrics):
         # Calculates the mean for each metric
         for key, values in totalMetrics.items():
-            totalMetrics[key] = values / self.k_iterations
+            try:
+                totalMetrics[key] = values / (self.k_iterations-self.notVaild)
+            except ZeroDivisionError:
+                return totalMetrics
         return totalMetrics
 
 
@@ -214,9 +216,17 @@ class Gather:
     Needs to be updated with scoring weights
     '''
     def __CalculateSampleScore(self, metrics):
-        # return sum(value for key, value in metrics.items()) % 100
-        # print(metrics)
-        return sum(value for key, value in metrics.items())
+        sum = 0
+        for key, value in metrics.items():
+            # Increases impact of Mccabe
+            if key == "MccabeComplexity":
+                sum += (value * 100)
+            # Reduces the impact of lots of code
+            elif key == "EstProgLength" or "Effort":
+                sum += (value / 10)
+            else:
+                sum += value
+        return sum
 
     '''
     Writes the sample score to given csv file
