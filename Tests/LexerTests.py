@@ -92,11 +92,11 @@ def runTests():
     '''
     Runs all the tests in this file
     '''
-    Suite_DB = unittest.TestLoader().loadTestsFromTestCase(TestEmpty)
-    Suite_DB.addTests(unittest.TestLoader().loadTestsFromTestCase(TestOnlyOperators))
-    Suite_DB.addTests(unittest.TestLoader().loadTestsFromTestCase(TestOnlyOperands))
-    Suite_DB.addTests(unittest.TestLoader().loadTestsFromTestCase(TestOnlyComments))
-    Suite_DB.addTests(unittest.TestLoader().loadTestsFromTestCase(TestExampleScripts))
-    return unittest.TextTestRunner().run(Suite_DB)
+    Suite = unittest.TestLoader().loadTestsFromTestCase(TestEmpty)
+    Suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestOnlyOperators))
+    Suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestOnlyOperands))
+    Suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestOnlyComments))
+    Suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestExampleScripts))
+    return unittest.TextTestRunner().run(Suite)
 
 runTests()
