@@ -11,7 +11,7 @@ STUDY_PARAMS = {
 "HUMAN_RESULTS_CSV_FILE_PATH" : "Code/data/HumanResults.csv",
 "GPT_SOLUTIONS_FILE_PATH" : "GeneratedSolutions/",
 "HUMAN_SOLUTIONS_FILE_PATH" : "HumanSolutions/",
-"PROBLEMS_FILE_PATH" : "Code/data/pilotProblems.json",
+"PROBLEMS_FILE_PATH" : "Code/data/ProblemQuestions.json",
 "PROBLEM_AMOUNT" : 5,
 "TEMPERATURE": 0.6,
 "K_ITERATIONS" : 1

@@ -32,7 +32,7 @@ def parserArguemts():
                         help="The path to store the generated solutions in")
     parser.add_argument("--humanSolutionsPath", "-hSP", default="HumanSolutions/",
                         help="The path to store the human solutions in")
-    parser.add_argument("--problemsPath", "-pP", default="Code/data/pilotProblems.json",
+    parser.add_argument("--problemsPath", "-pP", default="Code/data/ProblemQuestions.json",
                         help="The path to the problems json file")
     parser.add_argument("--problemAmount", "-pA", default=5, type=int,
                         help="The amount of problems to generate")
