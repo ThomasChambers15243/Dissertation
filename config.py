@@ -3,6 +3,10 @@ import os
 
 load_dotenv()
 
+
+''' ADD API KEY HERE '''
+API_KEY = os.getenv('API_KEY')
+
 # Initialize Research Parameters
 STUDY_PARAMS = {
 "SAMPLE_RESULTS_CSV_FILE_PATH" : "Code/data/SampleResults.csv",
@@ -17,7 +21,11 @@ STUDY_PARAMS = {
 "K_ITERATIONS" : 1
 }
 
-''' ADD API KEY HERE '''
-API_KEY = os.getenv('API_KEY')
 
-# Old temperature method: "TEMPERATURE_RANGES" : {"0.3" : 0.4, "0.6" : 0.6, "0.9" : 0.9},
+ROOT_DIR = f"{os.path.dirname(os.path.abspath(__file__))}/"
+print(ROOT_DIR)
+
+PATHS = {
+    "ROOT_DIR": ROOT_DIR,
+    "PYTHON_FILE_TEST_SAMPLES": f"{ROOT_DIR}Tests/TestFiles/PythonFileTestSamples/",
+}
