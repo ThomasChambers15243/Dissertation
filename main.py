@@ -10,10 +10,18 @@ from Code.Gather import Gather
 # Resets the file
 open("Tests/MethodTestFile.py", 'w').close()
 
+# Filter method for logs
+def level_filter(level):
+    def is_level(record):
+        return record["level"].name == level
+    return is_level
+
 # Innit Logger
 logger.remove()
 logger.add(sys.stderr, level="INFO")
-logger.add(f"{PATHS['LOG_MAIN']}")
+logger.add(f"{PATHS['LOG_MAIN']}", level = "INFO")
+logger.level("Results", no=15, color="<blue>")
+logger.add(sink=PATHS['LOG_RESULTS'], filter=level_filter("Results"))
 
 
 def parserArguemts():
