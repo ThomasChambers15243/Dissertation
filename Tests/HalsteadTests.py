@@ -2,6 +2,8 @@ import unittest
 from config import PATHS
 from Code import Analyzer
 
+TEST_NAME = "Halstead"
+
 class TestEmpty(unittest.TestCase):
     def test_empty(self):
         expectedMetrics = {

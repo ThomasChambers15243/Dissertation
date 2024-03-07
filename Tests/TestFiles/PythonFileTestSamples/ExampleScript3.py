@@ -14,13 +14,13 @@ class Node():
     def AddChild(self, node):
         self.children.append(node)
 
-    def AddChildren(self, numChildren : int, childrenData : list[int]):
+    def AddChildren(self, numChildren: int, childrenData: list[int]):
         for child in range(numChildren):
             self.AddChild(Node(childrenData[child]))
 
 
 #TODO
-def Q5(root : Node) -> Node:
+def Q5(root: Node) -> Node:
     if len(root.children) == 0:
         return root
 

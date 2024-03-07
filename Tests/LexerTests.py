@@ -2,6 +2,7 @@ import unittest
 from config import PATHS
 from Code import Lexer
 
+TEST_NAME = "Lexer"
 
 # Tests against an emtpy file
 class TestEmpty(unittest.TestCase):
@@ -112,7 +113,7 @@ class TestExampleScripts(unittest.TestCase):
         self.assertEqual(operandDict, distinctOperand)
 
 
-def runTests():
+def RunTests():
     """
     Runs all the tests in this file
     """

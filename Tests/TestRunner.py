@@ -1,48 +1,36 @@
 import LexerTests
 import HalsteadTests
+import ComplexityTests
 from config import PATHS
 from loguru import logger
 
 # Innit logger paths
 logger.add(f"{PATHS['LOG_TESTING']}")
 
-def RunLexerTests():
+def RunTest(methodObj):
     """
-    Runs all lexer tests
-    :return:
+    Runs and logs the results of the test obj passed through
+    :param methodObj: testfile obj
+    :return: bool, true if passed, false if failed
     """
-    results = LexerTests.runTests()
+    results = methodObj.RunTests()
     # Logs results
     if results.failures:
         for result in results.failures:
             with logger.contextualize():
                 logger.info(f"{result[0]} Failed")
+        return False
     else:
-        logger.success("Lexer Tests Passed")
-
-
-def RunHalsteadTests():
-    """
-    Runs all halstead tests
-    :return:
-    """
-    results = HalsteadTests.RunTests()
-    # Logs results
-    if results.failures:
-        for result in results.failures:
-            with logger.contextualize():
-                logger.info(f"{result[0]} Failed")
-    else:
-        logger.success("Halstead Tests Passed")
-
-
+        logger.success(f"{methodObj.TEST_NAME} Tests Passed")
+        return True
 
 def RunAllTests():
     """
     Runs all units tests
     :return:
     """
-    RunLexerTests()
-    RunHalsteadTests()
+    RunTest(LexerTests)
+    RunTest(HalsteadTests)
+    RunTest(ComplexityTests)
 
 RunAllTests()
