@@ -10,17 +10,21 @@ from Code.Gather import Gather
 # Resets the file
 open("Tests/MethodTestFile.py", 'w').close()
 
-# Filter method for logs
+
+# Filter method for logs by level
 def level_filter(level):
     def is_level(record):
         return record["level"].name == level
+
     return is_level
 
+
 # Innit Logger
+# Console log/ Main log/ Results Log
 logger.remove()
-logger.add(sys.stderr, level="INFO")
-logger.add(f"{PATHS['LOG_MAIN']}", level = "INFO")
 logger.level("Results", no=15, color="<blue>")
+logger.add(sys.stderr, level="INFO")
+logger.add(f"{PATHS['LOG_MAIN']}", level="INFO")
 logger.add(sink=PATHS['LOG_RESULTS'], filter=level_filter("Results"))
 
 
@@ -124,7 +128,10 @@ def fitRules(args) -> bool:
 
 @logger.catch
 def RunStudy():
-    # Get args
+    """
+    Runs the study depending on the passed through args
+    :return:
+    """
     args = parserArguemts()
     logger.success(f"Valid Args passed of: DataCollection: {args.dataCollection},  K: {args.K_iterations},  "
                    f"Temperature: {args.temperature}")
