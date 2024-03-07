@@ -26,4 +26,6 @@ def GetResponce(problemNumber: int, prompt: str, temperature=0.6) -> str:
     #     ],
     #     temperature=temperature,
     # )
-    return "print('hello')" #response['choices'][0]['message']['content']
+    print("ds")
+    return "print('hello')"
+    #return response['choices'][0]['message']['content']

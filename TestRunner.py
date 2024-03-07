@@ -1,11 +1,12 @@
-import LexerTests
-import HalsteadTests
-import ComplexityTests
+import Tests.LexerTests as LexerTests
+import Tests.HalsteadTests as HalsteadTests
+import Tests.ComplexityTests as ComplexityTests
 from config import PATHS
 from loguru import logger
 
 # Innit logger paths
 logger.add(f"{PATHS['LOG_TESTING']}")
+
 
 def RunTest(methodObj):
     """
@@ -24,6 +25,7 @@ def RunTest(methodObj):
         logger.success(f"{methodObj.TEST_NAME} Tests Passed")
         return True
 
+
 def RunAllTests():
     """
     Runs all units tests
@@ -33,4 +35,4 @@ def RunAllTests():
     RunTest(HalsteadTests)
     RunTest(ComplexityTests)
 
-RunAllTests()
+# RunAllTests()

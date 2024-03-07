@@ -20,12 +20,12 @@ def TestGenerationFunctionality(source: str, probNum: int, k: int) -> int:
         print("Incorrect amount of generated problem files")
         raise SystemError
 
+    # Tests functionality
     return sum(
         1
-        for attempt in range(k)
+        for attempt in range(numAttempts)
         if CanFilePass(f"{source}{attempt}.py", probNum)
     )
-
 
 def TestHumanFunctionality(source: str, probNum: int) -> int:
     """
@@ -91,7 +91,7 @@ def CheckTests(passed):
     :param passed: unnitest results
     :return: bool
     """
-    return len(passed.failures) == 0
+    return len(passed.failures) == 0 and len(passed.errors) == 0
 
 
 def validFile(source):
