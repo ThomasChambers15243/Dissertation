@@ -73,9 +73,7 @@ def areValidArgs(args) -> bool:
     :param args: cli arguments
     :return: bool
     """
-    if not argsExists(args):
-        return False
-    return fitRules(args)
+    return fitRules(args) if argsExists(args) else False
 
 
 def argsExists(args) -> bool:
@@ -84,11 +82,14 @@ def argsExists(args) -> bool:
     :param args: CLI arguments
     :return: bool
     """
-    if not args.dataCollection:
-        logger.error("Missing args dataCollection (-dc)")
-        return False
-    if not args.K_iterations:
-        logger.error("Missing args k_iterations (-k)")
+    try:
+        if not args.dataCollection:
+            logger.error("Missing args dataCollection (-dc)")
+            return False
+        if not args.K_iterations:
+            logger.error("Missing args k_iterations (-k)")
+            return False
+    except Exception:
         return False
     return True
 
