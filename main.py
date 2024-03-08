@@ -1,8 +1,6 @@
 import argparse
 import os
 import sys
-import traceback
-
 from loguru import logger
 from config import STUDY_PARAMS, PATHS
 from Code.Gather import Gather
@@ -28,7 +26,7 @@ logger.add(f"{PATHS['LOG_MAIN']}", level="INFO")
 logger.add(sink=PATHS['LOG_RESULTS'], filter=level_filter("Results"))
 
 
-def parserArguemts():
+def parser_arguments():
     """
     Gets arguments passed
     :return: namespace of arguments
@@ -62,21 +60,21 @@ def parserArguemts():
     args = parser.parse_args()
 
     # Checks Arguments exist
-    if areValidArgs(args):
+    if are_valid_args(args):
         return args
     raise SystemExit
 
 
-def areValidArgs(args) -> bool:
+def are_valid_args(args) -> bool:
     """
     Checks if the arguments are valid
     :param args: cli arguments
     :return: bool
     """
-    return fitRules(args) if argsExists(args) else False
+    return fit_rules(args) if args_exists(args) else False
 
 
-def argsExists(args) -> bool:
+def args_exists(args) -> bool:
     """
     Checks if the arguments exit
     :param args: CLI arguments
@@ -94,7 +92,7 @@ def argsExists(args) -> bool:
     return True
 
 
-def fitRules(args) -> bool:
+def fit_rules(args) -> bool:
     """
     :param args: CLI arguments
     :return: bool
@@ -119,21 +117,21 @@ def fitRules(args) -> bool:
             return False
     # Data collection for human files
     else:
-        for probNum in range(5):
-            numAttempts = len(os.listdir(f"HumanSolutions/problem{probNum}"))
-            if args.K_iterations != numAttempts:
+        for prob_num in range(5):
+            num_attempts = len(os.listdir(f"HumanSolutions/problem{prob_num}"))
+            if args.K_iterations != num_attempts:
                 logger.error("Incorrect amount of generated problem files")
                 return False
     return True
 
 
 @logger.catch
-def RunStudy():
+def run_study():
     """
     Runs the study depending on the passed through args
     :return:
     """
-    args = parserArguemts()
+    args = parser_arguments()
     logger.success(f"Valid Args passed of: DataCollection: {args.dataCollection},  K: {args.K_iterations},  "
                    f"Temperature: {args.temperature}")
 
@@ -142,9 +140,9 @@ def RunStudy():
     STUDY_PARAMS["TEMPERATURE"] = args.temperature
 
     # Creates instance with config file
-    DataGather = Gather(STUDY_PARAMS)
+    data_gather = Gather(STUDY_PARAMS)
 
-    logger.info("DataGather initialized")
+    logger.info("data_gather initialized")
 
     ### Collect data in csv files ###
 
@@ -152,7 +150,7 @@ def RunStudy():
     if args.dataCollection == 'h':
         logger.info("Starting Human Collection")
         try:
-            DataGather.GetHumanData()
+            data_gather.GetHumanData()
         except Exception:
             logger.error("Human Data collection failed")
         else:
@@ -160,7 +158,7 @@ def RunStudy():
     elif args.dataCollection == 'gen' and STUDY_PARAMS["K_ITERATIONS"] <= 100:
         logger.info("Starting Generation Collection")
         try:
-            DataGather.GetGPTData(args.temperature)
+            data_gather.GetGPTData(args.temperature)
         except Exception:
             logger.error("Generation Collection failed")
         else:
@@ -170,4 +168,4 @@ def RunStudy():
 
 
 if __name__ == '__main__':
-    RunStudy()
+    run_study()

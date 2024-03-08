@@ -230,46 +230,46 @@ Methods that run the individual tests when called
 """
 
 
-def run_Q1_Tests():
+def run_q1_tests():
     """
     Runs the tests for Q1
     :return: Test results
     """
-    Q1_Suite = unittest.TestLoader().loadTestsFromTestCase(TestQ1)
-    return unittest.TextTestRunner().run(Q1_Suite)
+    q1_suite = unittest.TestLoader().loadTestsFromTestCase(TestQ1)
+    return unittest.TextTestRunner().run(q1_suite)
 
 
-def run_Q2_Tests():
+def run_q2_tests():
     """
     Runs the tests for Q2
     :return: Test results
     """
-    Q2_Suite = unittest.TestLoader().loadTestsFromTestCase(TestQ2)
-    return unittest.TextTestRunner().run(Q2_Suite)
+    q2_suite = unittest.TestLoader().loadTestsFromTestCase(TestQ2)
+    return unittest.TextTestRunner().run(q2_suite)
 
 
-def run_Q3_Tests():
+def run_q3_tests():
     """
     Runs the tests for Q3
     :return: Test results
     """
-    Q3_Suite = unittest.TestLoader().loadTestsFromTestCase(TestQ3)
-    return unittest.TextTestRunner().run(Q3_Suite)
+    q3_suite = unittest.TestLoader().loadTestsFromTestCase(TestQ3)
+    return unittest.TextTestRunner().run(q3_suite)
 
 
-def run_Q4_Tests():
+def run_q4_tests():
     """
     Runs the tests for Q4
     :return: Test results
     """
-    Q4_Suite = unittest.TestLoader().loadTestsFromTestCase(TestQ4)
-    return unittest.TextTestRunner().run(Q4_Suite)
+    q4_suite = unittest.TestLoader().loadTestsFromTestCase(TestQ4)
+    return unittest.TextTestRunner().run(q4_suite)
 
 
-def run_Q5_tests():
+def run_q5_tests():
     """
     Runs the tests for Q5
     :return: Test results
     """
-    Q5_Suite = unittest.TestLoader().loadTestsFromTestCase(TestQ5)
-    return unittest.TextTestRunner().run(Q5_Suite)
+    q5_suite = unittest.TestLoader().loadTestsFromTestCase(TestQ5)
+    return unittest.TextTestRunner().run(q5_suite)

@@ -73,15 +73,15 @@ def CanFilePass(source: str, probNum: int) -> bool:
 
     # Runs tests
     if probNum == 0:
-        return CheckTests(ProblemTests.run_Q1_Tests())
+        return CheckTests(ProblemTests.run_q1_tests())
     if probNum == 1:
-        return CheckTests(ProblemTests.run_Q2_Tests())
+        return CheckTests(ProblemTests.run_q2_tests())
     if probNum == 2:
-        return CheckTests(ProblemTests.run_Q3_Tests())
+        return CheckTests(ProblemTests.run_q3_tests())
     if probNum == 3:
-        return CheckTests(ProblemTests.run_Q4_Tests())
+        return CheckTests(ProblemTests.run_q4_tests())
     if probNum == 4:
-        return CheckTests(ProblemTests.run_Q5_tests())
+        return CheckTests(ProblemTests.run_q5_tests())
     return True
 
 

@@ -8,28 +8,28 @@ TEST_NAME = "Lexer"
 class TestEmpty(unittest.TestCase):
     def test_BlankInput(self):
         lexer = Lexer.Lexer()
-        distinctOperator, distinctOperand, operatorCount, operandCount = lexer.TokenizeCode(
+        distinct_operator, distinct_operand, operator_count, operand_count = lexer.TokenizeCode(
             f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}EmtpyFile.py")
 
-        self.assertEqual(len(distinctOperator), 0)
-        self.assertEqual(len(distinctOperand), 0)
+        self.assertEqual(len(distinct_operator), 0)
+        self.assertEqual(len(distinct_operand), 0)
 
-        self.assertEqual(operatorCount, 0)
-        self.assertEqual(operatorCount, 0)
+        self.assertEqual(operator_count, 0)
+        self.assertEqual(operator_count, 0)
 
 
 # Tests against a file with only comments
 class TestOnlyComments(unittest.TestCase):
     def test_OnlyComments(self):
         lexer = Lexer.Lexer()
-        distinctOperator, distinctOperand, operatorCount, operandCount = lexer.TokenizeCode(
+        distinct_operator, distinct_operand, operator_count, operand_count = lexer.TokenizeCode(
             f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}OnlyComments.py")
 
-        self.assertEqual(len(distinctOperator), 0)
-        self.assertEqual(len(distinctOperand), 2)
+        self.assertEqual(len(distinct_operator), 0)
+        self.assertEqual(len(distinct_operand), 2)
 
-        self.assertEqual(operatorCount, 0)
-        self.assertEqual(operandCount, 2)
+        self.assertEqual(operator_count, 0)
+        self.assertEqual(operand_count, 2)
 
 
 # Tests against a file with only operators,
@@ -113,7 +113,7 @@ class TestExampleScripts(unittest.TestCase):
         self.assertEqual(operandDict, distinctOperand)
 
 
-def RunTests():
+def run_tests():
     """
     Runs all the tests in this file
     """
