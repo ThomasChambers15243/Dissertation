@@ -46,6 +46,7 @@ def passAtk(n,c,k):
     """
     The probability that at least one of the top k-generated code samples for a problem passes the unit tests
     Code taken from: https://arxiv.org/pdf/2107.03374.pdf
+    Good explenation - https://deepgram.com/learn/humaneval-llm-benchmark#the-passk-metric
     :param n: total number of samples
     :param c: number of correct samples
     :param k: k in pass@$k$

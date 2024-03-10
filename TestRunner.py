@@ -35,4 +35,4 @@ def run_all_tests():
     run_test(HalsteadTests)
     run_test(ComplexityTests)
 
-# run_all_tests()
+run_all_tests()
