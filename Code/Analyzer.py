@@ -43,13 +43,13 @@ class HalsteadMetrics:
             "DistinctOperandCount": 0,
             "TotalOperatorCount": 0,
             "TotalOperandCount": 0,
-            "vocabulary": 0,
-            "length": 0,
+            "Vocabulary": 0,
+            "Length": 0,
             "EstProgLength": 0,
-            "volume": 0,
-            "difficulty": 0,
-            "effort": 0,
-            "time": 0,
+            "Volume": 0,
+            "Difficulty": 0,
+            "Effort": 0,
+            "Time": 0,
             "BugsEstimate": 0
         }
         # Calculates and stores the Halstead metrics for the given file
@@ -64,13 +64,13 @@ class HalsteadMetrics:
         self.metrics["DistinctOperandCount"] = self.distinct_operand_count
         self.metrics["TotalOperatorCount"] = self.total_operator_count
         self.metrics["TotalOperandCount"] = self.total_operand_count
-        self.metrics["vocabulary"] = self.vocabulary()
-        self.metrics["length"] = self.length()
+        self.metrics["Vocabulary"] = self.vocabulary()
+        self.metrics["Length"] = self.length()
         self.metrics["EstProgLength"] = self.estimated_program_length()
-        self.metrics["volume"] = self.volume()
-        self.metrics["difficulty"] = self.difficulty()
-        self.metrics["effort"] = self.effort()
-        self.metrics["time"] = self.time()
+        self.metrics["Volume"] = self.volume()
+        self.metrics["Difficulty"] = self.difficulty()
+        self.metrics["Effort"] = self.effort()
+        self.metrics["Time"] = self.time()
         self.metrics["BugsEstimate"] = self.bugs_estimate()
 
     def print_stats(self):
@@ -91,13 +91,13 @@ class HalsteadMetrics:
         self.print_stats()
 
         # Prints Halstead Calculation Results
-        print(f"vocabulary: {self.metrics['vocabulary']}")
-        print(f"length: {self.metrics['length']}")
+        print(f"Vocabulary: {self.metrics['Vocabulary']}")
+        print(f"Length: {self.metrics['Length']}")
         print(f"Estimated Program length: {self.metrics['EstProgLength']}")
-        print(f"volume: {self.metrics['volume']}")
-        print(f"difficulty: {self.metrics['difficulty']}")
-        print(f"effort: {self.metrics['effort']}")
-        print(f"time: {self.metrics['time']}")
+        print(f"Volume: {self.metrics['Volume']}")
+        print(f"Difficulty: {self.metrics['Difficulty']}")
+        print(f"Effort: {self.metrics['Effort']}")
+        print(f"Time: {self.metrics['Time']}")
         print(f"Estimated Number of bugs: {self.metrics['BugsEstimate']}")
 
     def vocabulary(self) -> int:
