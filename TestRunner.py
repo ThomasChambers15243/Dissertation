@@ -8,13 +8,14 @@ from loguru import logger
 logger.add(f"{PATHS['LOG_TESTING']}")
 
 
-def run_test(method_obj):
+def run_test(method_obj) -> bool:
     """
     Runs and logs the results of the test obj passed through
     :param method_obj: testfile obj
-    :return: bool, true if passed, false if failed
     """
+    # Run Test
     results = method_obj.run_tests()
+
     # Logs results
     if results.failures:
         for result in results.failures:
@@ -29,10 +30,10 @@ def run_test(method_obj):
 def run_all_tests():
     """
     Runs all units tests
-    :return:
     """
     run_test(LexerTests)
     run_test(HalsteadTests)
     run_test(ComplexityTests)
 
-run_all_tests()
+if __name__ == "__main__":
+    run_all_tests()

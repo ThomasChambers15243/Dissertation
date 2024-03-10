@@ -126,7 +126,7 @@ def fit_rules(args) -> bool:
     return True
 
 
-#@logger.catch
+@logger.catch
 def run_study():
     """
     Runs the study depending on the passed through args
@@ -156,6 +156,7 @@ def run_study():
             logger.error(f"Human Data collection failed. Error: {e}")
         else:
             logger.success("Human Data collection was successful")
+    # Generation Collection
     elif args.dataCollection == 'gen' and STUDY_PARAMS["K_ITERATIONS"] <= 100:
         logger.info("Starting Generation Collection")
         try:

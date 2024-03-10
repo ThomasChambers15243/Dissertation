@@ -2,11 +2,15 @@ import unittest
 from config import PATHS
 from Code import Analyzer
 
+# File Test Name
 TEST_NAME = "Halstead"
 
 class TestEmpty(unittest.TestCase):
+    """
+    Tests against an empty file
+    """
     def test_empty(self):
-        expectedMetrics = {
+        expected_metrics = {
             "DistinctOperatorCount": 0,
             "DistinctOperandCount": 0,
             "TotalOperatorCount": 0,
@@ -20,13 +24,16 @@ class TestEmpty(unittest.TestCase):
             "Time": 0,
             "BugsEstimate": 0
         }
-        realMetrics = Analyzer.HalsteadMetrics(f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}EmtpyFile.py").Metrics
-        self.assertDictEqual(expectedMetrics, realMetrics)
+        real_metrics = Analyzer.HalsteadMetrics(f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}EmtpyFile.py").Metrics
+        self.assertDictEqual(expected_metrics, real_metrics)
 
 
 class TestOperandsWithComments(unittest.TestCase):
+    """
+    Tests with for operands in mostly comment file
+    """
     def test_OperandsWithComments(self):
-        expectedMetrics = {
+        expected_metrics = {
             "DistinctOperatorCount": 0,
             "DistinctOperandCount": 2,
             "TotalOperatorCount": 0,
@@ -40,13 +47,16 @@ class TestOperandsWithComments(unittest.TestCase):
             "Time": 0,
             "BugsEstimate": 0.0
         }
-        realMetrics = Analyzer.HalsteadMetrics(f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}OnlyComments.py").Metrics
-        self.assertDictEqual(expectedMetrics, realMetrics)
+        real_metrics = Analyzer.HalsteadMetrics(f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}OnlyComments.py").Metrics
+        self.assertDictEqual(expected_metrics, real_metrics)
 
 
 class TestExampleScript(unittest.TestCase):
+    """
+    Tests against example scriptsw
+    """
     def testScript_1(self):
-        expectedMetrics = {
+        expected_metrics = {
             "DistinctOperatorCount": 3,
             "DistinctOperandCount": 6,
             "TotalOperatorCount": 4,
@@ -60,11 +70,11 @@ class TestExampleScript(unittest.TestCase):
             "Time": 2.38,
             "BugsEstimate": 0.01
         }
-        realMetrics = Analyzer.HalsteadMetrics(f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}ExampleScript1.py").Metrics
-        self.assertDictEqual(expectedMetrics, realMetrics)
+        real_metrics = Analyzer.HalsteadMetrics(f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}ExampleScript1.py").Metrics
+        self.assertDictEqual(expected_metrics, real_metrics)
 
 
-def RunTests():
-    Suite = unittest.TestLoader().loadTestsFromTestCase(TestEmpty)
-    Suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestOperandsWithComments))
-    return unittest.TextTestRunner().run(Suite)
+def run_tests():
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestEmpty)
+    suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestOperandsWithComments))
+    return unittest.TextTestRunner().run(suite)
