@@ -160,7 +160,7 @@ def run_study():
     elif args.dataCollection == 'gen' and STUDY_PARAMS["K_ITERATIONS"] <= 100:
         logger.info("Starting Generation Collection")
         try:
-            data_gather.get_gpt_data(args.temperature)
+            data_gather.get_gpt_data()
         except Exception as e:
             logger.error(f"Generation Collection failed. Error: {e}")
         else:
