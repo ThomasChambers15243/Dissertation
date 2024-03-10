@@ -21,7 +21,6 @@ STUDY_PARAMS = {
 }
 
 ROOT_DIR = f"{os.path.dirname(os.path.abspath(__file__))}/"
-print(ROOT_DIR)
 
 PATHS = {
     "ROOT_DIR": ROOT_DIR,
