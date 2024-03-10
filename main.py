@@ -87,7 +87,8 @@ def args_exists(args) -> bool:
         if not args.K_iterations:
             logger.error("Missing args k_iterations (-k)")
             return False
-    except Exception:
+    except Exception as e:
+        logger.error(f"Argument Failure. Error: {e}")
         return False
     return True
 
@@ -125,7 +126,7 @@ def fit_rules(args) -> bool:
     return True
 
 
-@logger.catch
+#@logger.catch
 def run_study():
     """
     Runs the study depending on the passed through args
@@ -150,17 +151,17 @@ def run_study():
     if args.dataCollection == 'h':
         logger.info("Starting Human Collection")
         try:
-            data_gather.GetHumanData()
-        except Exception:
-            logger.error("Human Data collection failed")
+            data_gather.get_human_data()
+        except Exception as e:
+            logger.error(f"Human Data collection failed. Error: {e}")
         else:
             logger.success("Human Data collection was successful")
     elif args.dataCollection == 'gen' and STUDY_PARAMS["K_ITERATIONS"] <= 100:
         logger.info("Starting Generation Collection")
         try:
             data_gather.GetGPTData(args.temperature)
-        except Exception:
-            logger.error("Generation Collection failed")
+        except Exception as e:
+            logger.error(f"Generation Collection failed. Error: {e}")
         else:
             logger.success("Finished Generation Collection")
     else:
