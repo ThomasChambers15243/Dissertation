@@ -53,7 +53,7 @@ class TestOperandsWithComments(unittest.TestCase):
 
 class TestExampleScript(unittest.TestCase):
     """
-    Tests against example scriptsw
+    Tests against example python scripts
     """
     def testScript_1(self):
         expected_metrics = {

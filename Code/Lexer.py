@@ -2,14 +2,16 @@ class Lexer:
     """
     Tokenizes a python file into operators and operands
     Suitable for use in Halstead Complexity Measures
+    Valid Python file must be passed through else error
     """
 
     def __init__(self):
         # Returned Counts
-        self.operator_count = 0;
-        self.operand_count = 0;
+        self.operator_count = 0
+        self.operand_count = 0
         self.distinct_operators = {}
         self.distinct_operands = {}
+
         # Valid Operators
         self.operator_table = {
             # Assingment
@@ -89,13 +91,16 @@ class Lexer:
             "with": "op",
             "yield": "op",
         }
+
         # File Path
         self.file = None
+
         # Char Types
         self.block_quote_chars_three = ["'''", '"""']
         self.comment_char = "#"
         self.null_tolkens = [' ', '\n', ',']
         self.string_chars = ["'", '"']
+
         # Flags
         self.in_quote_block = False
         self.in_string = False
@@ -104,7 +109,7 @@ class Lexer:
         self.line = ""
         self.current = 0
 
-    def tokenize_code(self, file: str) -> tuple:
+    def tokenize_code(self, file: str) -> tuple[dict,dict,int,int]:
         """
         Tokenises the code in the file as compatible Halstead operands and operators
         :param file: File Path
@@ -117,6 +122,7 @@ class Lexer:
                 # Adds 5 spaces to the end of the line to prevent index out of range errors
                 self.line = r"".join(line) + "     "
                 self.current = 0
+
                 # Loop through each line
                 while self.current <= len(self.line) - 3:
                     # Handles comments and Blocks
@@ -243,7 +249,7 @@ class Lexer:
         if operator != "":
             self.add_token_operator(operator)
 
-    def add_number(self) -> bool:
+    def add_number(self):
         """
         Gets Number and adds it to the token list
         :return: None
@@ -280,7 +286,7 @@ class Lexer:
         """
         return self.line[self.current] in self.operator_table or self.line[self.current] == '!'
 
-    def add_token(self, token : str) -> None:
+    def add_token(self, token: str) -> None:
         """
         Adds token to the distinctOperators or distinctOperands dictionary
         :param token: Token to be added
@@ -293,7 +299,7 @@ class Lexer:
             self.operand_count += 1
             self.distinct_operands[token] = token
 
-    def add_token_operator(self, token : str) -> bool:
+    def add_token_operator(self, token: str):
         """
         Added operators to token list. Accounts for strings of operators.
         :param token: Token to be added

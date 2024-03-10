@@ -14,12 +14,12 @@ def innit_csv(csv_path: str, headers: list) -> None:
         writer.writerow(headers)
 
 
-def calculate_sample_score(metrics: dict):
+def calculate_sample_score(metrics: dict) -> float:
     """
     Calculates one value from the entire metrics dictionary
     Needs to be updated with scoring weights
-    :param metrics:
-    :return:
+    :param metrics: All Halstead
+    :return: Total score of all metrics
     """
     sample_sum = 0
     for key, value in metrics.items():
@@ -34,5 +34,9 @@ def calculate_sample_score(metrics: dict):
     return sample_sum
 
 
-def clear_test_write_file():
-    open("Tests/MethodTestFile.py", 'w').close()
+def clear_file(file_path) -> None:
+    """
+    Clears the
+    :return:
+    """
+    open(file_path, 'w').close()

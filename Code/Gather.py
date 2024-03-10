@@ -8,10 +8,10 @@ from Code import functionality
 from Code import mccabe
 from loguru import logger
 
-'''
+"""
 Class to Gather all data from the samples
 Write the human and generated data to csv
-'''
+"""
 
 
 class Gather:
@@ -43,7 +43,8 @@ class Gather:
 
     def get_gpt_data(self) -> None:
         """
-        Gathers generation data
+        Gathers generation data and write results to csv and log files
+        :return None
         """
         # Set Type
         self.collection_type = "gen"
@@ -97,11 +98,12 @@ class Gather:
                               f"    Q5: {self.pass_at_ks[4]}\n")
 
         # Reset methodTestFile
-        DataHelper.clear_test_write_file()
+        DataHelper.clear_file("Tests/MethodTestFile.py")
 
     def get_human_data(self) -> None:
         """
-        Gather human data
+        Gather human data and write results to csv and logs files
+        :return None
         """
         # Set Type
         self.collection_type = "h"
@@ -127,11 +129,13 @@ class Gather:
                               f"Not Valid: {self.not_vaild}\n")
 
         # Reset methodTestFile
-        DataHelper.clear_test_write_file()
+        DataHelper.clear_file("Tests/MethodTestFile.py")
 
     def _collect_metrics(self, problem: str, file_path: str) -> dict:
         """
         Collect metrics from the problem folder
+        :param Problem in form p{b}
+        :return Dict of metrics with each sum metric for each solution
         """
         # Sum all metrics for each solution
         total_sum_metrics = self._sum_metric_scores(file_path)
@@ -147,6 +151,7 @@ class Gather:
     def _innit_solutions_folder(self) -> None:
         """
         Wipes any previous generations in solutions
+        :return None
         """
         # Checks if the folder exists, if so, wipes the contents so the study starts anew
         for i in range(self.PROBLEM_AMOUNT):
@@ -158,18 +163,18 @@ class Gather:
                 # Create the folder
                 os.mkdir(f"{self.GPT_SOLUTIONS_FILE_PATH}problem{i}")
 
-    def _generate_solutions(self, temperature: float, problem_number: int, problem: str):
+    def _generate_solutions(self, temperature: float, problem_number: int, problem: str) -> None:
         """
         Generated GeneratedSolutions k number of times for the
         given problem and temperature
-        :param temperature:
-        :param problem_number:
-        :param problem:
-        :return:
+        :param temperature: Temperature for model to use in generation
+        :param problem_number: Problem number
+        :param problem: Problem as p{n} form
+        :return: None
         """
         for i in range(self.k_iterations):
             with open(f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problem_number}/generated--n{i}.py", "w") as file:
-                response = Generation.get_responce(self.PROBLEMS[problem], temperature)
+                response = Generation.get_response(self.PROBLEMS[problem], temperature)
 
                 # Clean file from ```python & ``` comments in file
                 # A common occurrence in generation where otherwise the code would
@@ -178,12 +183,13 @@ class Gather:
                 response = response.replace("```", "")
                 file.write(response)
 
-    def _sum_metric_scores(self, file_path: str):
+    def _sum_metric_scores(self, file_path: str) -> dict:
         """
         Given a folder with solutions,
         returns one dictionary with the total
         metrics of each solution
         :param file_path: String file path to get scores from
+        :return Dict containing the total Halstead scores of each solution
         """
         # Dictionary to hold the sum total of metrics
         total_metrics = {
@@ -213,11 +219,11 @@ class Gather:
             total_metrics["MccabeComplexity"] = mccabe.get_total_value(k_file)
         return total_metrics
 
-    def _calculate_average_metric(self, total_metrics):
+    def _calculate_average_metric(self, total_metrics: dict) -> dict:
         """
         Calculates average metric scores
-        :param total_metrics:
-        :return:
+        :param total_metrics: Dict of Halstead scores
+        :return: Dict of each average Halstead score for all solutions
         """
         # Calculates the mean for each metric
         for key, values in total_metrics.items():
@@ -227,24 +233,25 @@ class Gather:
                 return total_metrics
         return total_metrics
 
-    def _write_results(self, file_path):
+    def _write_results(self, file_path: str) -> None:
         """
         Writes the sample score to given csv file
-        :param file_path:
-        :return:
+        :param file_path: File path to write
+        :return: None
         """
         with open(file_path, "a", newline='') as file:
             writer = csv.writer(file)
+
             # Write Scores
             for key, value in self.sample_score.items():
                 writer.writerow([key, self.k_iterations, round(value, 2)])
 
-    def _write_raw_results(self, prob_number, metrics):
+    def _write_raw_results(self, prob_number: int, metrics: dict) -> None:
         """
         Writes the raw results to raw csv file
-        :param prob_number:
-        :param metrics:
-        :return:
+        :param prob_number: The problem number relevant to the metric scores
+        :param metrics: Metrics Halstead scores to write to the csv
+        :return: None
         """
         # Raw Headers
         # ["Problem", "Solution Amount", "Distinct Operators", "Distinct Operands", "Total Operators",

@@ -55,7 +55,7 @@ class HalsteadMetrics:
         # Calculates and stores the Halstead metrics for the given file
         self.set_metrics()
 
-    def set_metrics(self):
+    def set_metrics(self) -> None:
         """
         Sets the instances metrics
         :return: None

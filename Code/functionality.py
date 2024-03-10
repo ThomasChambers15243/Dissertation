@@ -29,10 +29,10 @@ def test_generation_functionality(source: str, prob_num: int, k: int) -> int:
 
 def test_human_functionality(source: str, prob_num: int) -> int:
     """
-    Tests the human solutions
-    :param source:
-    :param prob_num:
-    :return: bool
+    Tests how many human solutions passed the problem
+    :param source: File Source
+    :param prob_num: The problem number
+    :return: Number of successful solutions
     """
     num_attempts = len(os.listdir(f"HumanSolutions/problem{prob_num}"))
     return sum(
@@ -42,7 +42,7 @@ def test_human_functionality(source: str, prob_num: int) -> int:
     )
 
 
-def pass_atk(n, c, k):
+def pass_atk(n: float, c: float, k: float) -> float:
     """
     The probability that at least one of the top k-generated code samples for a problem passes the unit tests
     Code taken from: https://arxiv.org/pdf/2107.03374.pdf
@@ -50,7 +50,7 @@ def pass_atk(n, c, k):
     :param n: total number of samples
     :param c: number of correct samples
     :param k: k in pass@$k$
-    :return: float
+    :return: Pass@k value as float
     """
     if n - c < k:
         return 1.0
@@ -62,7 +62,7 @@ def can_file_pass(source: str, prob_num: int) -> bool:
     Checks whether the give python file passes the given task
     :param source: File path
     :param prob_num: Problem number
-    :return: bool
+    :return: Bool value, True if pass, else False
     """
     # Checks if file is valid
     if not valid_file(source):
@@ -86,20 +86,20 @@ def can_file_pass(source: str, prob_num: int) -> bool:
     return True
 
 
-def check_tests(passed):
+def check_tests(passed) -> bool:
     """
-    Checks if the tests were successful or not
+    Checks if the unit tests were successful or not
     :param passed: unnitest results
-    :return: bool
+    :return: True if passed, else false
     """
     return len(passed.failures) == 0 and len(passed.errors) == 0
 
 
-def valid_file(source):
+def valid_file(source: str):
     """
     Checks if the file is a valid python file that can compile
     :param source: File path
-    :return: bools
+    :return: Bool, true if valid python file, else false
     """
     try:
         with open(source, 'r', encoding="utf8") as file:
