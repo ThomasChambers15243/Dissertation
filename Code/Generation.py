@@ -7,7 +7,7 @@ openai.api_key = API_KEY
 # Engines Model
 MODEL = "gpt-3.5-turbo"
 
-def GetResponce(prompt: str, temperature=0.6) -> str:
+def get_responce(prompt: str, temperature=0.6) -> str:
     """
     Gets a response from the GPT-3.5 API
     :param prompt: Prompt to pass through
@@ -26,6 +26,5 @@ def GetResponce(prompt: str, temperature=0.6) -> str:
         ],
         temperature=temperature,
     )
-    #print("ds")
-    #return "print('hello')"
+
     return response['choices'][0]['message']['content']

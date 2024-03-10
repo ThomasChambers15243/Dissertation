@@ -11,7 +11,7 @@ class TestEmpty(unittest.TestCase):
     """
     def test_BlankInput(self):
         lexer = Lexer.Lexer()
-        distinct_operator, distinct_operand, operator_count, operand_count = lexer.TokenizeCode(
+        distinct_operator, distinct_operand, operator_count, operand_count = lexer.tokenize_code(
             f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}EmtpyFile.py")
 
         self.assertEqual(len(distinct_operator), 0)
@@ -27,7 +27,7 @@ class TestOnlyComments(unittest.TestCase):
     """
     def test_OnlyComments(self):
         lexer = Lexer.Lexer()
-        distinct_operator, distinct_operand, operator_count, operand_count = lexer.TokenizeCode(
+        distinct_operator, distinct_operand, operator_count, operand_count = lexer.tokenize_code(
             f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}OnlyComments.py")
 
         self.assertEqual(len(distinct_operator), 0)
@@ -44,7 +44,7 @@ class TestOnlyOperators(unittest.TestCase):
     """
     def test_OnlyOperatorsUnique(self):
         lexer = Lexer.Lexer()
-        distinct_operator, distinct_operand, operator_count, operand_count = lexer.TokenizeCode(
+        distinct_operator, distinct_operand, operator_count, operand_count = lexer.tokenize_code(
             f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}OnlyOperators.py")
 
         self.assertEqual(69, operator_count)
@@ -58,7 +58,7 @@ class TestOnlyOperands(unittest.TestCase):
     """
     def test_OnlyOperandsUnique(self):
         lexer = Lexer.Lexer()
-        distinct_operator, distinct_operand, operator_count, operand_count = lexer.TokenizeCode(
+        distinct_operator, distinct_operand, operator_count, operand_count = lexer.tokenize_code(
             f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}OnlyOperands.py")
 
         self.assertEqual(44, operand_count)
@@ -72,7 +72,7 @@ class TestExampleScripts(unittest.TestCase):
     """
     def testScript_1(self):
         lexer = Lexer.Lexer()
-        distinct_operator, distinct_operand, operator_count, operand_count = lexer.TokenizeCode(
+        distinct_operator, distinct_operand, operator_count, operand_count = lexer.tokenize_code(
             f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}ExampleScript1.py")
 
         operator_dict = {'=': '=', '(': '(', ')': ')'}
@@ -86,7 +86,7 @@ class TestExampleScripts(unittest.TestCase):
 
     def testScript_2(self):
         lexer = Lexer.Lexer()
-        distinct_operator, distinct_operand, operator_count, operand_count = lexer.TokenizeCode(
+        distinct_operator, distinct_operand, operator_count, operand_count = lexer.tokenize_code(
             f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}ExampleScript2.py")
 
         operator_dict = {'def': 'def', '(': '(', ':': ':', ')': ')', '->': '->', 'return': 'return',
@@ -103,7 +103,7 @@ class TestExampleScripts(unittest.TestCase):
 
     def testsScript_3(self):
         lexer = Lexer.Lexer()
-        distinct_operator, distinct_operand, operator_count, operand_count = lexer.TokenizeCode(
+        distinct_operator, distinct_operand, operator_count, operand_count = lexer.tokenize_code(
             f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}ExampleScript3.py")
 
         operator_dict = {'class': 'class', '(': '(', ')': ')', ':': ':', 'def': 'def', '=': '=', '-': '-', '.': '.',

@@ -6,12 +6,12 @@ class Lexer:
 
     def __init__(self):
         # Returned Counts
-        self.operatorCount = 0;
-        self.operandCount = 0;
-        self.distinctOperators = {}
-        self.distinctOperands = {}
+        self.operator_count = 0;
+        self.operand_count = 0;
+        self.distinct_operators = {}
+        self.distinct_operands = {}
         # Valid Operators
-        self.operatorTable = {
+        self.operator_table = {
             # Assingment
             "+=": "op",
             "*=": "op",
@@ -92,19 +92,19 @@ class Lexer:
         # File Path
         self.file = None
         # Char Types
-        self.blockQuoteCharsThree = ["'''", '"""']
-        self.commentChar = "#"
-        self.nullTolkens = [' ', '\n', ',']
-        self.stringChars = ["'", '"']
+        self.block_quote_chars_three = ["'''", '"""']
+        self.comment_char = "#"
+        self.null_tolkens = [' ', '\n', ',']
+        self.string_chars = ["'", '"']
         # Flags
-        self.inQuoteBlock = False
-        self.inString = False
+        self.in_quote_block = False
+        self.in_string = False
         # Line Trackers
-        self.currentString = ""
+        self.current_string = ""
         self.line = ""
         self.current = 0
 
-    def TokenizeCode(self, file: str) -> tuple:
+    def tokenize_code(self, file: str) -> tuple:
         """
         Tokenises the code in the file as compatible Halstead operands and operators
         :param file: File Path
@@ -120,87 +120,87 @@ class Lexer:
                 # Loop through each line
                 while self.current <= len(self.line) - 3:
                     # Handles comments and Blocks
-                    if not self.inString:
-                        if self.handleComments():
+                    if not self.in_string:
+                        if self.handle_comments():
                             break
-                        if self.isQuoteBlockChars() and self.handleBlockQuote():
+                        if self.is_quote_block_chars() and self.handle_block_quote():
                             continue
-                        if self.inQuoteBlock:
+                        if self.in_quote_block:
                             self.current += 1
                             continue
 
                     # Checks String
-                    if self.inStringBlock():
-                        self.addString()
+                    if self.in_string_block():
+                        self.add_string()
 
                     # Skip Null Tokens
-                    if self.skipNullTokens():
+                    if self.skip_null_tokens():
                         continue
 
                     # Checks Letter
                     if self.line[self.current].isalpha() or self.line[self.current] == '_':
-                        self.addOperand()
+                        self.add_operand()
 
                     # Checks Operator
-                    if self.isOperatorChar():
-                        self.addOperator()
+                    if self.is_operator_char():
+                        self.add_operator()
 
                     # Digit/number
                     if self.line[self.current].isdigit():
-                        self.addNumber()
+                        self.add_number()
 
-        return self.distinctOperators, self.distinctOperands, self.operatorCount, self.operandCount
+        return self.distinct_operators, self.distinct_operands, self.operator_count, self.operand_count
 
-    def handleComments(self) -> bool:
+    def handle_comments(self) -> bool:
         """
         Resets the current index to 0 if the current line is a comment
         :return: Bool
         """
-        if self.line[self.current] == self.commentChar and not self.inQuoteBlock:
+        if self.line[self.current] == self.comment_char and not self.in_quote_block:
             self.current = 0
             return True
         return False
 
-    def handleBlockQuote(self) -> bool:
+    def handle_block_quote(self) -> bool:
         """
         Skips block quote chars and flips inQuoteBlock flag
         :return: Bool
         """
         self.current += 3
-        self.inQuoteBlock = not self.inQuoteBlock
-        return self.inQuoteBlock
+        self.in_quote_block = not self.in_quote_block
+        return self.in_quote_block
 
-    def isQuoteBlockChars(self) -> bool:
+    def is_quote_block_chars(self) -> bool:
         """
         Uses a lookahead to check if the current token is a block quote
         :return: bool
         """
-        isQuote = self.line[self.current]
+        is_quote = self.line[self.current]
         for i in range(1, 3):
-            isQuote += self.line[self.current + i]
-        return isQuote in self.blockQuoteCharsThree
+            is_quote += self.line[self.current + i]
+        return is_quote in self.block_quote_chars_three
 
-    def skipNullTokens(self) -> bool:
+    def skip_null_tokens(self) -> bool:
         """
         Skips null tokens
         :return: bool
         """
-        while self.isNullToken():
+        while self.is_null_token():
             self.current += 1
             if self.current >= len(self.line) - 2:
                 return True
         return False
 
-    def inStringBlock(self) -> bool:
+    def in_string_block(self) -> bool:
         """
         Flips inString flag if token is a string character
         :return: bool
         """
-        if self.line[self.current] in self.stringChars:
-            self.inString = not self.inString
-        return self.inString
+        if self.line[self.current] in self.string_chars:
+            self.in_string = not self.in_string
+        return self.in_string
 
-    def addString(self) -> None:
+    def add_string(self) -> None:
         """
         Gets string and adds it to the token list
         :return: None
@@ -208,7 +208,7 @@ class Lexer:
         string = ""
         self.current += 1
         # Loops until end of string character is found. Does not add "|' to string
-        while self.inStringBlock():
+        while self.in_string_block():
             string += self.line[self.current]
             self.current += 1
             # Handles escape characters
@@ -216,34 +216,34 @@ class Lexer:
                 string += self.line[self.current + 1]
                 self.current += 2
         # Adds token and updates current to skip " character
-        self.addToken(string)
+        self.add_token(string)
         self.current += 1
 
-    def addOperand(self) -> None:
+    def add_operand(self) -> None:
         """
         Gets Operand and adds it to the token list
         :return: None
         """
         word = ""
-        while self.isWordChar():
+        while self.is_word_char():
             word += self.line[self.current]
             self.current += 1
         if word != "":
-            self.addToken(word)
+            self.add_token(word)
 
-    def addOperator(self) -> None:
+    def add_operator(self) -> None:
         """
         Gets Operator and adds it to the token list
         :return: None
         """
         operator = ""
-        while self.isOperatorChar():
+        while self.is_operator_char():
             operator += self.line[self.current]
             self.current += 1
         if operator != "":
-            self.addTokenOperator(operator)
+            self.add_token_operator(operator)
 
-    def addNumber(self) -> bool:
+    def add_number(self) -> bool:
         """
         Gets Number and adds it to the token list
         :return: None
@@ -257,51 +257,51 @@ class Lexer:
                 number += self.line[self.current]
                 self.current += 1
         if number != "":
-            self.addToken(number)
+            self.add_token(number)
 
-    def isNullToken(self) -> bool:
+    def is_null_token(self) -> bool:
         """
         Checks if token is a null token
         :return: bool
         """
-        return self.line[self.current] in self.nullTolkens
+        return self.line[self.current] in self.null_tolkens
 
-    def isWordChar(self) -> bool:
+    def is_word_char(self) -> bool:
         """
         Checks if token is a word character
         :return: bool
         """
         return self.line[self.current].isalpha() or self.line[self.current] == '_' or self.line[self.current].isdigit()
 
-    def isOperatorChar(self) -> bool:
+    def is_operator_char(self) -> bool:
         """
         Checks if token is an operator character
         :return: bool
         """
-        return self.line[self.current] in self.operatorTable or self.line[self.current] == '!'
+        return self.line[self.current] in self.operator_table or self.line[self.current] == '!'
 
-    def addToken(self, token : str) -> None:
+    def add_token(self, token : str) -> None:
         """
         Adds token to the distinctOperators or distinctOperands dictionary
         :param token: Token to be added
         :return: None
         """
-        if token in self.operatorTable:
-            self.operatorCount += 1
-            self.distinctOperators[token] = token
+        if token in self.operator_table:
+            self.operator_count += 1
+            self.distinct_operators[token] = token
         else:
-            self.operandCount += 1
-            self.distinctOperands[token] = token
+            self.operand_count += 1
+            self.distinct_operands[token] = token
 
-    def addTokenOperator(self, token : str) -> bool:
+    def add_token_operator(self, token : str) -> bool:
         """
         Added operators to token list. Accounts for strings of operators.
         :param token: Token to be added
         :return: None
         """
-        if token in self.operatorTable:
-            self.operatorCount += 1
-            self.distinctOperators[token] = token
+        if token in self.operator_table:
+            self.operator_count += 1
+            self.distinct_operators[token] = token
         else:
             for t in token:
-                self.addToken(t)
+                self.add_token(t)

@@ -46,13 +46,13 @@ class TestQ1(unittest.TestCase):
 class TestQ2(unittest.TestCase):
     def test_sum(self):
         importlib.reload(MethodTestFile)
-        floatList = [('4990', '1116'), ('3687', '2976'), ('1814', '4687'), ('2377', '3341'), ('436', '4656'),
+        float_list = [('4990', '1116'), ('3687', '2976'), ('1814', '4687'), ('2377', '3341'), ('436', '4656'),
                      ('3444', '1901'), ('4233', '4029'), ('2966', '2973'), ('2784', '4711'), ('3393', '4069')]
-        self.assertEqual(MethodTestFile.Q2(floatList), 30127.4459)
-        floatList = [('3182', '4951'), ('3014', '2519'), ('4346', '1905'), ('3840', '4423'), ('4092', '1638'),
+        self.assertEqual(MethodTestFile.Q2(float_list), 30127.4459)
+        float_list = [('3182', '4951'), ('3014', '2519'), ('4346', '1905'), ('3840', '4423'), ('4092', '1638'),
                      ('4556', '413'), ('3915', '14'), ('624', '4556'), ('815', '258'), ('692', '4254')]
-        self.assertEqual(MethodTestFile.Q2(floatList), 29079.235600000004)
-        floatList = [('715', '60'), ('1504', '4301'), ('1129', '3608'), ('2840', '3545'), ('1274', '2745'),
+        self.assertEqual(MethodTestFile.Q2(float_list), 29079.235600000004)
+        float_list = [('715', '60'), ('1504', '4301'), ('1129', '3608'), ('2840', '3545'), ('1274', '2745'),
                      ('3909', '352'), ('1352', '1322'), ('3442', '1500'), ('2426', '4063'), ('2930', '871'),
                      ('4135', '2283'), ('195', '4716'), ('3549', '1412'), ('4260', '2751'),
                      ('2521', '1029'), ('4408', '4690'), ('1712', '2928'), ('3822', '459'), ('3644', '733'),
@@ -74,7 +74,7 @@ class TestQ2(unittest.TestCase):
                      ('1551', '4859'), ('2869', '835'), ('321', '2947'), ('963', '3789'), ('583', '3287'),
                      ('232', '4722'), ('3672', '1930'), ('2118', '2534'), ('4300', '5087'),
                      ('4688', '3892'), ('3032', '3517')]
-        self.assertEqual(MethodTestFile.Q2(floatList), 244963.82360000012)
+        self.assertEqual(MethodTestFile.Q2(float_list), 244963.82360000012)
 
 
 class TestQ3(unittest.TestCase):
@@ -134,10 +134,10 @@ class TestQ4(unittest.TestCase):
         :param node: Root node
         :return: bool
         """
-        lastMin = -1
+        last_min = -1
         while node.next is not None:
-            self.assertGreaterEqual(node.data, lastMin)
-            lastMin = node.data
+            self.assertGreaterEqual(node.data, last_min)
+            last_min = node.data
             node = node.next
 
     def test_AlreadySortedList(self):
@@ -167,14 +167,14 @@ class TestQ5(unittest.TestCase):
             self.data = data
             self.children = []
 
-        def AddChild(self, node):
+        def add_child(self, node):
             self.children.append(node)
 
-        def AddChildren(self, numChildren: int, childrenData: list[int]):
-            for child in range(numChildren):
-                self.AddChild(TestQ5.Node(childrenData[child]))
+        def add_children(self, num_children: int, children_data: list[int]):
+            for child in range(num_children):
+                self.add_child(TestQ5.Node(children_data[child]))
 
-    def MakeTree(self, root, numChildren: int, childrenData: list[int], depth: int, level: int) -> Node:
+    def MakeTree(self, root, num_children: int, children_data: list[int], depth: int, level: int) -> Node:
         '''
         Makes the tree
         :param root: The root node
@@ -184,10 +184,10 @@ class TestQ5(unittest.TestCase):
         :param level: The current level of the tree
         '''
         if level != depth:
-            root.AddChildren(numChildren, childrenData)
+            root.AddChildren(num_children, children_data)
             level += 1
             for child in root.children:
-                self.MakeTree(child, numChildren, childrenData, depth, level)
+                self.MakeTree(child, num_children, children_data, depth, level)
             return root
 
     class TreeSearch:
@@ -198,13 +198,13 @@ class TestQ5(unittest.TestCase):
         def __init__(self, node):
             self.values = [node.data]
             self.node = node
-            self.Search(node)
+            self.search(node)
 
-        def Search(self, node):
+        def search(self, node):
             if len(node.children) == 0:
                 return node.data
             for child in node.children:
-                value = self.Search(child)
+                value = self.search(child)
                 if value is not None:
                     self.values.append(value)
             return node.data
@@ -212,17 +212,17 @@ class TestQ5(unittest.TestCase):
     def tests_NoDupes(self):
         importlib.reload(MethodTestFile)
         # Gets the tree from solution
-        treeZeroDupes = MethodTestFile.Q5(self.MakeTree(self.Node(0), 2, [1, 2], 1, 0))
-        treeDupes = MethodTestFile.Q5(self.MakeTree(self.Node(0), 5, [1, 2, 3, 4, 5], 5, 0))
+        tree_zero_dupes = MethodTestFile.Q5(self.MakeTree(self.Node(0), 2, [1, 2], 1, 0))
+        tree_dupes = MethodTestFile.Q5(self.MakeTree(self.Node(0), 5, [1, 2, 3, 4, 5], 5, 0))
 
         # Searches the tree
-        searchZeroDupes = self.TreeSearch(treeZeroDupes)
-        searchDupes = self.TreeSearch(treeDupes)
+        search_zero_dupes = self.TreeSearch(tree_zero_dupes)
+        search_dupes = self.TreeSearch(tree_dupes)
 
         # Test the trees
         # A set does not have duplicate values, even if they are added.
-        self.assertEqual(len(searchZeroDupes.values), len(set(searchZeroDupes.values)))
-        self.assertEqual(len(searchDupes.values), len(set(searchDupes.values)))
+        self.assertEqual(len(search_zero_dupes.values), len(set(search_zero_dupes.values)))
+        self.assertEqual(len(search_dupes.values), len(set(search_dupes.values)))
 
 
 """

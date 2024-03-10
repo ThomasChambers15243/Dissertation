@@ -1,15 +1,11 @@
+import csv
+import json
+import os
 from Code import Analyzer
 from Code import Generation
 from Code import functionality
 from Code import mccabe
-from config import PATHS
 from loguru import logger
-import csv
-import json
-import os
-
-# Init Logger
-#logger.add(sink=PATHS['LOG_RESULTS'], level="INFO")
 
 '''
 Class to Gather all data from the samples
@@ -29,15 +25,15 @@ class Gather:
         self.PROBLEMS = json.load(open(params["PROBLEMS_FILE_PATH"], encoding="utf8"))
 
         # Research Parameters
-        self.collectionType = ""
+        self.collection_type = ""
         self.PROBLEM_AMOUNT = params["PROBLEM_AMOUNT"]
         self.TEMPERATURE = params["TEMPERATURE"]
         self.k_iterations = params["K_ITERATIONS"]
-        self.rawCSVHeaders = ["Problem", "Solution Amount", "Not Valid", "Distinct Operators", "Distinct Operands",
+        self.raw_csv_headers = ["Problem", "Solution Amount", "Not Valid", "Distinct Operators", "Distinct Operands",
                               "Total Operators",
                               "Total Operands", "Vocabulary", "Length", "Estimated Program Length", "Volume",
                               "Difficulty", "Effort", "Time", "Bugs Estimate", "Mccabe Complexity"]
-        self.csvHeaders = ["Problem", "Solution Amount", "Not Valid", "Score"]
+        self.csv_headers = ["Problem", "Solution Amount", "Not Valid", "Score"]
 
         # Research Outputs
         self.sample_score = {}
@@ -45,20 +41,19 @@ class Gather:
         self.pass_at_ks = [0, 0, 0, 0, 0]
 
 
-    def GetGPTData(self, temperature):
+    def get_gpt_data(self):
         """
         Gathers generation data
-        :param temperature:
         :return:
         """
         # Set Type
-        self.collectionType = "gen"
+        self.collection_type = "gen"
         # Sets up csv's headers
-        self.__InnitCSV(self.SAMPLE_RESULTS_CSV_FILE_PATH, self.csvHeaders)
-        self.__InnitCSV(self.GEN_RAW_RESULTS_CSV_FILE_PATH, self.rawCSVHeaders)
+        self._innit_csv(self.SAMPLE_RESULTS_CSV_FILE_PATH, self.csv_headers)
+        self._innit_csv(self.GEN_RAW_RESULTS_CSV_FILE_PATH, self.raw_csv_headers)
 
         # Remove any files from solutions
-        self.__InnitSolutionsFolder()
+        self._innit_solutions_folder()
 
         # Passed Count used in pass@k
         # failed = k_iterations - passed
@@ -66,24 +61,24 @@ class Gather:
 
         # Generate GeneratedSolutions to problems at given temperature,
         for problem_number, problem in enumerate(self.PROBLEMS):
-            self.__GenerateSolutions(self.TEMPERATURE, problem_number, problem)
+            self._generate_solutions(self.TEMPERATURE, problem_number, problem)
 
             # Tests Functionality of the Code - to be abstracted into method
             source = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problem_number}/generated--n"
 
-            passed = functionality.TestGenerationFunctionality(source, problem_number, self.k_iterations)
+            passed = functionality.test_generation_functionality(source, problem_number, self.k_iterations)
             total_passed += passed
 
             # Calculate pass@k for each problem
-            self.pass_at_ks[problem_number] = functionality.passAtk(self.k_iterations, passed, self.k_iterations)
+            self.pass_at_ks[problem_number] = functionality.pass_atk(self.k_iterations, passed, self.k_iterations)
 
             # Collects the GeneratedSolutions metrics and stores them in self.sampleScore["problem"]
             file_path = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problem_number}/generated--n"
-            total_sum_metrics = self.__CollectMetrics(problem, file_path)
-            self.__WriteRawResults(problem_number, total_sum_metrics)
+            total_sum_metrics = self._collect_metrics(problem, file_path)
+            self._write_raw_results(problem_number, total_sum_metrics)
 
         # Write metric score to csv
-        self.__WriteResults(self.SAMPLE_RESULTS_CSV_FILE_PATH)
+        self._write_results(self.SAMPLE_RESULTS_CSV_FILE_PATH)
 
         # Calculate results values
         total_samples = {self.k_iterations * self.PROBLEM_AMOUNT}
@@ -103,7 +98,7 @@ class Gather:
                           f"    Q5: {self.pass_at_ks[4]}\n")
 
         # Reset methodTestFile
-        self.clearTestWriteFile()
+        self.clear_test_write_file()
 
 
     def get_human_data(self):
@@ -112,33 +107,33 @@ class Gather:
         :return:
         """
         # Set Type
-        self.collectionType = "h"
-        self.__InnitCSV(self.HUMAN_RESULTS_CSV_FILE_PATH, self.csvHeaders)
-        self.__InnitCSV(self.HUMAN_RAW_RESULTS_CSV_FILE_PATH, self.rawCSVHeaders)
+        self.collection_type = "h"
+        self._innit_csv(self.HUMAN_RESULTS_CSV_FILE_PATH, self.csv_headers)
+        self._innit_csv(self.HUMAN_RAW_RESULTS_CSV_FILE_PATH, self.raw_csv_headers)
         passed = 0
 
         # Collects the GeneratedSolutions metrics and stores them in self.sampleScore["problem"]
-        for problemNumber, problem in enumerate(self.PROBLEMS):
-            filePath = f"{self.HUMAN_SOLUTIONS_FILE_PATH}problem{problemNumber}/human--n"
-            passed += functionality.TestHumanFunctionality(filePath, problemNumber)
-            totalSumMetrics = self.__CollectMetrics(problem, filePath)
-            self.__WriteRawResults(problemNumber, totalSumMetrics)
+        for problem_number, problem in enumerate(self.PROBLEMS):
+            file_path = f"{self.HUMAN_SOLUTIONS_FILE_PATH}problem{problem_number}/human--n"
+            passed += functionality.test_human_functionality(file_path, problem_number)
+            total_sum_metrics = self._collect_metrics(problem, file_path)
+            self._write_raw_results(problem_number, total_sum_metrics)
 
         # Write metric score to csv
-        self.__WriteResults(self.HUMAN_RESULTS_CSV_FILE_PATH)
+        self._write_results(self.HUMAN_RESULTS_CSV_FILE_PATH)
 
         # Log results
-        totalSamples = self.k_iterations * self.PROBLEM_AMOUNT
+        total_samples = self.k_iterations * self.PROBLEM_AMOUNT
         logger.log("Results", f"Human Collection.\n"
-                          f"Total: {totalSamples}.\n"
+                          f"Total: {total_samples}.\n"
                           f"Successful: {passed}.\n"
                           f"Not Valid: {self.not_vaild}\n")
 
         # Reset methodTestFile
-        self.clearTestWriteFile()
+        self.clear_test_write_file()
 
 
-    def __CollectMetrics(self, problem, filePath):
+    def _collect_metrics(self, problem, file_path):
         """
         Collect metrics from the problem folder
         """
@@ -146,18 +141,18 @@ class Gather:
 
         # Calculate average scores and write them to a csv for each sample/problem
         # Sum all metrics for each solution
-        totalSumMetrics = self.__SumMetricScores(filePath)
+        total_sum_metrics = self._sum_metric_scores(file_path)
 
         # Calculate average metric
-        totalSumMetrics = self.__CalculateAverageMetric(totalSumMetrics)
+        total_sum_metrics = self._calculate_average_metric(total_sum_metrics)
 
         # Total up all scores to produce one value
-        self.sample_score[problem] = self.__CalculateSampleScore(totalSumMetrics)
+        self.sample_score[problem] = self._calculate_sample_score(total_sum_metrics)
 
-        return totalSumMetrics
+        return total_sum_metrics
 
 
-    def __InnitSolutionsFolder(self):
+    def _innit_solutions_folder(self):
         """
         Wipes any previous generations in solutions
         :return:
@@ -173,47 +168,46 @@ class Gather:
                 os.mkdir(f"{self.GPT_SOLUTIONS_FILE_PATH}problem{i}")
 
 
-    def __InnitCSV(self, csvPath, headers):
+    def _innit_csv(self, csv_path, headers):
         """
         Sets up headers for Sample Score CSV Data
-        :param csvPath:
+        :param csv_path:
         :param headers:
         :return:
         """
         # Create CSV File with appropriate headers
-        with open(f"{csvPath}", 'w', newline='') as file:
+        with open(f"{csv_path}", 'w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(headers)
 
 
-    def __GenerateSolutions(self, temperature, problemNumber, problem):
+    def _generate_solutions(self, temperature, problem_number, problem):
         """
         Generated GeneratedSolutions k number of times for the
         given problem and temperature
         :param temperature:
-        :param problemNumber:
+        :param problem_number:
         :param problem:
         :return:
         """
         for i in range(self.k_iterations):
-            with open(f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problemNumber}/generated--n{i}.py", "w") as file:
-                response = Generation.GetResponce(self.PROBLEMS[problem], temperature)
+            with open(f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problem_number}/generated--n{i}.py", "w") as file:
+                response = Generation.get_responce(self.PROBLEMS[problem], temperature)
                 # Clean file from ```python & ``` comments in file
                 response = response.replace("```python", "")
                 response = response.replace("```", "")
                 file.write(response)
 
 
-    def __SumMetricScores(self, filePath):
+    def _sum_metric_scores(self, file_path: str):
         """
         Given a folder with solutions,
         returns one dictionary with the total
         metrics of each solution
-        :param filePath:
-        :return:
+        :param file_path: String file path to get scores from
         """
         # Dictionary to hold the sum total of metrics
-        totalMetrics = {
+        total_metrics = {
             "DistinctOperatorCount": 0,
             "DistinctOperandCount": 0,
             "TotalOperatorCount": 0,
@@ -229,70 +223,69 @@ class Gather:
             "MccabeComplexity": 0}
 
         for attempt in range(self.k_iterations):
-            kFile = f"{filePath}{attempt}.py"
+            k_file = f"{file_path}{attempt}.py"
             # Only add valid python files
-            if not functionality.validFile(kFile):
+            if not functionality.valid_file(k_file):
                 self.not_vaild += 1
                 continue
             # Add Halstead and mccabe metric scores
-            for key, values in Analyzer.HalsteadMetrics(kFile).Metrics.items():
-                totalMetrics[key] += values
-            totalMetrics["MccabeComplexity"] = mccabe.GetTotalValue(kFile)
-        return totalMetrics
+            for key, values in Analyzer.HalsteadMetrics(k_file).metrics.items():
+                total_metrics[key] += values
+            total_metrics["MccabeComplexity"] = mccabe.get_total_value(k_file)
+        return total_metrics
 
 
-    def __CalculateAverageMetric(self, totalMetrics):
+    def _calculate_average_metric(self, total_metrics):
         """
         Calculates average metric scores
-        :param totalMetrics:
+        :param total_metrics:
         :return:
         """
         # Calculates the mean for each metric
-        for key, values in totalMetrics.items():
+        for key, values in total_metrics.items():
             try:
-                totalMetrics[key] = values / (self.k_iterations - self.not_vaild)
+                total_metrics[key] = values / (self.k_iterations - self.not_vaild)
             except ZeroDivisionError:
-                return totalMetrics
-        return totalMetrics
+                return total_metrics
+        return total_metrics
 
 
-    def __CalculateSampleScore(self, metrics):
+    def _calculate_sample_score(self, metrics):
         """
         Calculates one value from the entire metrics dictionary
         Needs to be updated with scoring weights
         :param metrics:
         :return:
         """
-        sum = 0
+        sample_sum = 0
         for key, value in metrics.items():
             # Increases impact of Mccabe
             if key == "MccabeComplexity":
-                sum += (value * 100)
+                sample_sum += (value * 100)
             # Reduces the impact of lots of code
             elif key == "EstProgLength" or "Effort":
-                sum += (value / 10)
+                sample_sum += (value / 10)
             else:
-                sum += value
-        return sum
+                sample_sum += value
+        return sample_sum
 
-
-    def __WriteResults(self, filePath):
+    def _write_results(self, file_path):
         """
         Writes the sample score to given csv file
-        :param filePath:
+        :param file_path:
         :return:
         """
-        with open(filePath, "a", newline='') as file:
+        with open(file_path, "a", newline='') as file:
             writer = csv.writer(file)
             # Write Scores
             for key, value in self.sample_score.items():
                 writer.writerow([key, self.k_iterations, round(value, 2)])
 
 
-    def __WriteRawResults(self, probNumber, metrics):
+    def _write_raw_results(self, prob_number, metrics):
         """
         Writes the raw results to raw csv file
-        :param probNumber:
+        :param prob_number:
         :param metrics:
         :return:
         """
@@ -300,14 +293,14 @@ class Gather:
         # ["Problem", "Solution Amount", "Distinct Operators", "Distinct Operands", "Total Operators",
         #     "Total Operands", "Vocabulary", "Length", "Estimated Program Length", "Volume",
         #     "Difficulty", "Effort", "Time", "Bugs Estimate", "Mccabe Complexity"]
-        if self.collectionType == "gen":
+        if self.collection_type == "gen":
             path = self.GEN_RAW_RESULTS_CSV_FILE_PATH
         else:
             path = self.HUMAN_RAW_RESULTS_CSV_FILE_PATH
         with open(path, "a", newline='') as file:
             writer = csv.writer(file)
             writer.writerow([
-                probNumber,
+                prob_number,
                 self.k_iterations,
                 self.not_vaild,
                 round(metrics["DistinctOperatorCount"], 2),
@@ -325,5 +318,6 @@ class Gather:
                 round(metrics["MccabeComplexity"], 2)
             ])
 
-    def clearTestWriteFile(self):
+
+    def clear_test_write_file(self):
         open("Tests/MethodTestFile.py", 'w').close()

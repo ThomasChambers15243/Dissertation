@@ -7,42 +7,42 @@ from Tests import ProblemTests
 
 
 
-def TestGenerationFunctionality(source: str, probNum: int, k: int) -> int:
+def test_generation_functionality(source: str, prob_num: int, k: int) -> int:
     """
     Tests how many generations passed the problem
     :param source: file to be tested
-    :param probNum: given problem number
+    :param prob_num: given problem number
     :param k: total iterations
     :return: number of successful iterations
     """
-    numAttempts = len(os.listdir(f"GeneratedSolutions/problem{probNum}"))
-    if k != numAttempts:
+    num_attempts = len(os.listdir(f"GeneratedSolutions/problem{prob_num}"))
+    if k != num_attempts:
         print("Incorrect amount of generated problem files")
         raise SystemError
 
     # Tests functionality
     return sum(
         1
-        for attempt in range(numAttempts)
-        if CanFilePass(f"{source}{attempt}.py", probNum)
+        for attempt in range(num_attempts)
+        if can_file_pass(f"{source}{attempt}.py", prob_num)
     )
 
-def TestHumanFunctionality(source: str, probNum: int) -> int:
+def test_human_functionality(source: str, prob_num: int) -> int:
     """
     Tests the human solutions
     :param source:
-    :param probNum:
+    :param prob_num:
     :return: bool
     """
-    numAttempts = len(os.listdir(f"HumanSolutions/problem{probNum}"))
+    num_attempts = len(os.listdir(f"HumanSolutions/problem{prob_num}"))
     return sum(
         1
-        for attempt in range(numAttempts)
-        if CanFilePass(f"{source}{attempt}.py", probNum)
+        for attempt in range(num_attempts)
+        if can_file_pass(f"{source}{attempt}.py", prob_num)
     )
 
 
-def passAtk(n,c,k):
+def pass_atk(n, c, k):
     """
     The probability that at least one of the top k-generated code samples for a problem passes the unit tests
     Code taken from: https://arxiv.org/pdf/2107.03374.pdf
@@ -57,15 +57,15 @@ def passAtk(n,c,k):
     return 1.0 - np.prod(1.0 - k / np.arange(n - c + 1, n + 1))
 
 
-def CanFilePass(source: str, probNum: int) -> bool:
+def can_file_pass(source: str, prob_num: int) -> bool:
     """
     Checks whether the give python file passes the given task
     :param source: File path
-    :param probNum: Problem number
+    :param prob_num: Problem number
     :return: bool
     """
     # Checks if file is valid
-    if not validFile(source):
+    if not valid_file(source):
         return False
 
     destination = "Tests/MethodTestFile.py"
@@ -73,20 +73,20 @@ def CanFilePass(source: str, probNum: int) -> bool:
     shutil.copyfile(source, destination)
 
     # Runs tests
-    if probNum == 0:
-        return CheckTests(ProblemTests.run_q1_tests())
-    if probNum == 1:
-        return CheckTests(ProblemTests.run_q2_tests())
-    if probNum == 2:
-        return CheckTests(ProblemTests.run_q3_tests())
-    if probNum == 3:
-        return CheckTests(ProblemTests.run_q4_tests())
-    if probNum == 4:
-        return CheckTests(ProblemTests.run_q5_tests())
+    if prob_num == 0:
+        return check_tests(ProblemTests.run_q1_tests())
+    if prob_num == 1:
+        return check_tests(ProblemTests.run_q2_tests())
+    if prob_num == 2:
+        return check_tests(ProblemTests.run_q3_tests())
+    if prob_num == 3:
+        return check_tests(ProblemTests.run_q4_tests())
+    if prob_num == 4:
+        return check_tests(ProblemTests.run_q5_tests())
     return True
 
 
-def CheckTests(passed):
+def check_tests(passed):
     """
     Checks if the tests were successful or not
     :param passed: unnitest results
@@ -95,7 +95,7 @@ def CheckTests(passed):
     return len(passed.failures) == 0 and len(passed.errors) == 0
 
 
-def validFile(source):
+def valid_file(source):
     """
     Checks if the file is a valid python file that can compile
     :param source: File path
@@ -103,8 +103,8 @@ def validFile(source):
     """
     try:
         with open(source, 'r', encoding="utf8") as file:
-            fSource = file.read()
-        compile(fSource, fSource, 'exec')
+            f_source = file.read()
+        compile(f_source, f_source, 'exec')
         return True
     except Exception as e:
         print(f"Not valid file, Error: {e}")

@@ -13,10 +13,10 @@ Halstead Calculations
     Program vocabulary: n = n1 + n2
     Program length: N = N1 + N2
     Calculated program length: N'=n1log2(n1)+n2log2(n2)
-    Volume: V = Nlog2(n)
-    Difficulty: D = (n1/2) * (N2/n2)
-    Effort: E= DV
-    Time = T = E / 18 sec
+    volume: V = Nlog2(n)
+    difficulty: D = (n1/2) * (N2/n2)
+    effort: E= DV
+    time = T = E / 18 sec
     Bugs Estimate = B = V / 3000
 
 Operators are all normal operators, keywords and brackets of all kinds ( (), [], {} )
@@ -31,142 +31,142 @@ class HalsteadMetrics:
 
     def __init__(self, source: str):
         lexer = Lexer.Lexer()
-        n1, n2, N1, N2 = lexer.TokenizeCode(source)
-        self.distinctOperators = n1
-        self.distinctOperands = n2
-        self.distinctOperatorCount = len(self.distinctOperators)
-        self.distinctOperandCount = len(self.distinctOperands)
-        self.totalOperatorCount = N1
-        self.totalOperandCount = N2
-        self.Metrics = {
+        n1, n2, N1, N2 = lexer.tokenize_code(source)
+        self.distinct_operators = n1
+        self.distinct_operands = n2
+        self.distinct_operator_count = len(self.distinct_operators)
+        self.distinct_operand_count = len(self.distinct_operands)
+        self.total_operator_count = N1
+        self.total_operand_count = N2
+        self.metrics = {
             "DistinctOperatorCount": 0,
             "DistinctOperandCount": 0,
             "TotalOperatorCount": 0,
             "TotalOperandCount": 0,
-            "Vocabulary": 0,
-            "Length": 0,
+            "vocabulary": 0,
+            "length": 0,
             "EstProgLength": 0,
-            "Volume": 0,
-            "Difficulty": 0,
-            "Effort": 0,
-            "Time": 0,
+            "volume": 0,
+            "difficulty": 0,
+            "effort": 0,
+            "time": 0,
             "BugsEstimate": 0
         }
         # Calculates and stores the Halstead metrics for the given file
-        self.SetMetrics()
+        self.set_metrics()
 
-    def SetMetrics(self):
+    def set_metrics(self):
         """
         Sets the instances metrics
         :return: None
         """
-        self.Metrics["DistinctOperatorCount"] = self.distinctOperatorCount
-        self.Metrics["DistinctOperandCount"] = self.distinctOperandCount
-        self.Metrics["TotalOperatorCount"] = self.totalOperatorCount
-        self.Metrics["TotalOperandCount"] = self.totalOperandCount
-        self.Metrics["Vocabulary"] = self.Vocabulary()
-        self.Metrics["Length"] = self.Length()
-        self.Metrics["EstProgLength"] = self.EstimatedProgramLength()
-        self.Metrics["Volume"] = self.Volume()
-        self.Metrics["Difficulty"] = self.Difficulty()
-        self.Metrics["Effort"] = self.Effort()
-        self.Metrics["Time"] = self.Time()
-        self.Metrics["BugsEstimate"] = self.BugsEstimate()
+        self.metrics["DistinctOperatorCount"] = self.distinct_operator_count
+        self.metrics["DistinctOperandCount"] = self.distinct_operand_count
+        self.metrics["TotalOperatorCount"] = self.total_operator_count
+        self.metrics["TotalOperandCount"] = self.total_operand_count
+        self.metrics["vocabulary"] = self.vocabulary()
+        self.metrics["length"] = self.length()
+        self.metrics["EstProgLength"] = self.estimated_program_length()
+        self.metrics["volume"] = self.volume()
+        self.metrics["difficulty"] = self.difficulty()
+        self.metrics["effort"] = self.effort()
+        self.metrics["time"] = self.time()
+        self.metrics["BugsEstimate"] = self.bugs_estimate()
 
-    def PrintStats(self):
+    def print_stats(self):
         """
         Prints raw operator and operand counts
         :return: None
         """
-        print(f"Number of Distinct Operators: {self.distinctOperatorCount}\n")
-        print(f"Number of Distinct Operands: {self.distinctOperandCount}\n")
-        print(f"Total Number of Operators: {self.totalOperatorCount}\n")
-        print(f"Total Number of Operands: {self.totalOperandCount}\n")
+        print(f"Number of Distinct Operators: {self.distinct_operator_count}\n")
+        print(f"Number of Distinct Operands: {self.distinct_operand_count}\n")
+        print(f"Total Number of Operators: {self.total_operator_count}\n")
+        print(f"Total Number of Operands: {self.total_operand_count}\n")
 
-    def PrintAllHalsteadMetrics(self):
+    def print_all_halstead_metrics(self):
         """
         Prints all Stats - counts and Halstead Metrics
         :return: None
         """
-        self.PrintStats()
+        self.print_stats()
 
         # Prints Halstead Calculation Results
-        print(f"Vocabulary: {self.Metrics['Vocabulary']}")
-        print(f"Length: {self.Metrics['Length']}")
-        print(f"Estimated Program Length: {self.Metrics['EstProgLength']}")
-        print(f"Volume: {self.Metrics['Volume']}")
-        print(f"Difficulty: {self.Metrics['Difficulty']}")
-        print(f"Effort: {self.Metrics['Effort']}")
-        print(f"Time: {self.Metrics['Time']}")
-        print(f"Estimated Number of bugs: {self.Metrics['BugsEstimate']}")
+        print(f"vocabulary: {self.metrics['vocabulary']}")
+        print(f"length: {self.metrics['length']}")
+        print(f"Estimated Program length: {self.metrics['EstProgLength']}")
+        print(f"volume: {self.metrics['volume']}")
+        print(f"difficulty: {self.metrics['difficulty']}")
+        print(f"effort: {self.metrics['effort']}")
+        print(f"time: {self.metrics['time']}")
+        print(f"Estimated Number of bugs: {self.metrics['BugsEstimate']}")
 
-    def Vocabulary(self) -> int:
+    def vocabulary(self) -> int:
         """
         Calculates vocabulary score
         :return: int
         """
-        return round(self.distinctOperatorCount + self.distinctOperandCount, 2)
+        return round(self.distinct_operator_count + self.distinct_operand_count, 2)
 
-    def Length(self) -> int:
+    def length(self) -> int:
         """
         Calculates length
         :return: int
         """
-        return round(self.distinctOperatorCount + self.distinctOperandCount, 2)
+        return round(self.distinct_operator_count + self.distinct_operand_count, 2)
 
-    def EstimatedProgramLength(self) -> float:
+    def estimated_program_length(self) -> float:
         """
         Calculates estimated program length
         :return: float
         """
         try:
-            lhs = self.distinctOperatorCount * math.log2(float(self.distinctOperatorCount))
-            rhs = self.distinctOperandCount * math.log2(float(self.distinctOperandCount))
+            lhs = self.distinct_operator_count * math.log2(float(self.distinct_operator_count))
+            rhs = self.distinct_operand_count * math.log2(float(self.distinct_operand_count))
         except ValueError:
             return 0
         return round(lhs + rhs, 2)
 
-    def Volume(self) -> float:
+    def volume(self) -> float:
         """
         Calculates volume score
         :return: float
         """
         try:
-            return round(self.Length() * math.log2(float(self.Vocabulary())), 2)
+            return round(self.length() * math.log2(float(self.vocabulary())), 2)
         except ValueError:
             return 0
 
-    def Difficulty(self) -> float:
+    def difficulty(self) -> float:
         """
         Calculates difficulty score
         :return: float
         """
         try:
             # Catch divide by 0 error
-            if self.distinctOperandCount == 0:
+            if self.distinct_operand_count == 0:
                 return 0
             else:
-                return round((self.distinctOperatorCount / 2) * (self.totalOperandCount / self.distinctOperandCount), 2)
+                return round((self.distinct_operator_count / 2) * (self.total_operand_count / self.distinct_operand_count), 2)
         except ValueError:
             return 0
 
-    def Effort(self) -> float:
+    def effort(self) -> float:
         """
-        Calculates Effort score
+        Calculates effort score
         :return: float
         """
-        return round(self.Difficulty() * self.Volume(), 2)
+        return round(self.difficulty() * self.volume(), 2)
 
-    def Time(self) -> float:
+    def time(self) -> float:
         """
         Calculate time to programn score
         :return: float
         """
-        return round(self.Effort() / 18, 2)
+        return round(self.effort() / 18, 2)
 
-    def BugsEstimate(self) -> float:
+    def bugs_estimate(self) -> float:
         """
         Calculate bug estimate
         :return: float
         """
-        return round(self.Volume() / 3000, 2)
+        return round(self.volume() / 3000, 2)

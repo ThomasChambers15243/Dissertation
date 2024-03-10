@@ -220,7 +220,7 @@ The quality of generated code is vital if the produced code is ever expected to 
 % Write about different code metrics and how they've been used to measure student work
 Pre-1980, software metrics generally worked as a regression model between two variables, conceptually simple, mostly relying on resources and quality. However, during the mid-late 70s, software metrics saw a new direction with Halstead and McCabe \cite{FENTON1999149}. They extracted information from the code design rather than just the static code.
 
-Halstead developed a set of formulas that, when given a code input, would produce a series of scores based on the number of unique and total amount of operands and operators used \cite{Halstead}. The definition of Operands and Operators has slightly different meanings depending on the implementation, but generally, operators are all normal operators, keywords and brackets of all kinds ( (), [], {} ). Operands are variables, methods or function declarations and constants such as Boolean values and strings. Halstead metrics produce useful scores of the complexity of code, such as an estimate of the time to program and the potential for bugs. Although Halstead metrics are not free from critique, various definitions can cause trouble when comparing scores, the use of magic numbers (18 appearing in the Time formula) appears to be arbitrary and it can be argued that the use of operands and operators is too simplistic for modern programming.
+Halstead developed a set of formulas that, when given a code input, would produce a series of scores based on the number of unique and total amount of operands and operators used \cite{Halstead}. The definition of Operands and Operators has slightly different meanings depending on the implementation, but generally, operators are all normal operators, keywords and brackets of all kinds ( (), [], {} ). Operands are variables, methods or function declarations and constants such as Boolean values and strings. Halstead metrics produce useful scores of the complexity of code, such as an estimate of the time to program and the potential for bugs. Although Halstead metrics are not free from critique, various definitions can cause trouble when comparing scores, the use of magic numbers (18 appearing in the time formula) appears to be arbitrary and it can be argued that the use of operands and operators is too simplistic for modern programming.
 
 Other code metrics take different approaches to Halstead to achieve the same goal of scoring code. The \textit{Flesch-Kincaid readability test} \cite{FleschReading} is a method to score the readability of human written language, based on the number of \textit{syllables per words} and \textit{words per sentence}, similar to how Halstead used operators and operands. Kurt Starsinic developed a module, \textit{Fathom.pm}, to apply the Fleshc-Kincaid test to Perl code, producing a score based on the number of \textit{{}tokens per expression}, \textit{expressions per statement} and \textit{statements per subroutine} \cite{Starsinic_1998}.
 \\ \\
@@ -321,13 +321,13 @@ def P2(s):
          Distinct Operands & 15.0 & 18\\
          Total Operators & 41.0 & 50\\
          Total Operands & 27.0 & 32\\
-         Vocabulary & 33.0 & 35\\
-         Length & 68.0 & 82\\
+         vocabulary & 33.0 & 35\\
+         length & 68.0 & 82\\
          Estim Prog Len & 133.66 & 144.55 \\
-         Volume &  343.02 & 420.6\\
-         Difficulty &  16.2 & 15.11\\
-         Effort & 5556.9 & 6355.75\\
-         Time &  308.72 & 353.1\\
+         volume &  343.02 & 420.6\\
+         difficulty &  16.2 & 15.11\\
+         effort & 5556.9 & 6355.75\\
+         time &  308.72 & 353.1\\
          Estim Bugs & 0.11 & 0.14\\
          \hline
     \end{tabular}

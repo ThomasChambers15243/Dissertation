@@ -313,15 +313,15 @@ All above is unmodified apart from some changed import checks
 Bellow is modified from the original
 """
 
-def GetGraphs(fileName: str, threshold=None) -> list[dict]:
+def get_graphs(file_name: str, threshold=None) -> list[dict]:
     """
     Gets graphs complexity
     :param fileName: str of filepath
     :param threshold: Lowest complexity value to be returned. Default None
     :return: list of dicts with keys "Name" "Score"
     """
-    code = _read(fileName)
-    tree = compile(code, fileName, "exec", ast.PyCF_ONLY_AST)
+    code = _read(file_name)
+    tree = compile(code, file_name, "exec", ast.PyCF_ONLY_AST)
     visitor = PathGraphingAstVisitor()
     visitor.preorder(tree, visitor)
 
@@ -333,12 +333,12 @@ def GetGraphs(fileName: str, threshold=None) -> list[dict]:
         or threshold is None
     ]
 
-def GetTotalValue(fileName :str, threshold=None) -> int:
+def get_total_value(file_name :str, threshold=None) -> int:
     """
     Calculates the sum of all complexity's within the file
     :param fileName: str of filepath
     :param threshold: Lowest complexity value to be returned. Default None
     :return: Integer sum
     """
-    return sum(graph["Score"] for graph in GetGraphs(fileName, threshold))
+    return sum(graph["Score"] for graph in get_graphs(file_name, threshold))
 

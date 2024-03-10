@@ -16,13 +16,13 @@
   - Distinct Operand Count
   - Total Operator Count
   - Total Operand Count
-  - Vocabulary
-  - Length
-  - Estimated Program Length
-  - Volume
-  - Difficulty
-  - Effort
-  - Time
+  - vocabulary
+  - length
+  - Estimated Program length
+  - volume
+  - difficulty
+  - effort
+  - time
   - Bugs Estimate
 
 Each of these values will be taken for each code generation per sample. All values will be summed to produce a final measurement for each sample. This will produce a final set of 20 measurements, valuing the code quality of generations. 

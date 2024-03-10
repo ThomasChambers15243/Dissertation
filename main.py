@@ -1,9 +1,9 @@
-import argparse
 import os
 import sys
+import argparse
 from loguru import logger
-from config import STUDY_PARAMS, PATHS
 from Code.Gather import Gather
+from config import STUDY_PARAMS, PATHS
 
 # Resets the file
 open("Tests/MethodTestFile.py", 'w').close()
@@ -160,7 +160,7 @@ def run_study():
     elif args.dataCollection == 'gen' and STUDY_PARAMS["K_ITERATIONS"] <= 100:
         logger.info("Starting Generation Collection")
         try:
-            data_gather.GetGPTData(args.temperature)
+            data_gather.get_gpt_data(args.temperature)
         except Exception as e:
             logger.error(f"Generation Collection failed. Error: {e}")
         else:

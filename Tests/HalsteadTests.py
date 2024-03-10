@@ -24,7 +24,7 @@ class TestEmpty(unittest.TestCase):
             "Time": 0,
             "BugsEstimate": 0
         }
-        real_metrics = Analyzer.HalsteadMetrics(f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}EmtpyFile.py").Metrics
+        real_metrics = Analyzer.HalsteadMetrics(f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}EmtpyFile.py").metrics
         self.assertDictEqual(expected_metrics, real_metrics)
 
 
@@ -47,7 +47,7 @@ class TestOperandsWithComments(unittest.TestCase):
             "Time": 0,
             "BugsEstimate": 0.0
         }
-        real_metrics = Analyzer.HalsteadMetrics(f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}OnlyComments.py").Metrics
+        real_metrics = Analyzer.HalsteadMetrics(f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}OnlyComments.py").metrics
         self.assertDictEqual(expected_metrics, real_metrics)
 
 
@@ -70,7 +70,7 @@ class TestExampleScript(unittest.TestCase):
             "Time": 2.38,
             "BugsEstimate": 0.01
         }
-        real_metrics = Analyzer.HalsteadMetrics(f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}ExampleScript1.py").Metrics
+        real_metrics = Analyzer.HalsteadMetrics(f"{PATHS['PYTHON_FILE_TEST_SAMPLES']}ExampleScript1.py").metrics
         self.assertDictEqual(expected_metrics, real_metrics)
 
 
