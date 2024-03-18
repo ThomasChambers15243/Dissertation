@@ -38,7 +38,8 @@ class Gather:
 
         # Research Outputs
         self.sample_score = {}
-        self.not_vaild = 0
+        self.not_valid = 0
+        self.total_passed = 0
         self.pass_at_ks = [0, 0, 0, 0, 0]
 
     def get_gpt_data(self) -> None:
@@ -55,19 +56,14 @@ class Gather:
         # Remove any files from solutions
         self._innit_solutions_folder()
 
-        # Passed Count used in pass@k
-        # failed = k_iterations - passed
-        total_passed = 0
-
         # Generate GeneratedSolutions to problems at given temperature,
         for problem_number, problem in enumerate(self.PROBLEMS):
             self._generate_solutions(self.TEMPERATURE, problem_number, problem)
-
-            # Tests Functionality of the Code - to be abstracted into method
+            # File path for the problem solution file
             source = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problem_number}/generated--n"
-
+            # Tests functionality of all solutions
             passed = functionality.test_generation_functionality(source, problem_number, self.k_iterations)
-            total_passed += passed
+            self.total_passed += passed
 
             # Calculate pass@k for each problem
             self.pass_at_ks[problem_number] = functionality.pass_atk(self.k_iterations, passed, self.k_iterations)
@@ -87,8 +83,8 @@ class Gather:
         # Log results
         logger.log("Results", f"Generation Collection\n"
                               f"Total: {total_samples}.\n"
-                              f"Successful: {total_passed}.\n"
-                              f"Not Valid: {self.not_vaild}.\n"
+                              f"Successful: {self.total_passed}.\n"
+                              f"Not Valid: {self.not_valid}.\n"
                               f"Average Pass@k: {average_pass_at_k}\n"
                               f"Pass@k Values:\n"
                               f"    Q1: {self.pass_at_ks[0]}\n"
@@ -109,13 +105,17 @@ class Gather:
         self.collection_type = "h"
         DataHelper.innit_csv(self.HUMAN_RESULTS_CSV_FILE_PATH, self.csv_headers)
         DataHelper.innit_csv(self.HUMAN_RAW_RESULTS_CSV_FILE_PATH, self.raw_csv_headers)
-        passed = 0
 
         # Collects the GeneratedSolutions metrics and stores them in self.sampleScore["problem"]
         for problem_number, problem in enumerate(self.PROBLEMS):
+            # File path for the problem solution file
             file_path = f"{self.HUMAN_SOLUTIONS_FILE_PATH}problem{problem_number}/human--n"
-            passed += functionality.test_human_functionality(file_path, problem_number)
-            total_sum_metrics = self._collect_metrics(problem, file_path)
+            #TODO
+            # # Tests the functionality and validity of the solutions
+            self.is_valid = DataHelper.number_of_valid_solutions(file_path, self.k_iterations)
+            passed = DataHelper.number_of_passed_solutions(file_path, self.k_iterations, problem_number)
+
+            total_sum_metrics = self._collect_metrics(problem_number, file_path)
             self._write_raw_results(problem_number, total_sum_metrics)
 
         # Write metric score to csv
@@ -125,26 +125,27 @@ class Gather:
         total_samples = self.k_iterations * self.PROBLEM_AMOUNT
         logger.log("Results", f"Human Collection.\n"
                               f"Total: {total_samples}.\n"
-                              f"Successful: {passed}.\n"
-                              f"Not Valid: {self.not_vaild}\n")
+                              f"Successful: {self.total_passed}.\n"
+                              f"Not Valid: {self.not_valid}\n")
 
         # Reset methodTestFile
         DataHelper.clear_file("Tests/MethodTestFile.py")
 
-    def _collect_metrics(self, problem: str, file_path: str) -> dict:
+    def _collect_metrics(self, problem_number: int, file_path: str) -> dict:
         """
         Collect metrics from the problem folder
         :param Problem in form p{b}
         :return Dict of metrics with each sum metric for each solution
         """
+
         # Sum all metrics for each solution
-        total_sum_metrics = self._sum_metric_scores(file_path)
+        total_sum_metrics = self._sum_metric_scores(problem_number, file_path)
 
         # Calculate average metric
         total_sum_metrics = self._calculate_average_metric(total_sum_metrics)
 
         # Total up all scores to produce one value
-        self.sample_score[problem] = DataHelper.calculate_sample_score(total_sum_metrics)
+        self.sample_score[f"P{problem_number}"] = DataHelper.calculate_sample_score(total_sum_metrics)
 
         return total_sum_metrics
 
@@ -183,7 +184,7 @@ class Gather:
                 response = response.replace("```", "")
                 file.write(response)
 
-    def _sum_metric_scores(self, file_path: str) -> dict:
+    def _sum_metric_scores(self, prob_num: int, file_path: str) -> dict:
         """
         Given a folder with solutions,
         returns one dictionary with the total
@@ -209,9 +210,8 @@ class Gather:
 
         for attempt in range(self.k_iterations):
             k_file = f"{file_path}{attempt}.py"
-            # Only add valid python files
-            if not functionality.valid_file(k_file):
-                self.not_vaild += 1
+            # Only add valid files which passed
+            if not functionality.valid_file(k_file) and functionality.can_file_pass(k_file, prob_num):
                 continue
             # Add Halstead and mccabe metric scores
             for key, values in Analyzer.HalsteadMetrics(k_file).metrics.items():
@@ -219,6 +219,8 @@ class Gather:
             total_metrics["MccabeComplexity"] = mccabe.get_total_value(k_file)
         return total_metrics
 
+    # TODO
+    #   Don't count metrics from non successful submission
     def _calculate_average_metric(self, total_metrics: dict) -> dict:
         """
         Calculates average metric scores
@@ -228,7 +230,7 @@ class Gather:
         # Calculates the mean for each metric
         for key, values in total_metrics.items():
             try:
-                total_metrics[key] = values / (self.k_iterations - self.not_vaild)
+                total_metrics[key] = values / (self.k_iterations - self.not_valid)
             except ZeroDivisionError:
                 return total_metrics
         return total_metrics
@@ -266,7 +268,7 @@ class Gather:
             writer.writerow([
                 prob_number,
                 self.k_iterations,
-                self.not_vaild,
+                self.not_valid,
                 round(metrics["DistinctOperatorCount"], 2),
                 round(metrics["DistinctOperandCount"], 2),
                 round(metrics["TotalOperatorCount"], 2),

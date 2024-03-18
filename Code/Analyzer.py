@@ -103,7 +103,7 @@ class HalsteadMetrics:
     def vocabulary(self) -> int:
         """
         Calculates vocabulary score
-        :return: int
+        :return: intw
         """
         return round(self.distinct_operator_count + self.distinct_operand_count, 2)
 
