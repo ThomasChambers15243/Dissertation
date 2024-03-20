@@ -27,6 +27,6 @@ PATHS = {
     "PYTHON_FILE_TEST_SAMPLES": f"{ROOT_DIR}Tests/TestFiles/PythonFileTestSamples/",
     "LOG_MAIN": f"{ROOT_DIR}Logs/Main.log",
     "LOG_RESULTS": f"{ROOT_DIR}Logs/Results.log",
-    "LOG_TESTING": f"{ROOT_DIR}Logs/SystemUnitTests.log",
+    "LOG_TESTING": f"{ROOT_DIR}Logs/SystemTests.log",
     "LOG_GENERATION_RESPONSES": f"{ROOT_DIR}Logs/GenerationResponses.log"
 }
