@@ -27,7 +27,7 @@ def calculate_sample_score(metrics: dict) -> float:
         if key == "MccabeComplexity":
             sample_sum += (value * 100)
         # Reduces the impact of lots of code
-        elif key == "EstProgLength" or "Effort":
+        elif key == "EstProgLength" or  "Effort":
             sample_sum += (value / 10)
         else:
             sample_sum += value
