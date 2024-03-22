@@ -67,6 +67,6 @@ def number_of_passed_solutions(file_path: str, k_iterations: int, prob_num: int)
     passed = 0
     for attempt in range(k_iterations):
         k_file = f"{file_path}{attempt}.py"
-        if functionality.test_human_functionality(k_file, prob_num):
+        if functionality.can_file_pass(k_file, prob_num):
             passed += 1
     return passed

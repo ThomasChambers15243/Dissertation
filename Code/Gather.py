@@ -62,7 +62,8 @@ class Gather:
             # File path for the problem solution file
             source = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problem_number}/generated--n"
             # Tests functionality of all solutions
-            passed = functionality.test_generation_functionality(source, problem_number, self.k_iterations)
+            #passed = functionality.test_generation_functionality(source, problem_number, self.k_iterations)
+            passed = DataHelper.number_of_passed_solutions(source, self.k_iterations, problem_number)
             self.total_passed += passed
 
             # Calculate pass@k for each problem
@@ -78,7 +79,6 @@ class Gather:
 
         # Calculate results values
         total_samples = {self.k_iterations * self.PROBLEM_AMOUNT}
-        # pass_k = functionality.passAtk((self.k_iterations * self.PROBLEM_AMOUNT), total_passed, self.k_iterations)
         average_pass_at_k = sum(self.pass_at_ks) / 5
         # Log results
         logger.log("Results", f"Generation Collection\n"
@@ -110,10 +110,9 @@ class Gather:
         for problem_number, problem in enumerate(self.PROBLEMS):
             # File path for the problem solution file
             file_path = f"{self.HUMAN_SOLUTIONS_FILE_PATH}problem{problem_number}/human--n"
-            #TODO
-            # # Tests the functionality and validity of the solutions
+            # Tests the functionality and validity of the solutions
             self.is_valid = DataHelper.number_of_valid_solutions(file_path, self.k_iterations)
-            passed = DataHelper.number_of_passed_solutions(file_path, self.k_iterations, problem_number)
+            self.total_passed += DataHelper.number_of_passed_solutions(file_path, self.k_iterations, problem_number)
 
             total_sum_metrics = self._collect_metrics(problem_number, file_path)
             self._write_raw_results(problem_number, total_sum_metrics)

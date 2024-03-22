@@ -27,20 +27,6 @@ def test_generation_functionality(source: str, prob_num: int, k: int) -> int:
         if can_file_pass(f"{source}{attempt}.py", prob_num)
     )
 
-def test_human_functionality(source: str, prob_num: int) -> int:
-    """
-    Tests how many human solutions passed the problem
-    :param source: File Source
-    :param prob_num: The problem number
-    :return: Number of successful solutions
-    """
-    num_attempts = len(os.listdir(f"HumanSolutions/problem{prob_num}"))
-    return sum(
-        1
-        for attempt in range(num_attempts)
-        if can_file_pass(f"{source}{attempt}.py", prob_num)
-    )
-
 
 def pass_atk(n: float, c: float, k: float) -> float:
     """

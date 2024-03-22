@@ -174,7 +174,7 @@ class TestQ5(unittest.TestCase):
             for child in range(num_children):
                 self.add_child(TestQ5.Node(children_data[child]))
 
-    def MakeTree(self, root, num_children: int, children_data: list[int], depth: int, level: int) -> Node:
+    def make_tree(self, root, num_children: int, children_data: list[int], depth: int, level: int) -> Node:
         '''
         Makes the tree
         :param root: The root node
@@ -184,10 +184,10 @@ class TestQ5(unittest.TestCase):
         :param level: The current level of the tree
         '''
         if level != depth:
-            root.AddChildren(num_children, children_data)
+            root.add_children(num_children, children_data)
             level += 1
             for child in root.children:
-                self.MakeTree(child, num_children, children_data, depth, level)
+                self.make_tree(child, num_children, children_data, depth, level)
             return root
 
     class TreeSearch:
@@ -212,8 +212,8 @@ class TestQ5(unittest.TestCase):
     def tests_NoDupes(self):
         importlib.reload(MethodTestFile)
         # Gets the tree from solution
-        tree_zero_dupes = MethodTestFile.Q5(self.MakeTree(self.Node(0), 2, [1, 2], 1, 0))
-        tree_dupes = MethodTestFile.Q5(self.MakeTree(self.Node(0), 5, [1, 2, 3, 4, 5], 5, 0))
+        tree_zero_dupes = MethodTestFile.Q5(self.make_tree(self.Node(0), 2, [1, 2], 1, 0))
+        tree_dupes = MethodTestFile.Q5(self.make_tree(self.Node(0), 5, [1, 2, 3, 4, 5], 5, 0))
 
         # Searches the tree
         search_zero_dupes = self.TreeSearch(tree_zero_dupes)
