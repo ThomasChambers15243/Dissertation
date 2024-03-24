@@ -38,7 +38,8 @@ def parser_arguments():
     # Critical Arguments
     parser.add_argument("--dataCollection", "-dc", "-DC", choices=["gen", "h"],
                         help="The type of data collection, 'h' for human, 'gen' for generation")
-    parser.add_argument("--sampleCollection", "-sc", "-SC", action="store_true")
+    parser.add_argument("--sampleCollection", "-sc", "-SC", action="store_true",
+                        help="Flag to collect code generation solutions. Needs -t & -k")
     parser.add_argument("--temperature", "-t", "-T", type=float,
                         help="The temperature to use for the GPT-3 API")
     parser.add_argument("--K_iterations", "-k", "-K", type=int,
@@ -116,7 +117,7 @@ def fit_rules(args) -> bool:
         if not args.K_iterations:
             logger.error("Must input iterations, -k {int}")
             return False
-        if args.K_iterations < 1 or args.K_iterations >= 100:
+        if args.K_iterations < 1 or args.K_iterations > 100:
             logger.error(f"Error: Invalid K. Must be 1 <= K <= 100, not {args.K_iterations}")
             return False
     # Data collection for human files

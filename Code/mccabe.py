@@ -31,8 +31,8 @@ class ASTVisitor(object):
         klass = node.__class__
         meth = self._cache.get(klass)
         if meth is None:
-            className = klass.__name__
-            meth = getattr(self.visitor, 'visit' + className, self.default)
+            class_name = klass.__name__
+            meth = getattr(self.visitor, 'visit' + class_name, self.default)
             self._cache[klass] = meth
         return meth(node, *args)
 
@@ -94,7 +94,7 @@ class PathGraphingAstVisitor(ASTVisitor):
 
     def __init__(self):
         super(PathGraphingAstVisitor, self).__init__()
-        self.classname = ""
+        self.class_name = ""
         self.graphs = {}
         self.reset()
 
@@ -108,8 +108,8 @@ class PathGraphingAstVisitor(ASTVisitor):
 
     def visitFunctionDef(self, node):
 
-        if self.classname:
-            entity = '%s%s' % (self.classname, node.name)
+        if self.class_name:
+            entity = '%s%s' % (self.class_name, node.name)
         else:
             entity = node.name
 
@@ -129,16 +129,16 @@ class PathGraphingAstVisitor(ASTVisitor):
             pathnode = PathNode(name)
             self.tail = pathnode
             self.dispatch_list(node.body)
-            self.graphs["%s%s" % (self.classname, node.name)] = self.graph
+            self.graphs["%s%s" % (self.class_name, node.name)] = self.graph
             self.reset()
 
     visitAsyncFunctionDef = visitFunctionDef
 
     def visitClassDef(self, node):
-        old_classname = self.classname
-        self.classname += node.name + "."
+        old_class_name = self.class_name
+        self.class_name += node.name + "."
         self.dispatch_list(node.body)
-        self.classname = old_classname
+        self.class_name = old_class_name
 
     def appendPathNode(self, name):
         if not self.tail:
@@ -175,11 +175,10 @@ class PathGraphingAstVisitor(ASTVisitor):
     def _subgraph(self, node, name, extra_blocks=()):
         """create the subgraphs representing any `if` and `for` statements"""
         if self.graph is None:
-            # global loop
             self.graph = PathGraph(name, name, node.lineno, node.col_offset)
             pathnode = PathNode(name)
             self._subgraph_parse(node, pathnode, extra_blocks)
-            self.graphs["%s%s" % (self.classname, name)] = self.graph
+            self.graphs["%s%s" % (self.class_name, name)] = self.graph
             self.reset()
         else:
             pathnode = self.appendPathNode(name)
@@ -336,7 +335,7 @@ def get_graphs(file_name: str, threshold=None) -> list[dict]:
 def get_total_value(file_name :str, threshold=None) -> int:
     """
     Calculates the sum of all complexity's within the file
-    :param fileName: str of filepath
+    :param file_name: str of filepath
     :param threshold: Lowest complexity value to be returned. Default None
     :return: Integer sum
     """

@@ -15,3 +15,8 @@ HumanSolutions/
 /Logs/SystemUnitTests.log
 /Logs/Main.log
 /Logs/Results.log
+/Code/data/SampleResults/
+/Code/data/HumanResults/
+/Code/data/RawSampleResults/
+/Logs/
+/Code/data/RawHumanResults/

@@ -1,7 +1,10 @@
 import shutil
 import os
+import sys
+import io
 import numpy as np
 from Tests import ProblemTests
+from config import PATHS
 
 ### Tests the functionality of python files ###
 
@@ -54,22 +57,26 @@ def can_file_pass(source: str, prob_num: int) -> bool:
     if not valid_file(source):
         return False
 
-    destination = "Tests/MethodTestFile.py"
+    # Copies file to be tested into test file so that unit tests can find it
+    shutil.copyfile(source, PATHS["METHOD_TEST_FILE"])
 
-    shutil.copyfile(source, destination)
-
+    # Suppress console output from files ran
+    suppress_text = io.StringIO()
+    sys.stdout = suppress_text
+    results = False
     # Runs tests
     if prob_num == 0:
-        return check_tests(ProblemTests.run_q1_tests())
-    if prob_num == 1:
-        return check_tests(ProblemTests.run_q2_tests())
-    if prob_num == 2:
-        return check_tests(ProblemTests.run_q3_tests())
-    if prob_num == 3:
-        return check_tests(ProblemTests.run_q4_tests())
-    if prob_num == 4:
-        return check_tests(ProblemTests.run_q5_tests())
-    return True
+        results = ProblemTests.run_q1_tests()
+    elif prob_num == 1:
+        results = ProblemTests.run_q2_tests()
+    elif prob_num == 2:
+        results = ProblemTests.run_q3_tests()
+    elif prob_num == 3:
+        results = ProblemTests.run_q4_tests()
+    elif prob_num == 4:
+        results = ProblemTests.run_q5_tests()
+    sys.stdout = sys.__stdout__
+    return check_tests(results)
 
 
 def check_tests(passed) -> bool:

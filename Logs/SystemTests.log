@@ -1,3 +1,6 @@
 2024-03-20 09:33:58.190 | SUCCESS  | __main__:run_test:26 - Lexer Tests Passed
 2024-03-20 09:33:58.195 | SUCCESS  | __main__:run_test:26 - Halstead Tests Passed
 2024-03-20 09:33:58.200 | SUCCESS  | __main__:run_test:26 - Complexity Tests Passed
+2024-03-24 17:02:36.809 | SUCCESS  | __main__:run_test:26 - Lexer Tests Passed
+2024-03-24 17:02:36.813 | SUCCESS  | __main__:run_test:26 - Halstead Tests Passed
+2024-03-24 17:02:36.819 | SUCCESS  | __main__:run_test:26 - Complexity Tests Passed

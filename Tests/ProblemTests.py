@@ -1,7 +1,6 @@
 import unittest
 import importlib
 from Tests import MethodTestFile
-
 """
 Before each test, the MethodTestFile is reloaded to ensure
 that the correct method has been written to the file. 
@@ -209,6 +208,7 @@ class TestQ5(unittest.TestCase):
                     self.values.append(value)
             return node.data
 
+
     def tests_NoDupes(self):
         importlib.reload(MethodTestFile)
         # Gets the tree from solution
@@ -223,7 +223,6 @@ class TestQ5(unittest.TestCase):
         # A set does not have duplicate values, even if they are added.
         self.assertEqual(len(search_zero_dupes.values), len(set(search_zero_dupes.values)))
         self.assertEqual(len(search_dupes.values), len(set(search_dupes.values)))
-
 
 """
 Methods that run the individual tests when called
