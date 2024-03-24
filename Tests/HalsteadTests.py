@@ -1,5 +1,5 @@
 import unittest
-from config import PATHS
+from config import PATHS, NULL_STREAM
 from Code import Analyzer
 
 # File Test Name
@@ -77,4 +77,4 @@ class TestExampleScript(unittest.TestCase):
 def run_tests():
     suite = unittest.TestLoader().loadTestsFromTestCase(TestEmpty)
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestOperandsWithComments))
-    return unittest.TextTestRunner().run(suite)
+    return unittest.TextTestRunner(stream=NULL_STREAM).run(suite)

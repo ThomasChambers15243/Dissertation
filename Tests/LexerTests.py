@@ -1,5 +1,5 @@
 import unittest
-from config import PATHS
+from config import PATHS, NULL_STREAM
 from Code import Lexer
 
 # File Test Name
@@ -135,4 +135,4 @@ def run_tests():
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestOnlyComments))
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(TestExampleScripts))
 
-    return unittest.TextTestRunner().run(suite)
+    return unittest.TextTestRunner(stream=NULL_STREAM).run(suite)

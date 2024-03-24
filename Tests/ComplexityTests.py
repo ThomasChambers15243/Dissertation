@@ -1,5 +1,5 @@
 import unittest
-from config import PATHS
+from config import PATHS, NULL_STREAM
 from Code import mccabe
 
 # File Test Name
@@ -22,4 +22,4 @@ class TestScores(unittest.TestCase):
 
 def run_tests():
     suite = unittest.TestLoader().loadTestsFromTestCase(TestScores)
-    return unittest.TextTestRunner().run(suite)
+    return unittest.TextTestRunner(stream=NULL_STREAM).run(suite)

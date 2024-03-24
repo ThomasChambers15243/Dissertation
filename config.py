@@ -1,7 +1,12 @@
 import os
+import io
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# 'Nowhere' target for the text runner to print through,
+# this avoids clogging up the console
+NULL_STREAM = io.StringIO()
 
 ''' ADD API KEY HERE '''
 API_KEY = os.getenv('API_KEY')
