@@ -15,7 +15,7 @@ MODEL = "gpt-3.5-turbo"
 
 # Initialize Research Parameters
 STUDY_PARAMS = {
-    "SAMPLE_RESULTS_CSV_DIR_PATH" : "Code/data/SampleResults/",
+    "SAMPLE_RESULTS_CSV_DIR_PATH": "Code/data/SampleResults/",
     "HUMAN_RESULTS_CSV_DIR_PATH": "Code/data/HumanResults/",
     "RAW_SAMPLE_RESULTS_CSV_DIR_PATH": "Code/data/RawSampleResults/",
     "RAW_HUMAN_RESULTS_CSV_DIR_PATH": "Code/data/RawHumanResults/",

@@ -1,4 +1,3 @@
-import os
 import sys
 import argparse
 from loguru import logger
@@ -13,7 +12,6 @@ open("Tests/MethodTestFile.py", 'w').close()
 def level_filter(level):
     def is_level(record):
         return record["level"].name == level
-
     return is_level
 
 
@@ -120,13 +118,6 @@ def fit_rules(args) -> bool:
         if args.K_iterations < 1 or args.K_iterations > 100:
             logger.error(f"Error: Invalid K. Must be 1 <= K <= 100, not {args.K_iterations}")
             return False
-    # Data collection for human files
-    # else:
-    #     for prob_num in range(5):
-    #         num_attempts = len(os.listdir(f"HumanSolutions/problem{prob_num}"))
-    #         if args.K_iterations != num_attempts:
-    #             logger.error("Incorrect amount of generated problem files")
-    #             return False
     return True
 
 
