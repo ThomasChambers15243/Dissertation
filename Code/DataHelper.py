@@ -9,6 +9,8 @@ def get_metrics(prob_num: int, source: str) -> list[dict]:
     """
     Gets the metrics of each solution in a dict
     and returns a list of all dics
+    :param prob_num: The problem number for metric collection
+    :param source: The file path containing the solution
     :return: All metrics in [{metrics}]
     """
     all_metrics = []
@@ -41,18 +43,12 @@ def get_metrics(prob_num: int, source: str) -> list[dict]:
     return all_metrics
 
 
-
-
-
-
-
-
 def innit_csv(csv_path: str, headers: list) -> None:
     """
     Sets up headers for Sample Score CSV Data
     :param csv_path: Path for the csv path to be written too
-    :param headers:
-    :return:
+    :param headers: List of headers to load into the top of the file
+    :return: None
     """
     # Create CSV File with appropriate headers
     with open(f"{csv_path}", 'w', newline='') as file:
@@ -72,8 +68,7 @@ def calculate_sample_score(metrics: dict) -> float:
         # Increases impact of Mccabe
         if key == "MccabeComplexity":
             sample_sum += (value * 100)
-        # Reduces the impact of lots of code
-        elif key == "EstProgLength" or  "Effort":
+        elif key in ["EstProgLength", "Effort"]:
             sample_sum += (value / 10)
         else:
             sample_sum += value
@@ -82,10 +77,11 @@ def calculate_sample_score(metrics: dict) -> float:
 
 def clear_file(file_path) -> None:
     """
-    Clears the
-    :return:
+    Clears the given file of all data so it just one empty line
+    :return: None
     """
     open(file_path, 'w').close()
+
 
 def number_of_valid_solutions(file_path: str, k_iterations: int):
     """
@@ -100,6 +96,7 @@ def number_of_valid_solutions(file_path: str, k_iterations: int):
         if functionality.valid_file(k_file):
             valid += 1
     return valid
+
 
 def number_of_passed_solutions(file_path: str, k_iterations: int, prob_num: int):
     """
