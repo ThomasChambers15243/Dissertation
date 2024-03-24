@@ -86,10 +86,7 @@ class Gather:
             # Checks there is a correct amount of solution in each folder
             # to the saved K value
             num_of_solutions = len(os.listdir(f"GeneratedSolutions/problem{problem_number}"))
-            if num_of_solutions == self.k_iterations:
-                logger.info(f"Num of attempts in dir {problem_number} is equal to expected:"
-                            f" {num_of_solutions} == k{self.k_iterations}")
-            else:
+            if num_of_solutions != self.k_iterations:
                 logger.error(f"Num of attempts in dir {problem_number} is not equal to expected:"
                              f"{num_of_solutions} != k{self.k_iterations}")
 
