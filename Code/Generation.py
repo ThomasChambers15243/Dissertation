@@ -1,11 +1,8 @@
 import openai
-from config import API_KEY, PATHS
+from config import API_KEY, MODEL
 
 # Innits the Key
 openai.api_key = API_KEY
-
-# Engines Model
-MODEL = "gpt-3.5-turbo"
 
 
 def get_response(prompt: str, temperature=0.6) -> str:

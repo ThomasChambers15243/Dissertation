@@ -1,5 +1,51 @@
+import os
 import csv
+from Code import mccabe
+from Code import Analyzer
 from Code import functionality
+
+
+def get_metrics(prob_num: int, source: str) -> list[dict]:
+    """
+    Gets the metrics of each solution in a dict
+    and returns a list of all dics
+    :return: All metrics in [{metrics}]
+    """
+    all_metrics = []
+    for attempt in range(len(os.listdir(f"HumanSolutions/problem{prob_num}"))):
+        # Dictionary to hold the sum total of metrics
+        metrics = {
+            "DistinctOperatorCount": 0,
+            "DistinctOperandCount": 0,
+            "TotalOperatorCount": 0,
+            "TotalOperandCount": 0,
+            "Vocabulary": 0,
+            "Length": 0,
+            "EstProgLength": 0,
+            "Volume": 0,
+            "Difficulty": 0,
+            "Effort": 0,
+            "Time": 0,
+            "BugsEstimate": 0,
+            "MccabeComplexity": 0}
+        k_file = f"{source}{attempt}.py"
+
+        # Only calculate metrics if file is valid and passes problem
+        if functionality.valid_file(k_file) and functionality.can_file_pass(k_file, prob_num):
+            # Add Halstead and mccabe metric scores to dict
+            for key, value in Analyzer.HalsteadMetrics(k_file).metrics.items():
+                metrics[key] = value
+            metrics["MccabeComplexity"] = mccabe.get_total_value(k_file)
+        all_metrics.append(metrics)
+
+    return all_metrics
+
+
+
+
+
+
+
 
 def innit_csv(csv_path: str, headers: list) -> None:
     """
@@ -54,7 +100,6 @@ def number_of_valid_solutions(file_path: str, k_iterations: int):
         if functionality.valid_file(k_file):
             valid += 1
     return valid
-
 
 def number_of_passed_solutions(file_path: str, k_iterations: int, prob_num: int):
     """

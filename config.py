@@ -6,12 +6,14 @@ load_dotenv()
 ''' ADD API KEY HERE '''
 API_KEY = os.getenv('API_KEY')
 
+MODEL = "gpt-3.5-turbo"
+
 # Initialize Research Parameters
 STUDY_PARAMS = {
-    "SAMPLE_RESULTS_CSV_FILE_PATH": "Code/data/SampleResults.csv",
-    "HUMAN_RAW_RESULTS_CSV_FILE_PATH": "Code/data/RawHumanResults.csv",
-    "GEN_RAW_RESULTS_CSV_FILE_PATH": "Code/data/RawGenResults.csv",
-    "HUMAN_RESULTS_CSV_FILE_PATH": "Code/data/HumanResults.csv",
+    "SAMPLE_RESULTS_CSV_DIR_PATH" : "Code/data/SampleResults/",
+    "HUMAN_RESULTS_CSV_DIR_PATH": "Code/data/HumanResults/",
+    "RAW_SAMPLE_RESULTS_CSV_DIR_PATH": "Code/data/RawSampleResults/",
+    "RAW_HUMAN_RESULTS_CSV_DIR_PATH": "Code/data/RawHumanResults/",
     "GPT_SOLUTIONS_FILE_PATH": "GeneratedSolutions/",
     "HUMAN_SOLUTIONS_FILE_PATH": "HumanSolutions/",
     "PROBLEMS_FILE_PATH": "Code/data/ProblemQuestions.json",
@@ -28,5 +30,6 @@ PATHS = {
     "LOG_MAIN": f"{ROOT_DIR}Logs/Main.log",
     "LOG_RESULTS": f"{ROOT_DIR}Logs/Results.log",
     "LOG_TESTING": f"{ROOT_DIR}Logs/SystemTests.log",
-    "LOG_GENERATION_RESPONSES": f"{ROOT_DIR}Logs/GenerationResponses.log"
+    "LOG_GENERATION_RESPONSES": f"{ROOT_DIR}Logs/GenerationResponses.log",
+    "METHOD_TEST_FILE": f"{ROOT_DIR}Tests/MethodTestFile.py"
 }
