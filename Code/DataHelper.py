@@ -1,20 +1,33 @@
 import os
 import csv
+from tqdm import tqdm
 from Code import mccabe
 from Code import Analyzer
 from Code import functionality
 
+# Including functionality and passed counts in here
+# are a little messy, however they need to be called before
+# collecting metrics - so its more efficient to get them
+# all in one method
 
-def get_metrics(prob_num: int, source: str) -> list[dict]:
+
+def get_metrics(prob_num: int, num_of_solutions: int, source: str) -> tuple[list[dict], int, int]:
     """
     Gets the metrics of each solution in a dict
-    and returns a list of all dics
+    and returns a tuple - list of all dics containing metrics,
+    non-valid, passed
     :param prob_num: The problem number for metric collection
+    :param num_of_solutions: number of solutions in dir
     :param source: The file path containing the solution
-    :return: All metrics in [{metrics}]
+    :return: All metrics in [{metrics}], non-valid, passed
     """
     all_metrics = []
-    for attempt in range(len(os.listdir(f"HumanSolutions/problem{prob_num}"))):
+    passed = 0
+    invalid = 0
+    for attempt in tqdm(range(num_of_solutions),
+                        desc=f"\033[33mGetting Metrics",
+                        ncols=80,
+                        leave=False):
         # Dictionary to hold the sum total of metrics
         metrics = {
             "DistinctOperatorCount": 0,
@@ -33,14 +46,18 @@ def get_metrics(prob_num: int, source: str) -> list[dict]:
         k_file = f"{source}{attempt}.py"
 
         # Only calculate metrics if file is valid and passes problem
-        if functionality.valid_file(k_file) and functionality.can_file_pass(k_file, prob_num):
-            # Add Halstead and mccabe metric scores to dict
-            for key, value in Analyzer.HalsteadMetrics(k_file).metrics.items():
-                metrics[key] = value
-            metrics["MccabeComplexity"] = mccabe.get_total_value(k_file)
+        if functionality.valid_file(k_file):
+            if functionality.can_file_pass(k_file, prob_num):
+                passed += 1
+                # Add Halstead and mccabe metric scores to dict
+                for key, value in Analyzer.HalsteadMetrics(k_file).metrics.items():
+                    metrics[key] = value
+                metrics["MccabeComplexity"] = mccabe.get_total_value(k_file)
+        else:
+            invalid += 1
         all_metrics.append(metrics)
 
-    return all_metrics
+    return all_metrics, invalid, passed
 
 
 def innit_csv(csv_path: str, headers: list) -> None:
@@ -83,19 +100,19 @@ def clear_file(file_path) -> None:
     open(file_path, 'w').close()
 
 
-def number_of_valid_solutions(file_path: str, k_iterations: int):
+def number_of_invalid_solutions(file_path: str, k_iterations: int):
     """
     Gets how many valid python files are in the file path folder
     :param file_path: Path to solution folder
     :param k_iterations: Number of attempts
     :return: Number of valid files
     """
-    valid = 0
+    not_valid = 0
     for attempt in range(k_iterations):
         k_file = f"{file_path}{attempt}.py"
-        if functionality.valid_file(k_file):
-            valid += 1
-    return valid
+        if not functionality.valid_file(k_file):
+            not_valid += 1
+    return not_valid
 
 
 def number_of_passed_solutions(file_path: str, k_iterations: int, prob_num: int):

@@ -3,10 +3,8 @@ import json
 import os
 from config import MODEL
 from Code import DataHelper
-from Code import Analyzer
 from Code import Generation
 from Code import functionality
-from Code import mccabe
 from loguru import logger
 from tqdm import tqdm
 
@@ -82,28 +80,32 @@ class Gather:
         self.TEMPERATURE = saved_data["temperature"]
 
         # Collects daa for given solutions
-        for problem_number, problem in enumerate(self.PROBLEMS):
+        for problem_number, problem in tqdm(enumerate(self.PROBLEMS),
+                                            total=self.PROBLEM_AMOUNT,
+                                            desc="\033[34mCollecting Metric Data",
+                                            ncols=100):
+            # File path for the problem solution file
+            file_path = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problem_number}"
             # Checks there is a correct amount of solution in each folder
             # to the saved K value
-            num_of_solutions = len(os.listdir(f"GeneratedSolutions/problem{problem_number}"))
+            num_of_solutions = len(os.listdir(file_path))
             if num_of_solutions != self.k_iterations:
                 logger.error(f"Num of attempts in dir {problem_number} is not equal to expected:"
                              f"{num_of_solutions} != k{self.k_iterations}")
+            file_path += "/generated--n"
 
-            # File path for the problem solution file
-            file_path = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problem_number}/generated--n"
             # Gets metrics for problem
-            all_metrics = DataHelper.get_metrics(problem_number, file_path)
+            metrics = DataHelper.get_metrics(problem_number, num_of_solutions, file_path)
+            all_metrics, in_valid, passed = metrics[0], metrics[1], metrics[2]
+            self.not_valid += in_valid
+            self.total_passed += passed
+
             # Write Results
             self.write_results(all_metrics, problem_number)
             self.write_raw_results(all_metrics, problem_number)
 
-            # Tests functionality of all solutions
-            passed = DataHelper.number_of_passed_solutions(file_path, self.k_iterations, problem_number)
-            self.total_passed += passed
-
             # Calculate pass@k for each problem
-            self.pass_at_ks[problem_number] = functionality.pass_atk(self.k_iterations, passed, 5)
+            self.pass_at_ks[problem_number] = functionality.pass_atk(self.k_iterations, passed, self.PROBLEM_AMOUNT)
 
         # Calculate Result Values
         total_samples = self.k_iterations * self.PROBLEM_AMOUNT
@@ -140,16 +142,22 @@ Pass@{self.k_iterations} Values:
         self.collection_type = "h"
         num_of_solutions = -1
         # Collects the GeneratedSolutions metrics and stores them in self.sampleScore["problem"]
-        for problem_number, problem in enumerate(self.PROBLEMS):
+        for problem_number, problem in tqdm(enumerate(self.PROBLEMS),
+                                            total=self.PROBLEM_AMOUNT,
+                                            desc="\033[34mCollecting Metric Data",
+                                            ncols=100):
             # File path for the problem solution file
-            file_path = f"{self.HUMAN_SOLUTIONS_FILE_PATH}problem{problem_number}/human--n"
-            num_of_solutions = len(os.listdir(f"HumanSolutions/problem{problem_number}"))
+            file_path = f"{self.HUMAN_SOLUTIONS_FILE_PATH}problem{problem_number}"
+            num_of_solutions = len(os.listdir(file_path))
+            file_path += "/human--n"
 
-            # Tests the functionality and validity of the solutions
-            # self.is_valid = DataHelper.number_of_valid_solutions(file_path, num_of_solutions) #todo DO I NEED THIS???
-            self.total_passed += DataHelper.number_of_passed_solutions(file_path, num_of_solutions, problem_number)
+            # Gets metrics for problem
+            metrics = DataHelper.get_metrics(problem_number, num_of_solutions, file_path)
+            all_metrics, in_valid, passed = metrics[0], metrics[1], metrics[2]
+            self.not_valid += in_valid
+            self.total_passed += passed
 
-            all_metrics = DataHelper.get_metrics(problem_number, file_path)
+            # Write Results
             self.write_results(all_metrics, problem_number)
             self.write_raw_results(all_metrics, problem_number)
 
