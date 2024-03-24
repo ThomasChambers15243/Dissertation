@@ -1,6 +1,7 @@
 import csv
 import json
 import os
+from config import MODEL
 from Code import DataHelper
 from Code import Analyzer
 from Code import Generation
@@ -27,9 +28,9 @@ class Gather:
 
         # Research Parameters
         self.collection_type = ""
+        self.k_iterations = -1
         self.PROBLEM_AMOUNT = params["PROBLEM_AMOUNT"]
         self.TEMPERATURE = params["TEMPERATURE"]
-        self.k_iterations = params["K_ITERATIONS"]
         self.raw_csv_headers = ["Problem", "Solution Amount", "Not Valid", "Distinct Operators", "Distinct Operands",
                                 "Total Operators",
                                 "Total Operands", "Vocabulary", "Length", "Estimated Program Length", "Volume",
@@ -42,27 +43,53 @@ class Gather:
         self.total_passed = 0
         self.pass_at_ks = [0, 0, 0, 0, 0]
 
+    def generate_gpt_solution(self, k_iterations):
+        """
+        Generates and saves gpt solutions
+        :return: None
+        """
+        self.k_iterations = k_iterations
+        # Clean solution folders
+        self._innit_solutions_folder()
+
+        # Generate GeneratedSolutions to problems at given temperature
+        self._generate_solutions()
+
+        # Records what the files are
+        self._save_generation_params()
+
+
     def get_gpt_data(self) -> None:
         """
-        Gathers generation data and write results to csv and log files
+        Gathers metric data for generated code and write results to csv and log files
         :return None
         """
         # Set Type
         self.collection_type = "gen"
+
+        savedData = self._load_save_param_data()
+        self.k_iterations = savedData["k_iterations"]
+
         # Sets up csv's headers
         DataHelper.innit_csv(self.SAMPLE_RESULTS_CSV_FILE_PATH, self.csv_headers)
         DataHelper.innit_csv(self.GEN_RAW_RESULTS_CSV_FILE_PATH, self.raw_csv_headers)
 
-        # Remove any files from solutions
-        self._innit_solutions_folder()
-
-        # Generate GeneratedSolutions to problems at given temperature,
+        # Collects daa for given solutions
         for problem_number, problem in enumerate(self.PROBLEMS):
-            self._generate_solutions(self.TEMPERATURE, problem_number, problem)
+            # Checks there is a correct amount of solution in each folder
+            # to the saved K value
+            num_of_solutions = len(os.listdir(f"GeneratedSolutions/problem{problem_number}"))
+            if num_of_solutions == self.k_iterations:
+                logger.info(f"Num of attempts in dir {problem_number} is equal to expected:"
+                            f" {num_of_solutions} == k{self.k_iterations}")
+            else:
+                logger.error(f"Num of attempts in dir {problem_number} is not equal to expected:"
+                            f"{num_of_solutions} != k{self.k_iterations}")
+
             # File path for the problem solution file
             source = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problem_number}/generated--n"
+
             # Tests functionality of all solutions
-            #passed = functionality.test_generation_functionality(source, problem_number, self.k_iterations)
             passed = DataHelper.number_of_passed_solutions(source, self.k_iterations, problem_number)
             self.total_passed += passed
 
@@ -72,6 +99,7 @@ class Gather:
             # Collects the GeneratedSolutions metrics and stores them in self.sampleScore["problem"]
             file_path = f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problem_number}/generated--n"
             total_sum_metrics = self._collect_metrics(problem, file_path)
+            # Write raw results
             self._write_raw_results(problem_number, total_sum_metrics)
 
         # Write metric score to csv
@@ -82,6 +110,8 @@ class Gather:
         average_pass_at_k = sum(self.pass_at_ks) / 5
         # Log results
         logger.log("Results", f"Generation Collection\n"
+                              f"Model: {savedData['model']}\n"
+                              f"Temperature: {savedData['temperature']}\n"
                               f"Total: {total_samples}.\n"
                               f"Successful: {self.total_passed}.\n"
                               f"Not Valid: {self.not_valid}.\n"
@@ -163,25 +193,57 @@ class Gather:
                 # Create the folder
                 os.mkdir(f"{self.GPT_SOLUTIONS_FILE_PATH}problem{i}")
 
-    def _generate_solutions(self, temperature: float, problem_number: int, problem: str) -> None:
+    def _generate_solutions(self) -> None:
         """
-        Generated GeneratedSolutions k number of times for the
-        given problem and temperature
-        :param temperature: Temperature for model to use in generation
-        :param problem_number: Problem number
-        :param problem: Problem as p{n} form
+        Generated GeneratedSolutions k number of times for all problems,
+        at the given temperature
         :return: None
         """
-        for i in range(self.k_iterations):
-            with open(f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problem_number}/generated--n{i}.py", "w") as file:
-                response = Generation.get_response(self.PROBLEMS[problem], temperature)
+        for problem_number, problem in enumerate(self.PROBLEMS):
+            for i in range(self.k_iterations):
+                with open(f"{self.GPT_SOLUTIONS_FILE_PATH}problem{problem_number}/generated--n{i}.py", "w") as file:
+                    response = Generation.get_response(self.PROBLEMS[problem], self.TEMPERATURE)
 
-                # Clean file from ```python & ``` comments in file
-                # A common occurrence in generation where otherwise the code would
-                # Be valid Python
-                response = response.replace("```python", "")
-                response = response.replace("```", "")
-                file.write(response)
+                    # Clean file from ```python & ``` comments in file
+                    # A common occurrence in generation where otherwise the code would
+                    # Be valid Python
+                    response = response.replace("```python", "")
+                    response = response.replace("```", "")
+                    file.write(response)
+
+    def _save_generation_params(self):
+        """
+        Save the generation data to a json file
+        :return: None
+        """
+
+        # Data to save
+        save_data = {
+            "k_iterations" : self.k_iterations,
+            "temperature" : self.TEMPERATURE,
+            "problem_Amount" : self.PROBLEM_AMOUNT,
+            "model" : MODEL
+        }
+        # Dumps save_data into a json file in the same dir as generated solutions
+        try:
+            with open (f"{self.GPT_SOLUTIONS_FILE_PATH}/genParms.json", "w") as save_file:
+                json.dump(save_data, save_file)
+            logger.success("Data Saved")
+        except Exception as e:
+            logger.error(f"Data could not be saved. Error: {e}")
+
+    def _load_save_param_data(self) -> dict:
+        """
+        Gets the param data of the dataset
+        :return: Dictionary of saved param data
+        """
+        try:
+            with open (f"{self.GPT_SOLUTIONS_FILE_PATH}/genParms.json", "r") as save_file:
+                save_data = json.load(save_file)
+            return save_data
+        except Exception as e:
+            logger.error(f"Could not load saved param data. Error: {e}")
+
 
     def _sum_metric_scores(self, prob_num: int, file_path: str) -> dict:
         """

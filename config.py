@@ -6,6 +6,8 @@ load_dotenv()
 ''' ADD API KEY HERE '''
 API_KEY = os.getenv('API_KEY')
 
+MODEL = "gpt-3.5-turbo"
+
 # Initialize Research Parameters
 STUDY_PARAMS = {
     "SAMPLE_RESULTS_CSV_FILE_PATH": "Code/data/SampleResults.csv",

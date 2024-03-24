@@ -38,6 +38,7 @@ def parser_arguments():
     # Critical Arguments
     parser.add_argument("--dataCollection", "-dc", "-DC", choices=["gen", "h"],
                         help="The type of data collection, 'h' for human, 'gen' for generation")
+    parser.add_argument("--sampleCollection", "-sc", "-SC", action="store_true")
     parser.add_argument("--temperature", "-t", "-T", type=float,
                         help="The temperature to use for the GPT-3 API")
     parser.add_argument("--K_iterations", "-k", "-K", type=int,
@@ -81,15 +82,17 @@ def args_exists(args) -> bool:
     :return: bool
     """
     try:
-        if not args.dataCollection:
-            logger.error("Missing args dataCollection (-dc)")
+        if not args.dataCollection and not args.sampleCollection:
+            logger.error("Missing args, either dataCollection (-dc) or sampleCollection (-sc) must be used")
             return False
-        if not args.K_iterations:
-            logger.error("Missing args k_iterations (-k)")
+        if (args.sampleCollection and not args.dataCollection) and (not args.K_iterations or not args.temperature):
+            logger.error("Missing args k_iterations (-k) or temperature (-t)")
             return False
     except Exception as e:
         logger.error(f"Argument Failure. Error: {e}")
         return False
+
+    # If all required args exist
     return True
 
 
@@ -99,11 +102,11 @@ def fit_rules(args) -> bool:
     :return: bool
     """
     # Checks Arguments are valid
-    if args.dataCollection not in ["gen", "h"]:
+    if args.dataCollection and args.dataCollection not in ["gen", "h"]:
         logger.error(f"Error: Invalid data collection. Must be: gen || h, not {args.dataCollection}")
         return False
     # Data collection for generations
-    if args.dataCollection == "gen":
+    if args.sampleCollection:
         if not args.temperature:
             logger.error("Error: Must input temperature: -t {int}")
             return False
@@ -117,12 +120,12 @@ def fit_rules(args) -> bool:
             logger.error(f"Error: Invalid K. Must be 1 <= K <= 100, not {args.K_iterations}")
             return False
     # Data collection for human files
-    else:
-        for prob_num in range(5):
-            num_attempts = len(os.listdir(f"HumanSolutions/problem{prob_num}"))
-            if args.K_iterations != num_attempts:
-                logger.error("Incorrect amount of generated problem files")
-                return False
+    # else:
+    #     for prob_num in range(5):
+    #         num_attempts = len(os.listdir(f"HumanSolutions/problem{prob_num}"))
+    #         if args.K_iterations != num_attempts:
+    #             logger.error("Incorrect amount of generated problem files")
+    #             return False
     return True
 
 
@@ -133,7 +136,8 @@ def run_study():
     :return:
     """
     args = parser_arguments()
-    logger.success(f"Valid Args passed of: DataCollection: {args.dataCollection},  K: {args.K_iterations},  "
+    logger.success(f"Valid Args passed of: DataCollection: {args.dataCollection}, "
+                   f"SampleCollection: {args.sampleCollection}, K: {args.K_iterations},  "
                    f"Temperature: {args.temperature}")
 
     # Update Config
@@ -156,15 +160,20 @@ def run_study():
             logger.error(f"Human Data collection failed. Error: {e}")
         else:
             logger.success("Human Data collection was successful")
-    # Generation Collection
-    elif args.dataCollection == 'gen' and STUDY_PARAMS["K_ITERATIONS"] <= 100:
-        logger.info("Starting Generation Collection")
+    elif args.dataCollection == 'gen':
         try:
+            logger.info("Starting Generation Data Collection")
             data_gather.get_gpt_data()
+            logger.success("Finished Generation Data Collection")
         except Exception as e:
             logger.error(f"Generation Collection failed. Error: {e}")
-        else:
-            logger.success("Finished Generation Collection")
+    elif args.sampleCollection:
+        try:
+            logger.info(f"Starting gpt sample collection for k: {args.K_iterations} & T: {args.temperature}")
+            data_gather.generate_gpt_solution(args.K_iterations)
+            logger.success("GPT sample generation successful.")
+        except Exception as e:
+            logger.error(f"GPT sample generation failed. Error: {e}")
     else:
         logger.error("Incorrect Params")
 
