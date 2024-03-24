@@ -31,6 +31,7 @@ def run_all_tests():
     """
     Runs all units tests
     """
+    logger.info("\nTests Started...")
     run_test(LexerTests)
     run_test(HalsteadTests)
     run_test(ComplexityTests)
