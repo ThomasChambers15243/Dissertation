@@ -269,9 +269,9 @@ Not Valid: {self.not_valid}"""
             # Write Scores
             for attempt in range(len(all_metrics)):
                 if self.collection_type == "gen":
-                    writer.writerow([attempt, self.TEMPERATURE, all_metrics[attempt]])
+                    writer.writerow([attempt, self.TEMPERATURE, round(all_metrics[attempt], 2)])
                 else:
-                    writer.writerow([attempt, all_metrics[attempt]])
+                    writer.writerow([attempt, round(all_metrics[attempt], 2)])
 
     def write_raw_results(self, all_metrics: list[dict], prob_num: int) -> None:
         """
