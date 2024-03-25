@@ -40,6 +40,8 @@ main.py -dc h
 ```bash
   TestRunner.py
 ```
+### Example
+![Example Usage of Software](Docs/dissertation-dataCollection-working.gif)
 ## Navigation
 
 Bellow is a brief description of the code base and how modules relate to each other. This is not important for usage of the program, but important for understanding and potential forking.
@@ -62,6 +64,7 @@ Bellow is a brief description of the code base and how modules relate to each ot
       <li> <i>ProblemQuestions.json</i> Containing the problem Stores</li>
       <li> <i>stats.R</i> containing the R code used in the studies analysis</li>
     </ul>
+  <li> <i>Gather.py</i> Main class for collecting data. Generates samples and performs data collecting on said sampless</li>
   <li> <i>Analyzer.py</i> Calculates Halstead Metrics for given file</li>
   <li> <i>Functionality.py</i> Tests the functionaly/validity of python files</li>
   <li> <i>Generation.py</i> Generates code samples using OpenAI API</li>
