@@ -1,6 +1,6 @@
-import Tests.LexerTests as LexerTests
-import Tests.HalsteadTests as HalsteadTests
-import Tests.ComplexityTests as ComplexityTests
+import Tests.SystemTests.LexerTests as LexerTests
+import Tests.SystemTests.HalsteadTests as HalsteadTests
+import Tests.SystemTests.ComplexityTests as ComplexityTests
 from config import PATHS
 from loguru import logger
 

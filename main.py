@@ -43,20 +43,6 @@ def parser_arguments():
     parser.add_argument("--K_iterations", "-k", "-K", type=int,
                         help="The amount of times to run the study. K in pass@k")
 
-    # Optional Arguments
-    parser.add_argument("--sampleCSVPath", "-sCSVp", default="Code/data/SampleResults.csv",
-                        help="The path to store the generated CSV")
-    parser.add_argument("--humanCSVPath", "-hCSVp", default="Code/data/HumanResults.csv",
-                        help="The path to store the human results in")
-    parser.add_argument("--genSolutionsPath", "-gSP", default="GeneratedSolutions/",
-                        help="The path to store the generated solutions in")
-    parser.add_argument("--humanSolutionsPath", "-hSP", default="HumanSolutions/",
-                        help="The path to store the human solutions in")
-    parser.add_argument("--problemsPath", "-pP", default="Code/data/ProblemQuestions.json",
-                        help="The path to the problems json file")
-    parser.add_argument("--problemAmount", "-pA", default=5, type=int,
-                        help="The amount of problems to generate")
-
     args = parser.parse_args()
 
     # Checks Arguments exist
