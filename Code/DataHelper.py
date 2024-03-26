@@ -50,10 +50,10 @@ def get_metrics(prob_num: int, num_of_solutions: int, source: str) -> tuple[list
             if functionality.can_file_pass(k_file, prob_num):
                 passed += 1
                 # Add Halstead and mccabe metric scores to dict
-            # Moved out to test metrics regardless of functionality
-            for key, value in Analyzer.HalsteadMetrics(k_file).metrics.items():
-                metrics[key] = value
-            metrics["MccabeComplexity"] = mccabe.get_total_value(k_file)
+                # Move out to test metrics regardless of functionality
+                for key, value in Analyzer.HalsteadMetrics(k_file).metrics.items():
+                    metrics[key] = value
+                metrics["MccabeComplexity"] = mccabe.get_total_value(k_file)
         else:
             invalid += 1
         all_metrics.append(metrics)
