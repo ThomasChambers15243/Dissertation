@@ -31,6 +31,10 @@ main.py -sc -k 10 -t 0.6
 ```bash
 main.py -dc gen
 ```
+#### Load in Human Samples
+```bash
+load_human_solutions.py
+```
 #### Gathers data for human samples
 ```bash
 main.py -dc h
@@ -50,6 +54,7 @@ Bellow is a brief description of the code base and how modules relate to each ot
 <summary> <b>/Root Dir</b> </summary>
 <li> <i>main.py</i> Runs is the root module to run the project from. All args follow from this module</li>
 <li> <i>TestRunner.py</i> Runs system unit tests</li>
+<li> <i>load_human_solutions.py</i> Loads in human solutions using paths in config</li>
 <li> <i>Requirements.txt</i> Stores all python requirements </li>
 <li> <i>config.py</i> Holds global variables used accross the system, including access to env api keys & file paths.</li>
 <li> <i>.gitignore</i> Excludes mostly cheche files and solution directories</li>
