@@ -5,6 +5,7 @@ import io
 import numpy as np
 from Tests import ProblemTests
 from config import PATHS
+from loguru import logger
 
 ### Tests the functionality of python files ###
 
@@ -99,6 +100,5 @@ def valid_file(source: str):
             f_source = file.read()
         compile(f_source, f_source, 'exec')
         return True
-    except Exception as e:
-        print(f"Not valid file, Error: {e}")
+    except Exception:
         return False
