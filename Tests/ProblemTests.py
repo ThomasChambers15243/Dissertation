@@ -193,23 +193,33 @@ class TestQ5(unittest.TestCase):
                 self.make_tree(child, num_children, children_data, depth, level)
             return root
 
-    class TreeSearch:
-        """
-        Searches the tree and collects all values as a list
-        """
+    class TestTree:
+        def __init__(self, head):
+            self.head = head
+            self.values = [head.data]
+            self.get_values(self.head)
 
-        def __init__(self, node):
-            self.values = [node.data]
-            self.node = node
-            self.search(node)
+        def can_pass_test(self) -> bool:
+            """
+            Checks the length of the list of all values in
+            the tree vs the length of the unique set of all values
+            in the tree
+            :return: bool
+            """
+            values_list = self.values
+            values_set = set(values_list)
+            return len(values_set) == len(values_list)
 
-        def search(self, node):
-            if len(node.children) == 0:
-                return node.data
-            for child in node.children:
-                value = self.search(child)
-                if value is not None:
-                    self.values.append(value)
+        def get_values(self, node) -> int:
+            """
+            Fills the values list with all values in the
+            tree
+            :param node: Current tree node
+            :return: int
+            """
+            if node.children:
+                for i in node.children:
+                    self.values.append(self.get_values(i))
             return node.data
 
     def tests_NoDupes(self):
@@ -218,14 +228,9 @@ class TestQ5(unittest.TestCase):
         tree_zero_dupes = MethodTestFile.Q5(self.make_tree(self.Node(0), 2, [1, 2], 1, 0))
         tree_dupes = MethodTestFile.Q5(self.make_tree(self.Node(0), 5, [1, 2, 3, 4, 5], 5, 0))
 
-        # Searches the tree
-        search_zero_dupes = self.TreeSearch(tree_zero_dupes)
-        search_dupes = self.TreeSearch(tree_dupes)
-
-        # Test the trees
-        # A set does not have duplicate values, even if they are added.
-        self.assertEqual(len(search_zero_dupes.values), len(set(search_zero_dupes.values)))
-        self.assertEqual(len(search_dupes.values), len(set(search_dupes.values)))
+        # Tests
+        self.assertTrue(self.TestTree(tree_zero_dupes))
+        self.assertTrue(self.TestTree(tree_dupes))
 
 
 """

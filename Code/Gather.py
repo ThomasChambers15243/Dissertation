@@ -56,15 +56,14 @@ class Gather:
         :return: None
         """
         self.k_iterations = k_iterations
-        # UNCOMMENT (just dont want to loose the 100 generations, it literally costs me money)
         # Clean solution folders
-        # self._innit_solutions_folder()
+        self._innit_solutions_folder()
 
         # Generate GeneratedSolutions to problems at given temperature
-        # self._generate_solutions()
+        self._generate_solutions()
 
         # Records what the files are
-        # self._save_generation_params()
+        self._save_generation_params()
 
     def get_gpt_data(self) -> None:
         """

@@ -11,6 +11,8 @@ NULL_STREAM = io.StringIO()
 ''' ADD API KEY HERE '''
 API_KEY = os.getenv('API_KEY')
 
+# Models
+ACCEPTED_MODELS = ["gpt-3.5", "gpt-3.5-turbo"]
 MODEL = "gpt-3.5-turbo"
 
 # Initialize Research Parameters
