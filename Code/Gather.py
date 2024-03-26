@@ -108,6 +108,7 @@ class Gather:
 
         # Calculate Result Values
         total_samples = self.k_iterations * self.PROBLEM_AMOUNT
+        percent_passed = round(self.total_passed/total_samples*100, 2)
         total_pass_at_k = functionality.pass_atk(total_samples, self.total_passed, self.k_iterations)
         average_pass_at_k = sum(self.pass_at_ks) / self.PROBLEM_AMOUNT
 
@@ -116,7 +117,8 @@ class Gather:
 Model: {saved_data['model']}
 Temperature: {saved_data['temperature']}
 Total: {total_samples}.
-Successful: {self.total_passed}.
+Successful: {percent_passed}%.
+Passed Problems: {self.total_passed}.
 Not Valid: {self.not_valid}.
 Total Pass@{self.k_iterations}: {total_pass_at_k}
 Average Pass@{self.k_iterations} per question: {average_pass_at_k}
@@ -162,9 +164,11 @@ Pass@{self.k_iterations} Values:
 
         # Log results
         total_samples = num_of_solutions * self.PROBLEM_AMOUNT
+        percent_passed = round(self.total_passed/total_samples*100, 2)
         results = f"""Human Collection Results:
 Total: {total_samples}.
 Successful: {self.total_passed}.
+Passed Problems: {percent_passed}%.
 Not Valid: {self.not_valid}"""
         logger.log("Results", results)
         logger.success(results)
