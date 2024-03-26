@@ -17,13 +17,13 @@ MODEL = "gpt-3.5-turbo"
 
 # Initialize Research Parameters
 STUDY_PARAMS = {
-    "SAMPLE_RESULTS_CSV_DIR_PATH": "Code/data/SampleResults/",
-    "HUMAN_RESULTS_CSV_DIR_PATH": "Code/data/HumanResults/",
-    "RAW_SAMPLE_RESULTS_CSV_DIR_PATH": "Code/data/RawSampleResults/",
-    "RAW_HUMAN_RESULTS_CSV_DIR_PATH": "Code/data/RawHumanResults/",
+    "SAMPLE_RESULTS_CSV_DIR_PATH": "data/SampleResults/",
+    "HUMAN_RESULTS_CSV_DIR_PATH": "data/HumanResults/",
+    "RAW_SAMPLE_RESULTS_CSV_DIR_PATH": "data/RawSampleResults/",
+    "RAW_HUMAN_RESULTS_CSV_DIR_PATH": "data/RawHumanResults/",
     "GPT_SOLUTIONS_FILE_PATH": "GeneratedSolutions/",
     "HUMAN_SOLUTIONS_FILE_PATH": "HumanSolutions/",
-    "PROBLEMS_FILE_PATH": "Code/data/ProblemQuestions.json",
+    "PROBLEMS_FILE_PATH": "Code/ProblemQuestions.json",
     "PROBLEM_AMOUNT": 5,
     "TEMPERATURE": 0.6,
     "K_ITERATIONS": 1
