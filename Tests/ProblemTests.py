@@ -181,8 +181,8 @@ class TestQ5(unittest.TestCase):
         """
         Makes the tree
         :param root: The root node
-        :param numChildren: The number of children each node will have
-        :param childrenData: The data for each child
+        :param num_children: The number of children each node will have
+        :param children_data: The data for each child
         :param depth: The depth of the tree
         :param level: The current level of the tree
         """
