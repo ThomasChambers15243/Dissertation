@@ -6,9 +6,13 @@ from loguru import logger
 # Innit Logger
 logger.add(f"{PATHS['LOG_MAIN']}", level="INFO")
 
-def load_human_files():
+
+def load_human_files() -> bool:
     """
-    Automates the loading of submissions into the directory
+    Automates the loading of submissions into the directory.
+    Loads all files from config PATHS dissertation_question_storage
+    into PATHS human_solutions_dir_path
+    :return Bool if method was successful
     """
     # Paths for questions
     dissertation_questions = PATHS["DISSERTATION_QUESTION_STORAGE"]
@@ -24,7 +28,7 @@ def load_human_files():
         submissionDir = f"{dissertation_questions}/{submission}"
         # Goes through each question in each human's submission
         for questionFile in os.listdir(submissionDir):
-            probNum = str(int(questionFile[9])-1)
+            probNum = str(int(questionFile[9]) - 1)
             # Sets up file paths
             solutionFile = f"{dissertation_questions}/{submission}/{questionFile}"
             destinationDir = f"{dissertation_destination}problem{probNum}"
@@ -38,9 +42,14 @@ def load_human_files():
                 file_count += 1
             except Exception as e:
                 logger.error(f"Could not copy over file. Error: {e}")
+                return False
+
+    # Log Solutions
     logger.success(f"Loaded human solution files. \n"
                    f"Total Attempts: {solution_attempt_count}.\n"
                    f"Total Files: {file_count}.")
+    return True
+
 
 if __name__ == "__main__":
     load_human_files()

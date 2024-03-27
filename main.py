@@ -2,6 +2,7 @@ import sys
 import argparse
 from loguru import logger
 from Code.Gather import Gather
+from Code.DataHelper import load_human_files
 from config import STUDY_PARAMS, PATHS
 
 # Resets the file
@@ -35,13 +36,16 @@ def parser_arguments():
 
     # Critical Arguments
     parser.add_argument("--dataCollection", "-dc", "-DC", choices=["gen", "h"],
-                        help="The type of data collection, 'h' for human, 'gen' for generation")
+                        help="The type of Data collection, 'h' for human, 'gen' for generation")
     parser.add_argument("--sampleCollection", "-sc", "-SC", action="store_true",
                         help="Flag to collect code generation solutions. Needs -t & -k")
     parser.add_argument("--temperature", "-t", "-T", type=float,
                         help="The temperature to use for the GPT-3 API")
     parser.add_argument("--K_iterations", "-k", "-K", type=int,
                         help="The amount of times to run the study. K in pass@k")
+    parser.add_argument("--loadHumanQuestions", "-lh", action="store_true",
+                        help="Loads in human written questions using PATHS file destination"
+                             "in config")
 
     args = parser.parse_args()
 
@@ -67,8 +71,9 @@ def args_exists(args) -> bool:
     :return: bool
     """
     try:
-        if not args.dataCollection and not args.sampleCollection:
-            logger.error("Missing args, either dataCollection (-dc) or sampleCollection (-sc) must be used")
+        if not args.dataCollection and not args.sampleCollection and not args.loadHumanQuestions:
+            logger.error("Missing args, either dataCollection (-dc), sampleCollection (-sc) or"
+                         " loadHumanQuestions (-lh) must be used")
             return False
         if (args.sampleCollection and not args.dataCollection) and (not args.K_iterations or not args.temperature):
             logger.error("Missing args k_iterations (-k) or temperature (-t)")
@@ -88,7 +93,7 @@ def fit_rules(args) -> bool:
     """
     # Checks Arguments are valid
     if args.dataCollection and args.dataCollection not in ["gen", "h"]:
-        logger.error(f"Error: Invalid data collection. Must be: gen || h, not {args.dataCollection}")
+        logger.error(f"Error: Invalid Data collection. Must be: gen || h, not {args.dataCollection}")
         return False
     # Data collection for generations
     if args.sampleCollection:
@@ -107,54 +112,89 @@ def fit_rules(args) -> bool:
     return True
 
 
-@logger.catch
-def run_study():
+def load_questions() -> bool:
     """
-    Runs the study depending on the passed through args
-    :return:
+    Load in human questions using config path
+    values
+    :return: True if successful
     """
-    args = parser_arguments()
-    logger.success(f"Valid Args passed of: DataCollection: {args.dataCollection}, "
-                   f"SampleCollection: {args.sampleCollection}, K: {args.K_iterations},  "
-                   f"Temperature: {args.temperature}")
+    logger.info("Starting to Load human questions")
+    try:
+        load_human_files()
+    except Exception as e:
+        logger.error(f"Could not load human files. Error: {e}")
+        raise SystemExit from e
+    return True
+
+
+def sample_collection(args) -> None:
+    """
+    Generated code samples based on args commands
+    :param args: Namespace of command-line args
+    :return: None
+    """
 
     # Update Config
     STUDY_PARAMS["K_ITERATIONS"] = args.K_iterations
     STUDY_PARAMS["TEMPERATURE"] = args.temperature
 
-    # Creates instance with config file
-    data_gather = Gather(STUDY_PARAMS)
+    try:
+        logger.info(f"Starting gpt sample collection for k: {args.K_iterations} & T: {args.temperature}")
+        # data_gather.generate_gpt_solution(args.K_iterations)
+        logger.success("GPT sample generation successful.")
+    except Exception as e:
+        logger.error(f"GPT sample generation failed. Error: {e}")
 
-    logger.info("data_gather initialized")
 
-    ### Collect data in csv files ###
+def data_collection(args) -> None:
+    """
+    Collects either human or generated Data from
+    code samples
+    :param args: Namespace of command-line args
+    :return: None
+    """
 
     # Human Collection
     if args.dataCollection == 'h':
-        logger.info("Starting Human Collection")
         try:
-            data_gather.get_human_data()
+            logger.info("Starting Human Collection")
+            #data_gather.get_human_data()
         except Exception as e:
             logger.error(f"Human Data collection failed. Error: {e}")
         else:
             logger.success("Human Data collection was successful")
+    # Generation Collection
     elif args.dataCollection == 'gen':
         try:
             logger.info("Starting Generation Data Collection")
-            data_gather.get_gpt_data()
+            #data_gather.get_gpt_data()
             logger.success("Finished Generation Data Collection")
         except Exception as e:
             logger.error(f"Generation Collection failed. Error: {e}")
-    elif args.sampleCollection:
-        try:
-            logger.info(f"Starting gpt sample collection for k: {args.K_iterations} & T: {args.temperature}")
-            data_gather.generate_gpt_solution(args.K_iterations)
-            logger.success("GPT sample generation successful.")
-        except Exception as e:
-            logger.error(f"GPT sample generation failed. Error: {e}")
     else:
         logger.error("Incorrect Params")
 
 
+def direct_program() -> None:
+    """
+    Gets arguments and directs the course
+    of the program, whether to interact with the study
+    or to load up the study
+    :return: None
+    """
+    args = parser_arguments()
+
+    # Decides what the program should run
+    if args.loadHumanQuestions:
+        logger.success("Valid args passed for loading human questions")
+        load_questions()
+    elif args.sampleCollection:
+        logger.success("Valid args pass for sample collection")
+        sample_collection(args)
+    elif args.dataCollection:
+        logger.success("Valid args pass for Data collection")
+        data_collection(args)
+
+
 if __name__ == '__main__':
-    run_study()
+    direct_program()

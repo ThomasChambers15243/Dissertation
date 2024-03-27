@@ -1,14 +1,22 @@
 import os
 import csv
+import shutil
+from config import PATHS
 from tqdm import tqdm
+from loguru import logger
 from Code import mccabe
 from Code import Analyzer
 from Code import functionality
 
-# Including functionality and passed counts in here
-# are a little messy, however they need to be called before
-# collecting metrics - so its more efficient to get them
-# all in one method
+# Innit Logger
+logger.add(f"{PATHS['LOG_MAIN']}", level="INFO")
+
+"""
+Including functionality and passed counts in here
+are a little messy, however they need to be called before
+collecting metrics - so its more efficient to get them
+all in one method
+ """
 
 
 def get_metrics(prob_num: int, num_of_solutions: int, source: str) -> tuple[list[dict], int, int]:
@@ -95,7 +103,7 @@ def calculate_sample_score(metrics: dict) -> float:
 
 def clear_file(file_path) -> None:
     """
-    Clears the given file of all data so it just one empty line
+    Clears the given file of all Data so it just one empty line
     :return: None
     """
     open(file_path, 'w').close()
@@ -130,3 +138,51 @@ def number_of_passed_solutions(file_path: str, k_iterations: int, prob_num: int)
         if functionality.can_file_pass(k_file, prob_num):
             passed += 1
     return passed
+
+
+""" Files to handle and clean Data AFTER collection """
+
+
+def load_human_files() -> bool:
+    """
+    Automates the loading of submissions into the directory.
+    Loads all files from config PATHS dissertation_question_storage
+    into PATHS human_solutions_dir_path
+    :return Bool if method was successful
+    """
+
+    # Paths for questions
+    dissertation_questions = PATHS["DISSERTATION_QUESTION_STORAGE"]
+    dissertation_destination = PATHS["HUMAN_SOLUTIONS_DIR_PATH"]
+
+    # Number of attempts
+    solution_attempt_count = len(os.listdir(dissertation_questions))
+    # Count number of files
+    file_count = 0
+
+    # For each human submission
+    for submissionNum, submission in enumerate(os.listdir(dissertation_questions)):
+        submissionDir = f"{dissertation_questions}/{submission}"
+        # Goes through each question in each human's submission
+        for questionFile in os.listdir(submissionDir):
+            probNum = str(int(questionFile[9]) - 1)
+            # Sets up file paths
+            solutionFile = f"{dissertation_questions}/{submission}/{questionFile}"
+            destinationDir = f"{dissertation_destination}problem{probNum}"
+            destinationFile = f"{destinationDir}/human--n{submissionNum}.py"
+            # Create problem dir if it doesn't exist
+            if not os.path.exists(destinationDir):
+                os.makedirs(destinationDir)
+            # Copies over file
+            try:
+                shutil.copyfile(solutionFile, destinationFile)
+                file_count += 1
+            except Exception as e:
+                logger.error(f"Could not copy over file. Error: {e}")
+                return False
+
+    # Log Solutions
+    logger.success(f"Loaded human solution files. \n"
+                   f"Total Attempts: {solution_attempt_count}.\n"
+                   f"Total Files: {file_count}.")
+    return True
