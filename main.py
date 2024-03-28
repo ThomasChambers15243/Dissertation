@@ -2,7 +2,7 @@ import sys
 import argparse
 from loguru import logger
 from Code.Gather import Gather
-from Code.DataHelper import load_human_files
+from Code.DataHelper import load_human_files, clean_failed_solutions
 from config import STUDY_PARAMS, PATHS
 
 # Resets the file
@@ -13,6 +13,7 @@ open("Tests/MethodTestFile.py", 'w').close()
 def level_filter(level):
     def is_level(record):
         return record["level"].name == level
+
     return is_level
 
 
@@ -34,18 +35,28 @@ def parser_arguments():
     # Gets passed through arguments
     parser = argparse.ArgumentParser()
 
-    # Critical Arguments
+    # Arguments
+    # Only one of these can be used. Group has priority over other args
+    wrangle = parser.add_mutually_exclusive_group()
+    wrangle.add_argument("--loadHumanQuestions", "-lh", action="store_true",
+                         help="Loads in human written questions using PATHS file destination"
+                              "in config")
+
+    wrangle.add_argument("--cleanFailedSolutions", "-c", "-clean", action="store_true",
+                         help="Removes all values that failed from data + their matched values in"
+                              "human/gen csv data. True by default.")
+
     parser.add_argument("--dataCollection", "-dc", "-DC", choices=["gen", "h"],
                         help="The type of Data collection, 'h' for human, 'gen' for generation")
+
     parser.add_argument("--sampleCollection", "-sc", "-SC", action="store_true",
                         help="Flag to collect code generation solutions. Needs -t & -k")
+
     parser.add_argument("--temperature", "-t", "-T", type=float,
                         help="The temperature to use for the GPT-3 API")
+
     parser.add_argument("--K_iterations", "-k", "-K", type=int,
                         help="The amount of times to run the study. K in pass@k")
-    parser.add_argument("--loadHumanQuestions", "-lh", action="store_true",
-                        help="Loads in human written questions using PATHS file destination"
-                             "in config")
 
     args = parser.parse_args()
 
@@ -71,10 +82,10 @@ def args_exists(args) -> bool:
     :return: bool
     """
     try:
-        if not args.dataCollection and not args.sampleCollection and not args.loadHumanQuestions:
-            logger.error("Missing args, either dataCollection (-dc), sampleCollection (-sc) or"
-                         " loadHumanQuestions (-lh) must be used")
-            return False
+        # if not args.dataCollection and not args.sampleCollection and not args.loadHumanQuestions and not args.:
+        #     logger.error("Missing args, either dataCollection (-dc), sampleCollection (-sc) or"
+        #                  " loadHumanQuestions (-lh) must be used")
+        #     return False
         if (args.sampleCollection and not args.dataCollection) and (not args.K_iterations or not args.temperature):
             logger.error("Missing args k_iterations (-k) or temperature (-t)")
             return False
@@ -112,21 +123,6 @@ def fit_rules(args) -> bool:
     return True
 
 
-def load_questions() -> bool:
-    """
-    Load in human questions using config path
-    values
-    :return: True if successful
-    """
-    logger.info("Starting to Load human questions")
-    try:
-        load_human_files()
-    except Exception as e:
-        logger.error(f"Could not load human files. Error: {e}")
-        raise SystemExit from e
-    return True
-
-
 def sample_collection(args) -> None:
     """
     Generated code samples based on args commands
@@ -153,12 +149,14 @@ def data_collection(args) -> None:
     :param args: Namespace of command-line args
     :return: None
     """
+    # Innit Study Class Object
+    data_gather = Gather(STUDY_PARAMS)
 
     # Human Collection
     if args.dataCollection == 'h':
         try:
             logger.info("Starting Human Collection")
-            #data_gather.get_human_data()
+            data_gather.get_human_data()
         except Exception as e:
             logger.error(f"Human Data collection failed. Error: {e}")
         else:
@@ -167,7 +165,7 @@ def data_collection(args) -> None:
     elif args.dataCollection == 'gen':
         try:
             logger.info("Starting Generation Data Collection")
-            #data_gather.get_gpt_data()
+            data_gather.get_gpt_data()
             logger.success("Finished Generation Data Collection")
         except Exception as e:
             logger.error(f"Generation Collection failed. Error: {e}")
@@ -187,7 +185,16 @@ def direct_program() -> None:
     # Decides what the program should run
     if args.loadHumanQuestions:
         logger.success("Valid args passed for loading human questions")
-        load_questions()
+        try:
+            load_human_files()
+        except Exception as e:
+            logger.error(f"Could not load human files. Error: {e}")
+    elif args.cleanFailedSolutions:
+        logger.success("Valid args passed for cleaning failed solutions from dataset")
+        try:
+            clean_failed_solutions()
+        except Exception as e:
+            logger.error(f"Could not clean data. Error: {e}")
     elif args.sampleCollection:
         logger.success("Valid args pass for sample collection")
         sample_collection(args)

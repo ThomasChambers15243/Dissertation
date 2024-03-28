@@ -32,10 +32,14 @@ STUDY_PARAMS = {
 ROOT_DIR = f"{os.path.dirname(os.path.abspath(__file__))}/"
 
 PATHS = {
-    "ROOT_DIR": ROOT_DIR,
     "DISSERTATION_QUESTION_STORAGE": r"C:/Users/Thoma/OneDrive/DissertationQuestions/",
+    "ROOT_DIR": ROOT_DIR,
+    "HUMAN_DATA_BACKUP": f"{ROOT_DIR}Data/humanBackUp",
+    "GEN_DATA_BACKUP": f"{ROOT_DIR}Data/genBackUp",
     "PYTHON_FILE_TEST_SAMPLES": f"{ROOT_DIR}Tests/TestFiles/PythonFileTestSamples/",
     "HUMAN_SOLUTIONS_DIR_PATH": f"{ROOT_DIR}HumanSolutions/",
+    "SAMPLE_RESULTS_CSV_DIR_PATH": f"{ROOT_DIR}Data/SampleResults/",
+    "HUMAN_RESULTS_CSV_DIR_PATH": f"{ROOT_DIR}Data/HumanResults/",
     "LOG_MAIN": f"{ROOT_DIR}Logs/Main.log",
     "LOG_RESULTS": f"{ROOT_DIR}Logs/Results.log",
     "LOG_TESTING": f"{ROOT_DIR}Logs/MainSystemTests.log",

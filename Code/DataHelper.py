@@ -1,6 +1,8 @@
 import os
 import csv
+from distutils.dir_util import copy_tree
 import shutil
+import csv
 from config import PATHS
 from tqdm import tqdm
 from loguru import logger
@@ -186,3 +188,120 @@ def load_human_files() -> bool:
                    f"Total Attempts: {solution_attempt_count}.\n"
                    f"Total Files: {file_count}.")
     return True
+
+
+def clean_failed_solutions(back_up=True) -> bool:
+    """
+    Removes all zero's (failed solutions) from human and
+    generated .csv files using config PATHS.
+    Backs up data by defualt and re-writes if cleaning
+    fails
+    :param back_up bool Backs up data before cleaning and re-writes data if
+    method fails. True by defualt
+    :return: bool if successful or not
+    """
+    # Backs up data
+    if back_up:
+        backup_data()
+
+    # Cleans Data
+    try:
+        delete_lines("hum")
+        delete_lines("gen")
+    except Exception as e:
+        logger.error(f"Cleaning Failed. Ensure directory's and their contents are valid. Error: {e}")
+        if back_up:
+            load_backup_data()
+        return False
+
+    # Deletes backed-up data
+    if back_up:
+        delete_backup_data()
+
+    return True
+
+
+def backup_data():
+    humanPath = PATHS["HUMAN_RESULTS_CSV_DIR_PATH"]
+    genPath = PATHS["SAMPLE_RESULTS_CSV_DIR_PATH"]
+    copy_tree(humanPath, f"{PATHS['HUMAN_DATA_BACKUP']}")
+    copy_tree(genPath, f"{PATHS['GEN_DATA_BACKUP']}")
+
+
+def load_backup_data():
+    raise NotImplementedError
+
+
+def delete_backup_data():
+    raise NotImplementedError
+
+
+def delete_lines(target: str):
+    """
+    Deletes the lines from human and gen csv's that have
+    zero'd values
+    :param target: string, The directory you want to find zeros in
+    :return: True if successful
+    """
+    # Set paths
+    humanPath = PATHS["HUMAN_RESULTS_CSV_DIR_PATH"]
+    genPath = PATHS["SAMPLE_RESULTS_CSV_DIR_PATH"]
+
+    # Check length are equal
+    if len(os.listdir(humanPath)) != len(os.listdir(genPath)):
+        logger.error("Unequal amount of of solutions in dirs")
+        return False
+
+    # Clean solutions
+    for csv_file in os.listdir(humanPath):
+        # Sets paths
+        human_file_path = f"{humanPath}{csv_file}"
+        gen_file_path = f"{genPath}{csv_file}"
+        # Get row lines to keep
+        if target != 'hum':
+            lines_to_keep = get_non_zeroed_lines(gen_file_path)
+        else:
+            lines_to_keep = get_non_zeroed_lines(human_file_path)
+        # Get rows to keep
+        human_rows_to_keep = get_rows_to_keep(human_file_path, lines_to_keep)
+        gen_rows_to_keep = get_rows_to_keep(gen_file_path, lines_to_keep)
+        # Write lines to
+        write_lines(human_file_path, human_rows_to_keep,
+                    gen_file_path, gen_rows_to_keep)
+    return True
+
+
+def write_lines(file1: str, file_one_rows: list[str],
+                file2: str, file_two_rows: list[str]) -> None:
+    with open(file1, "w", newline="") as one, open(file2, "w", newline="") as two:
+        # Sets up writers
+        writer_one = csv.writer(one)
+        writer_two = csv.writer(two)
+        # Write rows
+        writer_one.writerows(file_one_rows)
+        writer_two.writerows(file_two_rows)
+
+
+def get_rows_to_keep(filePath: str, row_nums: list[int]) -> list:
+    """
+    Gets a list of rows to keep in the csv
+    :param filePath: String file path
+    :param row_nums: List of rows to keep
+    :return: List of rows to keep
+    """
+    with open(filePath, "r") as file:
+        csv_reader = csv.reader(file, delimiter=',')
+        return [row for rowNum, row in enumerate(csv_reader)
+                if rowNum in row_nums]
+
+
+def get_non_zeroed_lines(filePath: str) -> list[int]:
+    """
+    Gets lines that equal to zero in the given file
+    :param filePath: String file path
+    :return: List one line numbers equal to zero
+    """
+    with open(filePath, "r") as file:
+        csv_reader = csv.reader(file, delimiter=',')
+        return [rowNum for rowNum, row in enumerate(csv_reader)
+                if row[-1] != '0.0']
