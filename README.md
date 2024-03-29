@@ -14,9 +14,12 @@ Full arguments and their properties are shown in the [Argument](#CLI-Arguments) 
 ## CLI Arguments
 To generate solutions, you will need to add `API_KEY` to environment variables, which contains your OpenAI API secret [key](https://platform.openai.com/api-keys).
 
-| Name | Alt's     | Type | Description |
+| Name | Alt's | Type | Description |
 | :-------- | :------- | :------------------------- | - |
-| `--dataCollection` | `-dc` | [`gen` \| `h`] |Collects data for the given dataset, either generation or human|
+`--dataCollection` | `-dc` | [`gen` \| `h`] |Collects data for the given dataset, either generation or human.
+Cannot be used with -c|
+`--cleanFailedSolutions` | `-c`, `-clean`| `Boolean Flag` | Flag to clean data of failed solutions.
+Cannot be used with -dc |
 `--sampleCollection`|`-sc`| `Boolean Flag` | Flag to collect code generation solutions. **Requires** -t & -k|
 `--temperature` | `-t` | `Float value` | Value of model of generation, **0 < T <= 1**|
 `--K_iterations` | `-k` | `Int Value` | Number of generations per questions & K in pass@k, **1 <= K <= 100** |
@@ -27,23 +30,27 @@ To generate solutions, you will need to add `API_KEY` to environment variables, 
 ```bash
 main.py -sc -k 10 -t 0.6
 ```
-#### Gathers data for generated samples
-```bash
-main.py -dc gen
-```
 #### Load in Human Samples
 ```bash
 load_human_solutions.py
+```
+#### Gathers data for generated samples
+```bash
+main.py -dc gen
 ```
 #### Gathers data for human samples
 ```bash
 main.py -dc h
 ```
+#### Cleaning Data of Failed Solutions
+```Bash
+main.py -c
+```
 #### Running Tests
-
 ```bash
   TestRunner.py
 ```
+
 ### Example
 ![Example Usage of Software](Docs/dissertation-dataCollection-working.gif)
 ## Navigation
@@ -63,27 +70,33 @@ Bellow is a brief description of the code base and how modules relate to each ot
 <details>
 <summary> <b>/Code</b> </summary>
 <ul>
+  <li> <i>Gather.py</i> Main class for collecting data. Generates samples and performs data collecting on said sampless</li>
+  <li> <i>Analyzer.py</i> Calculates Halstead Metrics for given file</li>
+  <li> <i>Functionality.py</i> Tests the functionality/validity of python files</li>
+  <li> <i>Generation.py</i> Generates code samples using OpenAI API</li>
+  <li> <i>Lexer.py</i> Extracts operands and operators from valid python files, ready to use in Halstead calculations</li>
+  <li> <i>mccabe.py</i> Calculates Cyclometric Complexity for a given python file</li>
+  <li> <i>DataHelper.py</i> Contains helper methods for sample generation and data collection</li>
+  <li> <i>CleanData/py</i> Module providing methods to clean data of failed solutions</li>
+  <li> <i>ProblemQuestions.json</i> Containing the problem Stores</li>
+  <li> <i>stats.R</i> containing the R code used in the studies analysis</li>
+</ul>
+</details>
+
+<details>
   <li><i>/Data</i> Directory of all data used in and collected from the system. </li>
     <ul>
       <li> Generation and Sample <i>.csv</i> result files</li>
-      <li> <i>ProblemQuestions.json</i> Containing the problem Stores</li>
-      <li> <i>stats.R</i> containing the R code used in the studies analysis</li>
+      <li> Raw Generation and Raw Sample <i>.csv</i> result files</li>
+      <li> Back up of sample data, used in cleaning, deleted after use</li>
     </ul>
-  <li> <i>Gather.py</i> Main class for collecting data. Generates samples and performs data collecting on said sampless</li>
-  <li> <i>Analyzer.py</i> Calculates Halstead Metrics for given file</li>
-  <li> <i>Functionality.py</i> Tests the functionaly/validity of python files</li>
-  <li> <i>Generation.py</i> Generates code samples using OpenAI API</li>
-  <li> <i>Lexer.py</i> Extracts operands and operators from valid python files, ready to use in Halstead calculations</li>
-  <li> <i>mccabe.py</i> Calculates cyclometric complexity for a given python file</li>
-  <li> <i>DataHelper.py</i> Contains helper methods for sample generation and data collection</li>
-</ul>
-
+  <li><i></i></li>
 </details>
 
 <details>
 <summary> <b>/Logs</b> </summary>
 <li> <i>Main.log</i> Master log for the program, should be your first stop for debugging</li>
-<li> <i>Results.log</i> Contains all resutls from any --dataCollection command.</li>
+<li> <i>Results.log</i> Contains all results from any --dataCollection command.</li>
 <li> <i>MainSystemTests.log</i> Contains results from system testing</li>
 </details>
 
@@ -92,7 +105,7 @@ Bellow is a brief description of the code base and how modules relate to each ot
 <li> <i>/TestFiles</i> Contains dummy python scripts for testing</li>
 <li> <i>/SystemTest</i>s Contains test files, called by TestRunner.py, that test the functionality of the System.</li>
 <li> <i>ProblemTests.py</i> Contains test classes and class access for functional testing of samples</li>
-<li> <i>MethodTestFile.py</i> Blank file thats used to load samples onto for funtional testing</li>
+<li> <i>MethodTestFile.py</i> Blank file thats used to load samples onto for functional testing</li>
 </details>
 
 ## Acknowledgements
