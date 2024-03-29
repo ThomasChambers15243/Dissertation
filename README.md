@@ -16,10 +16,8 @@ To generate solutions, you will need to add `API_KEY` to environment variables, 
 
 | Name | Alt's | Type | Description |
 | :-------- | :------- | :------------------------- | - |
-`--dataCollection` | `-dc` | [`gen` \| `h`] |Collects data for the given dataset, either generation or human.
-Cannot be used with -c|
-`--cleanFailedSolutions` | `-c`, `-clean`| `Boolean Flag` | Flag to clean data of failed solutions.
-Cannot be used with -dc |
+`--dataCollection` | `-dc` | [`gen` \| `h`] |Collects data for the given dataset, either generation or human. Cannot be used with -c |
+`--cleanFailedSolutions` | `-c`, `-clean`| `Boolean Flag` | Flag to clean data of failed solutions. Cannot be used with -dc |
 `--sampleCollection`|`-sc`| `Boolean Flag` | Flag to collect code generation solutions. **Requires** -t & -k|
 `--temperature` | `-t` | `Float value` | Value of model of generation, **0 < T <= 1**|
 `--K_iterations` | `-k` | `Int Value` | Number of generations per questions & K in pass@k, **1 <= K <= 100** |
@@ -90,7 +88,6 @@ Bellow is a brief description of the code base and how modules relate to each ot
       <li> Raw Generation and Raw Sample <i>.csv</i> result files</li>
       <li> Back up of sample data, used in cleaning, deleted after use</li>
     </ul>
-  <li><i></i></li>
 </details>
 
 <details>
