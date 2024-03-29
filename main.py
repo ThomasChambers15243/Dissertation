@@ -2,7 +2,8 @@ import sys
 import argparse
 from loguru import logger
 from Code.Gather import Gather
-from Code.DataHelper import load_human_files, clean_failed_solutions
+from Code.DataHelper import load_human_files
+from Code.CleanData import clean_failed_solutions
 from config import STUDY_PARAMS, PATHS
 
 # Resets the file
@@ -38,7 +39,7 @@ def parser_arguments():
     # Arguments
     # Only one of these can be used. Group has priority over other args
     wrangle = parser.add_mutually_exclusive_group()
-    wrangle.add_argument("--loadHumanQuestions", "-lh", action="store_true",
+    wrangle.add_argument("--loadHumanQuestions", "-lh", "-lq", action="store_true",
                          help="Loads in human written questions using PATHS file destination"
                               "in config")
 
@@ -129,14 +130,15 @@ def sample_collection(args) -> None:
     :param args: Namespace of command-line args
     :return: None
     """
-
+    # Innit Study Class Object
+    data_gather = Gather(STUDY_PARAMS)
     # Update Config
     STUDY_PARAMS["K_ITERATIONS"] = args.K_iterations
     STUDY_PARAMS["TEMPERATURE"] = args.temperature
 
     try:
         logger.info(f"Starting gpt sample collection for k: {args.K_iterations} & T: {args.temperature}")
-        # data_gather.generate_gpt_solution(args.K_iterations)
+        data_gather.generate_gpt_solution(args.K_iterations)
         logger.success("GPT sample generation successful.")
     except Exception as e:
         logger.error(f"GPT sample generation failed. Error: {e}")
@@ -193,6 +195,7 @@ def direct_program() -> None:
         logger.success("Valid args passed for cleaning failed solutions from dataset")
         try:
             clean_failed_solutions()
+            logger.success("Cleaned Solutions")
         except Exception as e:
             logger.error(f"Could not clean data. Error: {e}")
     elif args.sampleCollection:
