@@ -185,12 +185,14 @@ def direct_program() -> None:
     args = parser_arguments()
 
     # Decides what the program should run
+    # Loads human questions into project
     if args.loadHumanQuestions:
         logger.success("Valid args passed for loading human questions")
         try:
             load_human_files()
         except Exception as e:
             logger.error(f"Could not load human files. Error: {e}")
+    # Cleans failed solutions scores from data
     elif args.cleanFailedSolutions:
         logger.success("Valid args passed for cleaning failed solutions from dataset")
         try:
@@ -198,9 +200,11 @@ def direct_program() -> None:
             logger.success("Cleaned Solutions")
         except Exception as e:
             logger.error(f"Could not clean data. Error: {e}")
+    # Generates gpt samples
     elif args.sampleCollection:
         logger.success("Valid args pass for sample collection")
         sample_collection(args)
+    # Collects data about code solutions
     elif args.dataCollection:
         logger.success("Valid args pass for Data collection")
         data_collection(args)
