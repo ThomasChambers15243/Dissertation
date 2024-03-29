@@ -82,27 +82,28 @@ Bellow is a brief description of the code base and how modules relate to each ot
 </details>
 
 <details>
+<summary> <b>/Data</b> </summary>
   <li><i>/Data</i> Directory of all data used in and collected from the system. </li>
-    <ul>
-      <li> Generation and Sample <i>.csv</i> result files</li>
-      <li> Raw Generation and Raw Sample <i>.csv</i> result files</li>
-      <li> Back up of sample data, used in cleaning, deleted after use</li>
-    </ul>
+  <ul>
+    <li> Generation and Sample <i>.csv</i> result files</li>
+    <li> Raw Generation and Raw Sample <i>.csv</i> result files</li>
+    <li> Back up of sample data, used in cleaning, deleted after use</li>
+  </ul>
 </details>
 
 <details>
-<summary> <b>/Logs</b> </summary>
-<li> <i>Main.log</i> Master log for the program, should be your first stop for debugging</li>
-<li> <i>Results.log</i> Contains all results from any --dataCollection command.</li>
-<li> <i>MainSystemTests.log</i> Contains results from system testing</li>
+    <summary> <b>/Logs</b> </summary>
+    <li> <i>Main.log</i> Master log for the program, should be your first stop for debugging</li>
+    <li> <i>Results.log</i> Contains all results from any --dataCollection command.</li>
+    <li> <i>MainSystemTests.log</i> Contains results from system testing</li>
 </details>
 
 <details>
-<summary> <b>/Tests</b> </summary>
-<li> <i>/TestFiles</i> Contains dummy python scripts for testing</li>
-<li> <i>/SystemTest</i>s Contains test files, called by TestRunner.py, that test the functionality of the System.</li>
-<li> <i>ProblemTests.py</i> Contains test classes and class access for functional testing of samples</li>
-<li> <i>MethodTestFile.py</i> Blank file thats used to load samples onto for functional testing</li>
+    <summary> <b>/Tests</b> </summary>
+    <li> <i>/TestFiles</i> Contains dummy python scripts for testing</li>
+    <li> <i>/SystemTest</i>s Contains test files, called by TestRunner.py, that test the functionality of the System.</li>
+    <li> <i>ProblemTests.py</i> Contains test classes and class access for functional testing of samples</li>
+    <li> <i>MethodTestFile.py</i> Blank file thats used to load samples onto for functional testing</li>
 </details>
 
 ## Acknowledgements
