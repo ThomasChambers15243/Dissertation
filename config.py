@@ -34,8 +34,8 @@ ROOT_DIR = f"{os.path.dirname(os.path.abspath(__file__))}/"
 PATHS = {
     "DISSERTATION_QUESTION_STORAGE": r"C:/Users/Thoma/OneDrive/DissertationQuestions/",
     "ROOT_DIR": ROOT_DIR,
-    "HUMAN_DATA_BACKUP": f"{ROOT_DIR}Data/humanBackUp",
-    "GEN_DATA_BACKUP": f"{ROOT_DIR}Data/genBackUp",
+    "HUMAN_DATA_BACKUP": f"{ROOT_DIR}Data/Backup/humanBackUp",
+    "GEN_DATA_BACKUP": f"{ROOT_DIR}Data/Backup/genBackUp",
     "PYTHON_FILE_TEST_SAMPLES": f"{ROOT_DIR}Tests/TestFiles/PythonFileTestSamples/",
     "HUMAN_SOLUTIONS_DIR_PATH": f"{ROOT_DIR}HumanSolutions/",
     "SAMPLE_RESULTS_CSV_DIR_PATH": f"{ROOT_DIR}Data/SampleResults/",

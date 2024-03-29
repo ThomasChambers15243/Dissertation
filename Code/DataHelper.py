@@ -194,10 +194,10 @@ def clean_failed_solutions(back_up=True) -> bool:
     """
     Removes all zero's (failed solutions) from human and
     generated .csv files using config PATHS.
-    Backs up data by defualt and re-writes if cleaning
+    Backs up data by default and re-writes if cleaning
     fails
     :param back_up bool Backs up data before cleaning and re-writes data if
-    method fails. True by defualt
+    method fails. True by default
     :return: bool if successful or not
     """
     # Backs up data
@@ -211,7 +211,9 @@ def clean_failed_solutions(back_up=True) -> bool:
     except Exception as e:
         logger.error(f"Cleaning Failed. Ensure directory's and their contents are valid. Error: {e}")
         if back_up:
+            # Error HEre
             load_backup_data()
+            delete_backup_data()
         return False
 
     # Deletes backed-up data
@@ -222,18 +224,19 @@ def clean_failed_solutions(back_up=True) -> bool:
 
 
 def backup_data():
-    humanPath = PATHS["HUMAN_RESULTS_CSV_DIR_PATH"]
-    genPath = PATHS["SAMPLE_RESULTS_CSV_DIR_PATH"]
-    copy_tree(humanPath, f"{PATHS['HUMAN_DATA_BACKUP']}")
-    copy_tree(genPath, f"{PATHS['GEN_DATA_BACKUP']}")
+    copy_tree(PATHS["HUMAN_RESULTS_CSV_DIR_PATH"], f"{PATHS['HUMAN_DATA_BACKUP']}")
+    copy_tree(PATHS["SAMPLE_RESULTS_CSV_DIR_PATH"], f"{PATHS['GEN_DATA_BACKUP']}")
 
 
 def load_backup_data():
-    raise NotImplementedError
+    copy_tree(f"{PATHS['HUMAN_DATA_BACKUP']}", f"{PATHS['HUMAN_RESULTS_CSV_DIR_PATH']}")
+    copy_tree(f"{PATHS['GEN_DATA_BACKUP']}", PATHS["SAMPLE_RESULTS_CSV_DIR_PATH"])
+
 
 
 def delete_backup_data():
-    raise NotImplementedError
+    shutil.rmtree(f"{PATHS['HUMAN_DATA_BACKUP']}")
+    shutil.rmtree(f"{PATHS['GEN_DATA_BACKUP']}")
 
 
 def delete_lines(target: str):
