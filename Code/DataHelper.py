@@ -100,7 +100,8 @@ def calculate_sample_score(metrics: dict) -> float:
             sample_sum += (value / 10)
         else:
             sample_sum += value
-    return sample_sum
+
+    return "NA" if sample_sum == 0.0 else round(sample_sum, 2)
 
 
 def clear_file(file_path) -> None:

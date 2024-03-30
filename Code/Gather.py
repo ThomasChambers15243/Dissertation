@@ -272,9 +272,9 @@ Not Valid: {self.not_valid}"""
             # Write Scores
             for attempt in range(len(all_metrics)):
                 if self.collection_type == "gen":
-                    writer.writerow([attempt, self.TEMPERATURE, round(all_metrics[attempt], 2)])
+                    writer.writerow([attempt, self.TEMPERATURE, all_metrics[attempt]])
                 else:
-                    writer.writerow([attempt, round(all_metrics[attempt], 2)])
+                    writer.writerow([attempt, all_metrics[attempt]])
 
     def write_raw_results(self, all_metrics: list[dict], prob_num: int) -> None:
         """
@@ -300,34 +300,34 @@ Not Valid: {self.not_valid}"""
                     writer.writerow([
                         attempt,
                         self.TEMPERATURE,
-                        round(metrics["DistinctOperatorCount"], 2),
-                        round(metrics["DistinctOperandCount"], 2),
-                        round(metrics["TotalOperatorCount"], 2),
-                        round(metrics["TotalOperandCount"], 2),
-                        round(metrics["Vocabulary"], 2),
-                        round(metrics["Length"], 2),
-                        round(metrics["EstProgLength"], 2),
-                        round(metrics["Volume"], 2),
-                        round(metrics["Difficulty"], 2),
-                        round(metrics["Effort"], 2),
-                        round(metrics["Time"], 2),
-                        round(metrics["BugsEstimate"], 2),
-                        round(metrics["MccabeComplexity"], 2)
+                        metrics["DistinctOperatorCount"],
+                        metrics["DistinctOperandCount"],
+                        metrics["TotalOperatorCount"],
+                        metrics["TotalOperandCount"],
+                        metrics["Vocabulary"],
+                        metrics["Length"],
+                        metrics["EstProgLength"],
+                        metrics["Volume"],
+                        metrics["Difficulty"],
+                        metrics["Effort"],
+                        metrics["Time"],
+                        metrics["BugsEstimate"],
+                        metrics["MccabeComplexity"]
                     ])
                 else:
                     writer.writerow([
                         attempt,
-                        round(metrics["DistinctOperatorCount"], 2),
-                        round(metrics["DistinctOperandCount"], 2),
-                        round(metrics["TotalOperatorCount"], 2),
-                        round(metrics["TotalOperandCount"], 2),
-                        round(metrics["Vocabulary"], 2),
-                        round(metrics["Length"], 2),
-                        round(metrics["EstProgLength"], 2),
-                        round(metrics["Volume"], 2),
-                        round(metrics["Difficulty"], 2),
-                        round(metrics["Effort"], 2),
-                        round(metrics["Time"], 2),
-                        round(metrics["BugsEstimate"], 2),
-                        round(metrics["MccabeComplexity"], 2)
+                        metrics["DistinctOperatorCount"],
+                        metrics["DistinctOperandCount"],
+                        metrics["TotalOperatorCount"],
+                        metrics["TotalOperandCount"],
+                        metrics["Vocabulary"],
+                        metrics["Length"],
+                        metrics["EstProgLength"],
+                        metrics["Volume"],
+                        metrics["Difficulty"],
+                        metrics["Effort"],
+                        metrics["Time"],
+                        metrics["BugsEstimate"],
+                        metrics["MccabeComplexity"]
                     ])

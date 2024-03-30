@@ -142,4 +142,4 @@ def get_non_zeroed_lines(filePath: str) -> list[int]:
     with open(filePath, "r") as file:
         csv_reader = csv.reader(file, delimiter=',')
         return [rowNum for rowNum, row in enumerate(csv_reader)
-                if row[-1] != '0.0']
+                if row[-1] != 'NA']
