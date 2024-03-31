@@ -17,18 +17,18 @@ Full arguments and their properties are shown in the [Argument](#CLI-Arguments) 
 ## CLI Arguments
 
 To generate solutions, you will need to add `API_KEY` to environment variables, which contains your OpenAI API
-secret [key](https://platform.openai.com/api-keys).
-
-| Name | Alt's | Type | Description | | :-------- | :------- | :------------------------- | - |
+secret [key](https://platform.openai.com/api-keys). | Name | Alt's | Type | Description | | :-------- | :------- | :
+------------------------- | - |
 `--dataCollection` | `-dc` | [`gen` \| `h`] |Collects data for the given dataset, either generation or human. Cannot be
 used with -c |
 `--cleanFailedSolutions` | `-c`, `-clean`| `Boolean Flag` | Flag to clean data of failed solutions. Cannot be used with
 -dc |
-`--loadHumanQuestions` | `-lq` `-lh` | Boolean Flag | Flag to load in human questions |
+`--loadHumanQuestions` | `-lh` , `lq` |`Boolean Flag`| Loads human questions into projects|
 `--sampleCollection`|`-sc`| `Boolean Flag` | Flag to collect code generation solutions. **Requires** -t & -k|
 `--temperature` | `-t` | `Float value` | Value of model of generation, **0 < T <= 1**|
 `--K_iterations` | `-k` | `Int Value` | Number of generations per questions & K in pass@k, **1 <= K <= 100** |
 `--help` | `-h` | `Boolean Flag` | Shows all args and their helper methods |
+
 ## Usage Examples
 
 #### Generate 10 samples per question, at a temperature of 0.6
