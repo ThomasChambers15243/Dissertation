@@ -1,9 +1,12 @@
 # What is this?
 This project is the software for my Computer Science Dissertation at Falmouth University, 2024. The repo contains all code files, data collection, data analysis and write-up.
 
-**Research Question:** Can GPT3.5 generate code that scores higher than university programming students in code-quality metrics.
+**Research Question:** Can GPT3.5 generate code that scores higher than university programming students in code-quality
+metrics.
 
-The purpose of this code base is to provide a streamlined pipeline to generate hundreds of code solutions for *n* questions and collect code-quality metrics based on those soltuions. Data for human-written code solutions can also be collected.
+The purpose of this code base is to provide a streamlined pipeline to generate hundreds of code solutions for *n*
+questions and collect code-quality metrics based on those solutions. Data for human-written code solutions is also
+collected.
 
 **main.py** runs is the root file to run the project from. To get detailed usage, use the help command:
 
@@ -12,12 +15,16 @@ main.py --help
 ```
 Full arguments and their properties are shown in the [Argument](#CLI-Arguments) section further bellow. A descriptor of the code-base is given in the [Navigation](#Navigation) section further bellow.
 ## CLI Arguments
-To generate solutions, you will need to add `API_KEY` to environment variables, which contains your OpenAI API secret [key](https://platform.openai.com/api-keys).
 
-| Name | Alt's | Type | Description |
-| :-------- | :------- | :------------------------- | - |
-`--dataCollection` | `-dc` | [`gen` \| `h`] |Collects data for the given dataset, either generation or human. Cannot be used with -c |
-`--cleanFailedSolutions` | `-c`, `-clean`| `Boolean Flag` | Flag to clean data of failed solutions. Cannot be used with -dc |
+To generate solutions, you will need to add `API_KEY` to environment variables, which contains your OpenAI API
+secret [key](https://platform.openai.com/api-keys).
+
+| Name | Alt's | Type | Description | | :-------- | :------- | :------------------------- | - |
+`--dataCollection` | `-dc` | [`gen` \| `h`] |Collects data for the given dataset, either generation or human. Cannot be
+used with -c |
+`--cleanFailedSolutions` | `-c`, `-clean`| `Boolean Flag` | Flag to clean data of failed solutions. Cannot be used with
+-dc |
+`--loadHumanQuestions` | `-lq` `-lh` | Boolean Flag | Flag to load in human questions |
 `--sampleCollection`|`-sc`| `Boolean Flag` | Flag to collect code generation solutions. **Requires** -t & -k|
 `--temperature` | `-t` | `Float value` | Value of model of generation, **0 < T <= 1**|
 `--K_iterations` | `-k` | `Int Value` | Number of generations per questions & K in pass@k, **1 <= K <= 100** |
@@ -30,7 +37,7 @@ main.py -sc -k 10 -t 0.6
 ```
 #### Load in Human Samples
 ```bash
-load_human_solutions.py
+main.py -lq
 ```
 #### Gathers data for generated samples
 ```bash
@@ -40,20 +47,33 @@ main.py -dc gen
 ```bash
 main.py -dc h
 ```
+
 #### Cleaning Data of Failed Solutions
+
 ```Bash
 main.py -c
 ```
+
 #### Running Tests
+
 ```bash
   TestRunner.py
 ```
 
+#### View Docs
+
+```bash
+Documentation.html
+```
+
 ### Example
+
 ![Example Usage of Software](Docs/dissertation-dataCollection-working.gif)
+
 ## Navigation
 
-Bellow is a brief description of the code base and how modules relate to each other. This is not important for usage of the program, but important for understanding and potential forking.
+Bellow is a brief description of the code base and how modules relate to each other. This is not important for usage of
+the program, but important for understanding and potential forking.
 
 <details>
 <summary> <b>/Root Dir</b> </summary>
@@ -61,8 +81,9 @@ Bellow is a brief description of the code base and how modules relate to each ot
 <li> <i>TestRunner.py</i> Runs system unit tests</li>
 <li> <i>load_human_solutions.py</i> Loads in human solutions using paths in config</li>
 <li> <i>Requirements.txt</i> Stores all python requirements </li>
-<li> <i>config.py</i> Holds global variables used accross the system, including access to env api keys & file paths.</li>
-<li> <i>.gitignore</i> Excludes mostly cheche files and solution directories</li>
+<li> <i>config.py</i> Holds global variables used across the system, including access to env api keys & file paths.</li>
+<li> <i>.gitignore</i> Excludes mostly cached files and solution directories</li>
+<li> <i>documentation.html</i> Home html page for projects documentation</li>
 </details>
 
 <details>
@@ -103,11 +124,19 @@ Bellow is a brief description of the code base and how modules relate to each ot
     <li> <i>/TestFiles</i> Contains dummy python scripts for testing</li>
     <li> <i>/SystemTest</i>s Contains test files, called by TestRunner.py, that test the functionality of the System.</li>
     <li> <i>ProblemTests.py</i> Contains test classes and class access for functional testing of samples</li>
-    <li> <i>MethodTestFile.py</i> Blank file thats used to load samples onto for functional testing</li>
+    <li> <i>MethodTestFile.py</i> Blank file that's used to load samples onto for functional testing</li>
+</details>
+
+<details>
+    <summary> <b>Docs</b> </summary>
+    <li> <i>/Code</i> Contains doc files for html documentation</li>
+    <li> <i>Other</i> Documentation files</li>
 </details>
 
 ## Acknowledgements
- - Professor Joe Walton-Rivers & Sokol Murturi for guidance and support throughout the project
- - [McCabe Complexity Checker](https://nedbatchelder.com/blog/200803/python_code_complexity_microtool.html) | [Repo](https://github.com/PyCQA/mccabe)
+
+- Professor Joe Walton-Rivers & Sokol Murturi for guidance and support throughout the project
+- [McCabe Complexity Checker](https://nedbatchelder.com/blog/200803/python_code_complexity_microtool.html)
+  | [Repo](https://github.com/PyCQA/mccabe)
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)

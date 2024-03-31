@@ -1,5 +1,6 @@
 import sys
 import argparse
+import webbrowser
 from loguru import logger
 from Code.Gather import Gather
 from Code.DataHelper import load_human_files
