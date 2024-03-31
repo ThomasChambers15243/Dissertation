@@ -22,7 +22,8 @@ the code-base is given in the [Navigation](#Navigation) section further bellow.
 To generate solutions, you will need to add `API_KEY` to environment variables, which contains your OpenAI API
 secret [key](https://platform.openai.com/api-keys).
 
-| Name | Alt's | Type | Description | | :-------- | :------- | :------------------------- | - |
+| Name | Alt's | Type | Description |
+| :--------| :-------| :-------------------------| ---|
 `--dataCollection` | `-dc` | [`gen` \| `h`] |Collects data for the given dataset, either generation or human. Cannot be
 used with -c |
 `--cleanFailedSolutions` | `-c`, `-clean`| `Boolean Flag` | Flag to clean data of failed solutions. Cannot be used with
