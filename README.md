@@ -13,12 +13,16 @@ collected.
 ```bash
 main.py --help
 ```
-Full arguments and their properties are shown in the [Argument](#CLI-Arguments) section further bellow. A descriptor of the code-base is given in the [Navigation](#Navigation) section further bellow.
+
+Full arguments and their properties are shown in the [Argument](#CLI-Arguments) section further bellow. A descriptor of
+the code-base is given in the [Navigation](#Navigation) section further bellow.
+
 ## CLI Arguments
 
 To generate solutions, you will need to add `API_KEY` to environment variables, which contains your OpenAI API
-secret [key](https://platform.openai.com/api-keys). | Name | Alt's | Type | Description | | :-------- | :------- | :
-------------------------- | - |
+secret [key](https://platform.openai.com/api-keys).
+
+| Name | Alt's | Type | Description | | :-------- | :------- | :------------------------- | - |
 `--dataCollection` | `-dc` | [`gen` \| `h`] |Collects data for the given dataset, either generation or human. Cannot be
 used with -c |
 `--cleanFailedSolutions` | `-c`, `-clean`| `Boolean Flag` | Flag to clean data of failed solutions. Cannot be used with
@@ -32,6 +36,7 @@ used with -c |
 ## Usage Examples
 
 #### Generate 10 samples per question, at a temperature of 0.6
+
 ```bash
 main.py -sc -k 10 -t 0.6
 ```
